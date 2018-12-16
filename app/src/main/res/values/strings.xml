@@ -3,6 +3,9 @@
 
     <string name="file_provider_authority" translatable="false">com.example.alihasan.synergytwo.fileprovider</string>
 
+    <string name="error">Error finding image</string>
+
+
     <string-array name="resstatus">
         <item>SELF OWNED</item>
         <item>OWNED BY RELATIVES</item>

@@ -443,7 +443,7 @@ public class BusinessActivity extends AppCompatActivity {
                 /**
                  * RETROFIT MAGIC
                  */
-                sendNetworkRequest(data);
+                retroFitHelper(data);
 
             }
         });
@@ -451,7 +451,7 @@ public class BusinessActivity extends AppCompatActivity {
 
     }
 
-    public void sendNetworkRequest(BusinessModel data)
+    public void retroFitHelper(BusinessModel data)
     {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_URL)

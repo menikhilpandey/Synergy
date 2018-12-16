@@ -24,7 +24,8 @@ public interface Client {
     @POST("addToTable.php")
     Call<ArrayList<BusinessModel>> sendBusinessData(@Body BusinessModel data);
 
-
+    @POST("imageUpload.php")
+    Call<String> imageUpload(@Field("BASE") String ID, @Field("CASETYPE") String PASS);
 
 
 }
