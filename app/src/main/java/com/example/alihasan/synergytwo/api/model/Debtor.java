@@ -1,15 +1,22 @@
 package com.example.alihasan.synergytwo.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Debtor {
 
+    @SerializedName("CASENO")
     private String caseNo;
 
+    @SerializedName("APPLNAME")
     private String applName;
 
+    @SerializedName("ADDRESS")
     private String address;
 
+    @SerializedName("PHONE")
     private String altTele;
 
+    @SerializedName("CASETYPE")
     private String typeCase;
 
 //    private String productType;

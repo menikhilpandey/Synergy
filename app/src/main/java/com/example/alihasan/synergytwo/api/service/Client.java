@@ -13,19 +13,23 @@ import retrofit2.http.POST;
 
 public interface Client {
 
-    @POST("authorisedandroid.php")
+    @POST("authorizedandroid.php")
     @FormUrlEncoded
-    Call<String> getAuth(@Field("USER") String ID, @Field("PASS") String PASS);
+    Call<String> getAuth(@Field("USERNAME") String ID, @Field("PASSWORD") String PASS);
 
-    @POST("fetchaccess.php")
+    @POST("fetchcases.php")
     @FormUrlEncoded
-    Call<ArrayList<Debtor>> getDebtors(@Field("USER") String ID);
+    Call<ArrayList<Debtor>> getDebtors(@Field("PDANO") String ID);
 
-    @POST("addToTable.php")
-    Call<ArrayList<BusinessModel>> sendBusinessData(@Body BusinessModel data);
+    @POST("addtotable.php")
+    Call<String> sendBusinessData(@Body BusinessModel data);
 
-    @POST("imageUpload.php")
-    Call<String> imageUpload(@Field("BASE") String ID, @Field("CASETYPE") String PASS);
+    @POST("imageupload.php")
+    Call<String> imageUpload(@Field("IMAGE") String image,@Field("NAME") String imageName,
+                             @Field("CASENO") String caseNo, @Field("CASETYPE") String PASS, @Field("PDANO") String pdaNo);
+
+    @POST("exitcase.php")
+    Call<String> exit(@Field("CASENO") String ID, @Field("CASETYPE") String PASS);
 
 
 }

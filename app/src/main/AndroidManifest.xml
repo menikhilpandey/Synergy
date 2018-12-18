@@ -24,7 +24,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="@string/file_provider_authority"
@@ -35,7 +34,7 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <activity android:name=".PhotoActivity">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +43,8 @@
         </activity>
         <activity android:name=".Assignments.AssignmentChoose" />
         <activity android:name=".Assignments.BusinessActivity" />
-        <!--<activity android:name=".PhotoActivity"></activity>-->
+         <activity android:name=".PhotoActivity"></activity>
+        <!--<activity android:name=".BusinessHelper"></activity>-->
     </application>
 
 </manifest>

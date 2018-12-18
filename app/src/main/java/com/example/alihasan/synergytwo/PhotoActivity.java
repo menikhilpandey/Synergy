@@ -26,8 +26,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Adapters.AppExecutor;
+import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
+import com.example.alihasan.synergytwo.api.service.Client;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,6 +41,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class PhotoActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -45,13 +54,11 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.alihasan.synergytwo.fileprovider";
 
+    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
+
     private String mTempPhotoPath;
 
-    private AppExecutor mAppExcutor;
-
     private Bitmap mResultsBitmap;
-
-    static String SERVER_URL = "http://142.93.217.100/repignite/android/";
 
     File photoFile = null;
 
@@ -61,12 +68,17 @@ public class PhotoActivity extends AppCompatActivity {
 
     TextView tv;
 
+    Intent i = getIntent();
+    String caseNo = i.getStringExtra("CASENO");
+    String ACTIVITY = i.getStringExtra("TYPEOFCASE");
+    String userName = i.getStringExtra("USERANAME");
+
+    static String globalImageFileName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-
-        mAppExcutor = new AppExecutor();
 
         tv = findViewById(R.id.textView);
 
@@ -90,6 +102,17 @@ public class PhotoActivity extends AppCompatActivity {
                     // Launch the camera if the permission exists
                     launchCamera();
                 }
+            }
+        });
+
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                retrofitExit(caseNo,ACTIVITY);
+
+                Intent backToAssignmentChoose = new Intent(PhotoActivity.this,AssignmentChoose.class);
+                startActivity(backToAssignmentChoose);
             }
         });
 
@@ -150,12 +173,18 @@ public class PhotoActivity extends AppCompatActivity {
         // Resample the saved image to fit the ImageView
         mResultsBitmap = resamplePic(this, mTempPhotoPath);
 
-        tv.setText(base64conversion(photoFile));
+//        tv.setText(base64conversion(photoFile));
+//
+//        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setType("text/plain");
+//        intent.putExtra(Intent.EXTRA_TEXT, base64conversion(photoFile));
+//        startActivity(intent);
 
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, base64conversion(photoFile));
-        startActivity(intent);
+        /**
+         * UPLOAD IMAGE USING RETROFIT
+         */
+
+        retroFitHelper(base64conversion(photoFile));
 
         // Set the new bitmap to the ImageView
         imageView.setImageBitmap(mResultsBitmap);
@@ -163,6 +192,71 @@ public class PhotoActivity extends AppCompatActivity {
 
     public void retroFitHelper(String encodedImage)
     {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,caseNo,ACTIVITY,userName);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body() == "Success")
+                {
+                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
+    }
+
+    public  void retrofitExit(String caseNo, String caseType){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.exit(caseNo,caseType);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body() == "Success")
+                {
+                    Toast.makeText(getApplicationContext(), "COMPLETED", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
 
     }
 
@@ -211,6 +305,9 @@ public class PhotoActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         String imageFileName = "AZTEK" + timeStamp + "_";
+
+        globalImageFileName = imageFileName;
+
         File storageDir = context.getExternalCacheDir();
 
         return File.createTempFile(

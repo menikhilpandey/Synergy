@@ -1,5 +1,6 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+//import com.example.alihasan.synergytwo.BusinessHelper;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.BusinessModel;
@@ -48,33 +49,59 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BusinessActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://142.93.217.100/repignite/android/";
+    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
 
     /**
-     * 21 fields
-     * 13 EditText
-     * 8 Spinners
+     * 29 ELEMENTS
+     * 18 EDITTEXTS
+     * 11 SPINNER
      */
-    EditText desigAppl,perCont,desig,contact,offTele,namebusiness,bussNature,years,
-            noEmployee,noBranches,appnamever,empsighted,remarks;
 
-    String sdesigAppl,sperCont,sdesig,scontact,soffTele,snamebusiness,sbussNature,
-            syears,snoEmployee,snoBranches,sappnamever,sempsighted,sremarks;
+    EditText caseNo;
 
-    Spinner typeCompany,vcard,nameboard,ambience,
-            exterior,easeToLoc,bact,polaffl,recomm;
+    EditText applName,address, contactNo, compName,
+            businessNature, designation, workingSince,
+            personContacted, desigPersonMet, empNo,
+            landmark, branchNo, yearsPresentAdd,
+            conVer1, conVer2, addProofDetail;
 
-    String stypeCompany,svcard,snameboard,sambience,
-            sexterior,seaseToLoc,sbact,spolaffl,srecomm;
+    Spinner pdaNoSpinner, easeLocSpinner, offOwnershipSpinner,
+            localityTypeSpinner, businessSetupSpinner, businessBoardSpinner,
+            visCardSpinner,applVeriFrom, conVeriFeed,
+            polLinkSpinner, overallStatusSpinner,reasonNegativeSpinner;
 
+    /**
+     * EDITTEXT AND SPINNER
+     * STRING VALUES
+     */
+
+    String sapplName,saddress, scontactNo, scompName,
+            sbusinessNature, sdesignation, sworkingSince,
+            spersonContacted, sdesigContacted, sempNo,
+            slandmark, sbranchNo, syearsPresentAdd,
+            sconVer1, sconVer2, saddProofDetail;
+
+    String spdaNoSpinner, seaseLocSpinner, soffOwnershipSpinner,
+            slocalityTypeSpinner, sbusinessSetupSpinner, sbusinessBoardSpinner,
+            svisCardSpinner,sapplVeriFrom, sconVeriFeed,
+            spolLinkSpinner, soverallStatusSpinner,sreasonNegativeSpinner;
+    /**
+     * SPINNER ADAPTER
+     */
+    ArrayAdapter<CharSequence> spdaNoSpinnerAdapter, seaseLocSpinnerAdapter,
+            soffOwnershipSpinnerAdapter, slocalityTypeSpinnerAdapter,
+            sbusinessSetupSpinnerAdapter, sbusinessBoardSpinnerAdapter,
+            svisCardSpinnerAdapter,sapplVeriFromAdapter, sconVeriFeedAdapter,
+            spolLinkSpinnerAdapter, soverallStatusSpinnerAdapter,sreasonNegativeSpinnerAdapter;
+
+    /**
+     * LOCATION VARIABLES
+     */
     String slongi,slati;
 
-    ArrayAdapter<CharSequence> typecompadapter,vcardadapter, nameBoardadapter,ambienceadapter,
-            exterioradapter,locateadapter,bactadapter,polaffladapter,recommadapter;
+    ProgressDialog dialog;
 
     Button nextButton, locationButton;
-
-    ProgressDialog dialog;
 
     TextView lat,lng;
     public static final int LOCATION_REQ_CODE = 100;
@@ -83,46 +110,111 @@ public class BusinessActivity extends AppCompatActivity {
     private double longitude = 0;
 
     Intent i = getIntent();
-    String caseNo = i.getStringExtra("CASENO");
+    //    String StringCaseNo = i.getStringExtra("CASENO");
+//    String userName = i.getStringExtra("USERNAME");
+    String StringCaseNo = "StringCaseNo";
+    String userName = "userName";
+
+
+    String BUSINESS_ACTIVITY = "BUSINESS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
 
-        //EditText desigAppl,perCont,desig,contact,offTele,namebusiness,bussNature,years,
-        //            noEmployee,noBranches,appnamever,empsighted,remarks;
+        //        EDITTEXTS
+        applName = findViewById(R.id.applName);
+        address = findViewById(R.id.address) ;
+        contactNo = findViewById(R.id.contactNo);
+        compName = findViewById(R.id.compName);
+        businessNature = findViewById(R.id.businessNature);
+        designation = findViewById(R.id.designation);
+        workingSince = findViewById(R.id.workingSince);
+        personContacted = findViewById(R.id.personContacted);
+        desigPersonMet = findViewById(R.id.desigPersonMet);
+        empNo = findViewById(R.id.empNo);
+        landmark = findViewById(R.id.landmark);branchNo = findViewById(R.id.branchNo);
+        yearsPresentAdd = findViewById(R.id.yearsPresentAdd);
+        conVer1 = findViewById(R.id.conVer1);
+        conVer2 = findViewById(R.id.conVer2);
+        addProofDetail = findViewById(R.id.addProofDetail);
 
-        desigAppl = (EditText) findViewById(R.id.persondesignation);
-        perCont = (EditText) findViewById(R.id.perContacted);
-        desig = (EditText) findViewById(R.id.designationeditText);
-        contact = (EditText)findViewById(R.id.phoneeditText);
-        offTele = (EditText)findViewById(R.id.offteleditText);
-        namebusiness = (EditText)findViewById(R.id.namebusiness);
-        bussNature = (EditText)findViewById(R.id.busnatureeditText);
-        years = (EditText)findViewById(R.id.yearseditText);
-        noEmployee = (EditText)findViewById(R.id.EmpeditText);
-        noBranches = (EditText) findViewById(R.id.noOfbranches);
-        appnamever = (EditText) findViewById(R.id.app_verifired_whom);
-        empsighted = (EditText) findViewById(R.id.no_emp_in_prem);
-        remarks = (EditText) findViewById(R.id.OtherRemarkseditText);
+//        SPINNERS
+        pdaNoSpinner = findViewById(R.id.pdaNoSpinner);
+        easeLocSpinner = findViewById(R.id.easeLocSpinner);
+        offOwnershipSpinner = findViewById(R.id.offOwnershipSpinner);
+        localityTypeSpinner = findViewById(R.id.localityTypeSpinner);
+        businessSetupSpinner = findViewById(R.id.businessSetupSpinner);
+        businessBoardSpinner = findViewById(R.id.businessBoardSpinner);
+        visCardSpinner = findViewById(R.id.visCardSpinner);
+        applVeriFrom = findViewById(R.id.applVeriFrom);
+        conVeriFeed = findViewById(R.id.conVeriFeedSpinner);
+        polLinkSpinner = findViewById(R.id.polLinkSpinner);
+        overallStatusSpinner = findViewById(R.id.overallStatusSpinner);
+        reasonNegativeSpinner = findViewById(R.id.reasonNegativeSpinner);
 
+        nextButton = findViewById(R.id.nextButton);
+        locationButton = findViewById(R.id.locationButton);
 
-        nameboard = (Spinner)findViewById(R.id.nameboard);
-        ambience = (Spinner) findViewById(R.id.amb_office);
-        exterior = (Spinner) findViewById(R.id.exterior);
-        easeToLoc = (Spinner) findViewById(R.id.easy_locate);
-        bact = (Spinner) findViewById(R.id.business_activity);
-        typeCompany= (Spinner) findViewById(R.id.spinnecompanytyper);
-        vcard = (Spinner) findViewById(R.id.vcardspinner);
-        recomm = (Spinner)findViewById(R.id.recomm);
+        lat = findViewById(R.id.lat);
+        lng = findViewById(R.id.lng);
 
-        nextButton = (Button) findViewById(R.id.nextButton);
-        locationButton = (Button) findViewById(R.id.locationButton);
+        /**
+         * SETTING SPINNER ADAPTERS
+         */
 
-        lat = (TextView) findViewById(R.id.lat);
-        lng = (TextView) findViewById(R.id.lng);
+        spdaNoSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.pda, R.layout.support_simple_spinner_dropdown_item);
+        spdaNoSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        pdaNoSpinner.setAdapter(spdaNoSpinnerAdapter);
 
+        seaseLocSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.easy_locate, R.layout.support_simple_spinner_dropdown_item);
+        seaseLocSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        easeLocSpinner.setAdapter(seaseLocSpinnerAdapter);
+
+        soffOwnershipSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.offOwnership, R.layout.support_simple_spinner_dropdown_item);
+        soffOwnershipSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        offOwnershipSpinner.setAdapter(soffOwnershipSpinnerAdapter);
+
+        slocalityTypeSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.typeOfLocality, R.layout.support_simple_spinner_dropdown_item);
+        slocalityTypeSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        localityTypeSpinner.setAdapter(slocalityTypeSpinnerAdapter);
+
+        sbusinessSetupSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.busiSetup, R.layout.support_simple_spinner_dropdown_item);
+        sbusinessSetupSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        businessSetupSpinner.setAdapter(sbusinessSetupSpinnerAdapter);
+
+        sbusinessBoardSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.busiBoard, R.layout.support_simple_spinner_dropdown_item);
+        sbusinessBoardSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        businessBoardSpinner.setAdapter(sbusinessBoardSpinnerAdapter);
+
+        svisCardSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.visCard, R.layout.support_simple_spinner_dropdown_item);
+        svisCardSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        visCardSpinner.setAdapter(svisCardSpinnerAdapter);
+
+        sapplVeriFromAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.appliNameVeriFrom, R.layout.support_simple_spinner_dropdown_item);
+        sapplVeriFromAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        applVeriFrom.setAdapter(sapplVeriFromAdapter);
+
+        sconVeriFeedAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.conVeriFeed, R.layout.support_simple_spinner_dropdown_item);
+        sconVeriFeedAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        conVeriFeed.setAdapter(sconVeriFeedAdapter);
+
+        spolLinkSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.polLink, R.layout.support_simple_spinner_dropdown_item);
+        spolLinkSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        polLinkSpinner.setAdapter(spolLinkSpinnerAdapter);
+
+        soverallStatusSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.overAllStatus, R.layout.support_simple_spinner_dropdown_item);
+        soverallStatusSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        overallStatusSpinner.setAdapter(soverallStatusSpinnerAdapter);
+
+        sreasonNegativeSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.negativeReason, R.layout.support_simple_spinner_dropdown_item);
+        sreasonNegativeSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        reasonNegativeSpinner.setAdapter(sreasonNegativeSpinnerAdapter);
+
+        /**
+         * END SETTING ADAPTERS
+         */
         /**
          * LOCATION BUTTON
          */
@@ -195,237 +287,47 @@ public class BusinessActivity extends AppCompatActivity {
         /**
          * LOCATION END
          */
+
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//                String sname,sdesig,scontact,soffTele,sbussNature,sYearCompany,snoEmployee,
-//                        sappnamever,snamebusiness,spdesig,sremarks,snoBranches,sempsighted;
+                spdaNoSpinner = pdaNoSpinner.getSelectedItem().toString();
+                seaseLocSpinner = easeLocSpinner.getSelectedItem().toString();
+                soffOwnershipSpinner = offOwnershipSpinner.getSelectedItem().toString();
+                slocalityTypeSpinner = localityTypeSpinner.getSelectedItem().toString();
+                sbusinessSetupSpinner = businessSetupSpinner.getSelectedItem().toString();
+                sbusinessBoardSpinner = businessBoardSpinner.getSelectedItem().toString();
+                svisCardSpinner = visCardSpinner.getSelectedItem().toString();
+                sapplVeriFrom = applVeriFrom.getSelectedItem().toString();
+                sconVeriFeed = conVeriFeed.getSelectedItem().toString();
+                spolLinkSpinner = polLinkSpinner.getSelectedItem().toString();
+                soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
+                sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
 
                 /**
-                 * SPINNER ADAPTERS
+                 * END OF ADAPTERS
                  */
 
-//                Spinner typeCompany,vcard,nameboard,ambience,
-//                        exterior,easeToLoc,bact,recomm;
-//
-//                String stypeCompany,svcard,snameboard,sambience,
-//                        sexterior,seaseToLoc,sbact,srecomm;
-
-                typecompadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.company, R.layout.support_simple_spinner_dropdown_item);
-                typecompadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                typeCompany.setAdapter(typecompadapter);
-                stypeCompany = typeCompany.getSelectedItem().toString();
-
-                vcardadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.name_board, R.layout.support_simple_spinner_dropdown_item);
-                vcardadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                vcard.setAdapter(nameBoardadapter);
-
-                vcard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                svcard = "YES";
-                                break;
-                            case 1:
-                                svcard = "NO";
-                                break;
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                nameBoardadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.name_board, R.layout.support_simple_spinner_dropdown_item);
-                nameBoardadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                nameboard.setAdapter(nameBoardadapter);
-
-                nameboard.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                snameboard = "YES";
-                                break;
-                            case 1:
-                                snameboard = "NO";
-                                break;
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                ambienceadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.ambience, R.layout.support_simple_spinner_dropdown_item);
-                ambienceadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                ambience.setAdapter(ambienceadapter);
-
-                ambience.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                sambience = "AVERAGE";
-                                break;
-                            case 1:
-                                sambience = "GOOD";
-                                break;
-                            case 2:
-                                sambience = "POOR";
-                                break;
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                exterioradapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.exteriors, R.layout.support_simple_spinner_dropdown_item);
-                exterioradapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                exterior.setAdapter(exterioradapter);
-
-                exterior.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                sexterior = "C1";
-                                break;
-                            case 1:
-                                sexterior = "C2";
-                                break;
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                locateadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.easy_locate, R.layout.support_simple_spinner_dropdown_item);
-                locateadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                easeToLoc.setAdapter(locateadapter);
-
-                easeToLoc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                seaseToLoc = "YES";
-                                break;
-                            case 1:
-                                seaseToLoc = "NO";
-                                break;
-                        }
-
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-                bactadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.business_Act, R.layout.support_simple_spinner_dropdown_item);
-                bactadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                bact.setAdapter(bactadapter);
-
-                bact.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                sbact = "HIGH";
-                                break;
-                            case 1:
-                                sbact = "MEDIUM";
-                                break;
-                            case 2:
-                                sbact = "LOW";
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                polaffladapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.aff_pol_party, R.layout.support_simple_spinner_dropdown_item);
-                polaffladapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                polaffl.setAdapter(polaffladapter);
-
-                polaffl.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        switch (i) {
-                            case 0:
-                                spolaffl = "YES";
-                                break;
-                            case 1:
-                                spolaffl = "NO";
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-
-                recommadapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.recom_or_not, R.layout.support_simple_spinner_dropdown_item);
-                recommadapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                recomm.setAdapter(recommadapter);
-                srecomm = recomm.getSelectedItem().toString();
-
-                /**
-                 * Spinner Adapter END
-                 */
-
-                /**
-                 * EDIT TEXTS
-                 */
-
-                sdesigAppl = desigAppl.getText().toString().trim();
-                sperCont = perCont.getText().toString().trim();
-                sdesig = desig.getText().toString().trim();
-                scontact = contact.getText().toString().trim();
-                soffTele = offTele.getText().toString().trim();
-                snamebusiness = namebusiness.getText().toString().trim();
-                sbussNature = bussNature.getText().toString().trim();
-                syears = years.getText().toString().trim();
-                snoEmployee = noEmployee.getText().toString().trim();
-                snoBranches = noBranches.getText().toString().trim();
-                sappnamever = appnamever.getText().toString().trim();
-                sempsighted = empsighted.getText().toString().trim();
-                sremarks = remarks.getText().toString().trim();
+                sapplName = applName.getText().toString().trim();
+                saddress = address.getText().toString().trim();
+                scontactNo = contactNo.getText().toString().trim();
+                scompName = compName.getText().toString().trim();
+                sbusinessNature = businessNature.getText().toString().trim();
+                sdesignation = designation.getText().toString().trim();
+                sworkingSince = workingSince.getText().toString().trim();
+                spersonContacted = personContacted.getText().toString().trim();
+                sdesigContacted = designation.getText().toString().trim();
+                sempNo = empNo.getText().toString().trim();
+                slandmark = landmark.getText().toString().trim();
+                sbranchNo = branchNo.getText().toString().trim();
+                syearsPresentAdd = yearsPresentAdd.getText().toString().trim();
+                sconVer1 = conVer1.getText().toString().trim();
+                sconVer2 = conVer2.getText().toString().trim();
+                saddProofDetail = addProofDetail.getText().toString().trim();
 
                 slati = lat.getText().toString().trim();
                 slongi = lng.getText().toString().trim();
-
 
                 /**
                  * EDIT TEXTS END
@@ -434,11 +336,14 @@ public class BusinessActivity extends AppCompatActivity {
                 //String stypeCompany,svcard,snameboard,sambience,
                 //            sexterior,seaseToLoc,sbact,srecomm;
 
-                BusinessModel data = new BusinessModel(sdesigAppl,sperCont,
-                        sdesig,scontact,soffTele,snamebusiness,sbussNature,syears,
-                        stypeCompany,svcard,snoEmployee,snoBranches,snameboard,
-                        sambience,sexterior,sappnamever,sbact,sempsighted,
-                        spolaffl,srecomm,srecomm,slati,slongi);
+                BusinessModel data = new BusinessModel(StringCaseNo, scompName,
+                        sbusinessNature, sdesignation, sworkingSince,
+                        spersonContacted, sdesigContacted, sempNo,
+                        slandmark, sbranchNo, syearsPresentAdd,
+                        sconVer1, sconVer2, saddProofDetail,spdaNoSpinner, seaseLocSpinner, soffOwnershipSpinner,
+                        slocalityTypeSpinner, sbusinessSetupSpinner, sbusinessBoardSpinner,
+                        svisCardSpinner,sapplVeriFrom, sconVeriFeed,
+                        spolLinkSpinner, soverallStatusSpinner,sreasonNegativeSpinner,slati,slongi);
 
                 /**
                  * RETROFIT MAGIC
@@ -447,7 +352,6 @@ public class BusinessActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 
@@ -460,25 +364,37 @@ public class BusinessActivity extends AppCompatActivity {
 
         Client client = retrofit.create(Client.class);
 
-        Call<ArrayList<BusinessModel>> call = client.sendBusinessData(data);
+        Call<String> call = client.sendBusinessData(data);
 
-        call.enqueue(new Callback<ArrayList<BusinessModel>>() {
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<ArrayList<BusinessModel>> call, Response<ArrayList<BusinessModel>> response) {
-                Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
-                /**
-                 * Will receive something to verify
-                 * successful upload to table
-                 */
+            public void onResponse(Call<String> call, Response<String> response) {
 
-                Intent intent = new Intent(BusinessActivity.this,PhotoActivity.class);
-                intent.putExtra("CASENO",caseNo);
-                startActivity(intent);
+                if(response.body() == "Success") {
+
+                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
+                    /**
+                     * Will receive something to verify
+                     * successful upload to table
+                     */
+
+                    Intent intent = new Intent(BusinessActivity.this, PhotoActivity.class);
+                    intent.putExtra("CASENO", StringCaseNo);
+                    intent.putExtra("USERNAME", userName);
+                    intent.putExtra("TYPEOFCASE", BUSINESS_ACTIVITY);
+
+                    startActivity(intent);
+                }
+
+                else
+                    {
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<BusinessModel>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "FAILURE SENDING DATA", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
             }
         });
     }

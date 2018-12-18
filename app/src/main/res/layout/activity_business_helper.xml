@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Assignments.BusinessActivity">
+    tools:context=".BusinessHelper">
 
     <View
         android:layout_width="match_parent"
@@ -69,7 +69,6 @@
 
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -91,8 +90,6 @@
                         />
                 </LinearLayout>
                 <EditText
-                    android:visibility="gone"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/applName"
@@ -103,8 +100,6 @@
                 <!--NEXT-->
 
                 <LinearLayout
-                    android:visibility="gone"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -126,8 +121,6 @@
                         />
                 </LinearLayout>
                 <EditText
-                    android:visibility="gone"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/address"
@@ -138,8 +131,6 @@
                 <!--Contact-->
 
                 <LinearLayout
-                    android:visibility="gone"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -162,8 +153,6 @@
                         />
                 </LinearLayout>
                 <EditText
-                    android:visibility="gone"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/contactNo"
@@ -178,8 +167,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="gone"
-
                     >
                     <TextView
                         android:layout_width="wrap_content"
@@ -198,8 +185,6 @@
                         />
                 </LinearLayout>
                 <Spinner
-                    android:visibility="gone"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="50dp"

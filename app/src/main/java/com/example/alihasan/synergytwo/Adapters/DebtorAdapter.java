@@ -19,10 +19,12 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
     Context context;
     ArrayList<Debtor> debtorList = new ArrayList<Debtor>();
+    static String userName;
 
-    public DebtorAdapter(Context context, ArrayList<Debtor> debtorList) {
+    public DebtorAdapter(Context context, ArrayList<Debtor> debtorList, String userName) {
         this.context = context;
         this.debtorList = debtorList;
+        this.userName = userName;
     }
 
     @NonNull
@@ -74,6 +76,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             if(typeCase.getText().toString().equals("BUSINESS")) {
                 Intent intent = new Intent(this.context, BusinessActivity.class);
                 intent.putExtra("CASENO",caseNo.getText().toString());
+                intent.putExtra("USERNAME",userName);
                 context.startActivity(intent);
             }
         }

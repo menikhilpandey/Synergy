@@ -1,59 +1,200 @@
 package com.example.alihasan.synergytwo.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class BusinessModel {
 
-    private String desigAppl, personContacted,
-            desig, contact,
-            officeTele, busiName,
-            busiNature, years,
-            companyType, visCard,
-            noOfEmp, noOfBranches,
-            nameBoard, offiAmbi,
-            exterior, nameVeri,
-            busiActivity, empSighted,
-            politicalParty, recom,
-            remark, slat, slongi;
+//    private String applName;
+//
+//    private String address;
+//
+//    private String contactNo;
 
-    public BusinessModel(String desigAppl, String personContacted,
-                         String desig, String contact,
-                         String officeTele, String busiName,
-                         String busiNature, String years,
-                         String companyType, String visCard,
-                         String noOfEmp, String noOfBranches,
-                         String nameBoard, String offiAmbi,
-                         String exterior, String nameVeri,
-                         String busiActivity, String empSighted,
-                         String politicalParty, String recom,
-                         String remark, String slat, String slongi) {
-        this.desigAppl = desigAppl;
+    @SerializedName("CASENO")
+    private String caseNo;
+
+    @SerializedName("APPLCOMPANYNAME")
+    private String compName;
+
+    @SerializedName("NATUREBUSNIESS")
+    private String businessNature;
+
+    @SerializedName("APPLDESIGNATION")
+    private String designation;
+
+    @SerializedName("WORKINGSINCE")
+    private String workingSince;
+
+    @SerializedName("PERSONCONTACTED")
+    private String personContacted;
+
+    @SerializedName("PERSONDESIGNATION")
+    private String desigPersonMet;
+
+    @SerializedName("NOSEMP")
+    private String empNo;
+
+    @SerializedName("LANDMARK")
+    private String landmark;
+
+    @SerializedName("NOSBRANCHES")
+    private String branchNo;
+
+    @SerializedName("NOSYEARSATADDRESS")
+    private String yearsPresentAdd;
+
+    @SerializedName("CONTACTVERIF1")
+    private String conVer1;
+
+    @SerializedName("CONTACTVERIF2")
+    private String conVer2;
+
+    @SerializedName("PROOFDETAILS")
+    private String addProofDetail;
+
+    private String pdaNoSpinner;
+
+    @SerializedName("EASELOCATE")
+    private String easeLocSpinner;
+
+    @SerializedName("OFFICEOWNERSHIP")
+    private String offOwnershipSpinner;
+
+    @SerializedName("LOCALITYTYPE")
+    private String localityTypeSpinner;
+
+    @SerializedName("BUSINESSSETUP")
+    private String businessSetupSpinner;
+
+    @SerializedName("BUSINESSBOARD")
+    private String businessBoardSpinner;
+
+    @SerializedName("VISITINGCARD")
+    private String visCardSpinner;
+
+    @SerializedName("APPLNAMEVERIFFROM")
+    private String applVeriFrom;
+
+    @SerializedName("CONTACTFEEDBACK")
+    private String conVeriFeed;
+
+    @SerializedName("POLITICALLINK")
+    private String polLinkSpinner;
+
+    @SerializedName("OVERALLSTATUS")
+    private String overallStatusSpinner;
+
+    @SerializedName("REASONNEGATIVEFI")
+    private String reasonNegativeSpinner;
+
+    @SerializedName("LATITUDE")
+    private String lattitude;
+
+    @SerializedName("LONGITUDE")
+    private String longitude;
+
+    public BusinessModel(String caseNo, String compName,
+                         String businessNature, String designation, String workingSince, String personContacted, String desigPersonMet,
+                         String empNo, String landmark, String branchNo, String yearsPresentAdd, String conVer1, String conVer2,
+                         String addProofDetail, String pdaNoSpinner, String easeLocSpinner, String offOwnershipSpinner,
+                         String localityTypeSpinner, String businessSetupSpinner, String businessBoardSpinner, String visCardSpinner,
+                         String applVeriFrom, String conVeriFeed, String polLinkSpinner, String overallStatusSpinner,
+                         String reasonNegativeSpinner, String lattitude, String longitude) {
+        this.caseNo = caseNo;
+//        this.applName = applName;
+//        this.address = address;
+//        this.contactNo = contactNo;
+        this.compName = compName;
+        this.businessNature = businessNature;
+        this.designation = designation;
+        this.workingSince = workingSince;
         this.personContacted = personContacted;
-        this.desig = desig;
-        this.contact = contact;
-        this.officeTele = officeTele;
-        this.busiName = busiName;
-        this.busiNature = busiNature;
-        this.years = years;
-        this.companyType = companyType;
-        this.visCard = visCard;
-        this.noOfEmp = noOfEmp;
-        this.noOfBranches = noOfBranches;
-        this.nameBoard = nameBoard;
-        this.offiAmbi = offiAmbi;
-        this.exterior = exterior;
-        this.nameVeri = nameVeri;
-        this.busiActivity = busiActivity;
-        this.empSighted = empSighted;
-        this.politicalParty = politicalParty;
-        this.recom = recom;
-        this.remark = remark;
+        this.desigPersonMet = desigPersonMet;
+        this.empNo = empNo;
+        this.landmark = landmark;
+        this.branchNo = branchNo;
+        this.yearsPresentAdd = yearsPresentAdd;
+        this.conVer1 = conVer1;
+        this.conVer2 = conVer2;
+        this.addProofDetail = addProofDetail;
+        this.pdaNoSpinner = pdaNoSpinner;
+        this.easeLocSpinner = easeLocSpinner;
+        this.offOwnershipSpinner = offOwnershipSpinner;
+        this.localityTypeSpinner = localityTypeSpinner;
+        this.businessSetupSpinner = businessSetupSpinner;
+        this.businessBoardSpinner = businessBoardSpinner;
+        this.visCardSpinner = visCardSpinner;
+        this.applVeriFrom = applVeriFrom;
+        this.conVeriFeed = conVeriFeed;
+        this.polLinkSpinner = polLinkSpinner;
+        this.overallStatusSpinner = overallStatusSpinner;
+        this.reasonNegativeSpinner = reasonNegativeSpinner;
+        this.lattitude = lattitude;
+        this.longitude = longitude;
     }
 
-    public String getDesigAppl() {
-        return desigAppl;
+    public String getCaseNo() {
+        return caseNo;
     }
 
-    public void setDesigAppl(String desigAppl) {
-        this.desigAppl = desigAppl;
+    public void setCaseNo(String caseNo) {
+        this.caseNo = caseNo;
+    }
+
+//    public String getApplName() {
+//        return applName;
+//    }
+//
+//    public void setApplName(String applName) {
+//        this.applName = applName;
+//    }
+//
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(String address) {
+//        this.address = address;
+//    }
+//
+//    public String getContactNo() {
+//        return contactNo;
+//    }
+//
+//    public void setContactNo(String contactNo) {
+//        this.contactNo = contactNo;
+//    }
+
+    public String getCompName() {
+        return compName;
+    }
+
+    public void setCompName(String compName) {
+        this.compName = compName;
+    }
+
+    public String getBusinessNature() {
+        return businessNature;
+    }
+
+    public void setBusinessNature(String businessNature) {
+        this.businessNature = businessNature;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getWorkingSince() {
+        return workingSince;
+    }
+
+    public void setWorkingSince(String workingSince) {
+        this.workingSince = workingSince;
     }
 
     public String getPersonContacted() {
@@ -64,171 +205,189 @@ public class BusinessModel {
         this.personContacted = personContacted;
     }
 
-    public String getDesig() {
-        return desig;
+    public String getDesigPersonMet() {
+        return desigPersonMet;
     }
 
-    public void setDesig(String desig) {
-        this.desig = desig;
+    public void setDesigPersonMet(String desigPersonMet) {
+        this.desigPersonMet = desigPersonMet;
     }
 
-    public String getContact() {
-        return contact;
+    public String getEmpNo() {
+        return empNo;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setEmpNo(String empNo) {
+        this.empNo = empNo;
     }
 
-    public String getOfficeTele() {
-        return officeTele;
+    public String getLandmark() {
+        return landmark;
     }
 
-    public void setOfficeTele(String officeTele) {
-        this.officeTele = officeTele;
+    public void setLandmark(String landmark) {
+        this.landmark = landmark;
     }
 
-    public String getBusiName() {
-        return busiName;
+    public String getBranchNo() {
+        return branchNo;
     }
 
-    public void setBusiName(String busiName) {
-        this.busiName = busiName;
+    public void setBranchNo(String branchNo) {
+        this.branchNo = branchNo;
     }
 
-    public String getBusiNature() {
-        return busiNature;
+    public String getYearsPresentAdd() {
+        return yearsPresentAdd;
     }
 
-    public void setBusiNature(String busiNature) {
-        this.busiNature = busiNature;
+    public void setYearsPresentAdd(String yearsPresentAdd) {
+        this.yearsPresentAdd = yearsPresentAdd;
     }
 
-    public String getYears() {
-        return years;
+    public String getConVer1() {
+        return conVer1;
     }
 
-    public void setYears(String years) {
-        this.years = years;
+    public void setConVer1(String conVer1) {
+        this.conVer1 = conVer1;
     }
 
-    public String getCompanyType() {
-        return companyType;
+    public String getConVer2() {
+        return conVer2;
     }
 
-    public void setCompanyType(String companyType) {
-        this.companyType = companyType;
+    public void setConVer2(String conVer2) {
+        this.conVer2 = conVer2;
     }
 
-    public String getVisCard() {
-        return visCard;
+    public String getAddProofDetail() {
+        return addProofDetail;
     }
 
-    public void setVisCard(String visCard) {
-        this.visCard = visCard;
+    public void setAddProofDetail(String addProofDetail) {
+        this.addProofDetail = addProofDetail;
     }
 
-    public String getNoOfEmp() {
-        return noOfEmp;
+    public String getPdaNoSpinner() {
+        return pdaNoSpinner;
     }
 
-    public void setNoOfEmp(String noOfEmp) {
-        this.noOfEmp = noOfEmp;
+    public void setPdaNoSpinner(String pdaNoSpinner) {
+        this.pdaNoSpinner = pdaNoSpinner;
     }
 
-    public String getNoOfBranches() {
-        return noOfBranches;
+    public String getEaseLocSpinner() {
+        return easeLocSpinner;
     }
 
-    public void setNoOfBranches(String noOfBranches) {
-        this.noOfBranches = noOfBranches;
+    public void setEaseLocSpinner(String easeLocSpinner) {
+        this.easeLocSpinner = easeLocSpinner;
     }
 
-    public String getNameBoard() {
-        return nameBoard;
+    public String getOffOwnershipSpinner() {
+        return offOwnershipSpinner;
     }
 
-    public void setNameBoard(String nameBoard) {
-        this.nameBoard = nameBoard;
+    public void setOffOwnershipSpinner(String offOwnershipSpinner) {
+        this.offOwnershipSpinner = offOwnershipSpinner;
     }
 
-    public String getOffiAmbi() {
-        return offiAmbi;
+    public String getLocalityTypeSpinner() {
+        return localityTypeSpinner;
     }
 
-    public void setOffiAmbi(String offiAmbi) {
-        this.offiAmbi = offiAmbi;
+    public void setLocalityTypeSpinner(String localityTypeSpinner) {
+        this.localityTypeSpinner = localityTypeSpinner;
     }
 
-    public String getExterior() {
-        return exterior;
+    public String getBusinessSetupSpinner() {
+        return businessSetupSpinner;
     }
 
-    public void setExterior(String exterior) {
-        this.exterior = exterior;
+    public void setBusinessSetupSpinner(String businessSetupSpinner) {
+        this.businessSetupSpinner = businessSetupSpinner;
     }
 
-    public String getNameVeri() {
-        return nameVeri;
+    public String getBusinessBoardSpinner() {
+        return businessBoardSpinner;
     }
 
-    public void setNameVeri(String nameVeri) {
-        this.nameVeri = nameVeri;
+    public void setBusinessBoardSpinner(String businessBoardSpinner) {
+        this.businessBoardSpinner = businessBoardSpinner;
     }
 
-    public String getBusiActivity() {
-        return busiActivity;
+    public String getVisCardSpinner() {
+        return visCardSpinner;
     }
 
-    public void setBusiActivity(String busiActivity) {
-        this.busiActivity = busiActivity;
+    public void setVisCardSpinner(String visCardSpinner) {
+        this.visCardSpinner = visCardSpinner;
     }
 
-    public String getEmpSighted() {
-        return empSighted;
+    public String getApplVeriFrom() {
+        return applVeriFrom;
     }
 
-    public void setEmpSighted(String empSighted) {
-        this.empSighted = empSighted;
+    public void setApplVeriFrom(String applVeriFrom) {
+        this.applVeriFrom = applVeriFrom;
     }
 
-    public String getPoliticalParty() {
-        return politicalParty;
+    public String getConVeriFeed() {
+        return conVeriFeed;
     }
 
-    public void setPoliticalParty(String politicalParty) {
-        this.politicalParty = politicalParty;
+    public void setConVeriFeed(String conVeriFeed) {
+        this.conVeriFeed = conVeriFeed;
     }
 
-    public String getRecom() {
-        return recom;
+    public String getPolLinkSpinner() {
+        return polLinkSpinner;
     }
 
-    public void setRecom(String recom) {
-        this.recom = recom;
+    public void setPolLinkSpinner(String polLinkSpinner) {
+        this.polLinkSpinner = polLinkSpinner;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getOverallStatusSpinner() {
+        return overallStatusSpinner;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setOverallStatusSpinner(String overallStatusSpinner) {
+        this.overallStatusSpinner = overallStatusSpinner;
     }
 
-    public String getSlat() {
-        return slat;
+    public String getReasonNegativeSpinner() {
+        return reasonNegativeSpinner;
     }
 
-    public void setSlat(String slat) {
-        this.slat = slat;
+    public void setReasonNegativeSpinner(String reasonNegativeSpinner) {
+        this.reasonNegativeSpinner = reasonNegativeSpinner;
     }
 
-    public String getSlongi() {
-        return slongi;
+    public String getLattitude() {
+        return lattitude;
     }
 
-    public void setSlongi(String slongi) {
-        this.slongi = slongi;
+    public void setLattitude(String lattitude) {
+        this.lattitude = lattitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }
+
+/*
+public BusinessModel(String caseNo, String applName, String address, String contactNo, String compName,
+                         String businessNature, String designation, String workingSince, String personContacted, String desigPersonMet,
+                         String empNo, String landmark, String branchNo, String yearsPresentAdd, String conVer1, String conVer2,
+                         String addProofDetail, String pdaNoSpinner, String easeLocSpinner, String offOwnershipSpinner,
+                         String localityTypeSpinner, String businessSetupSpinner, String businessBoardSpinner, String visCardSpinner,
+                         String applVeriFrom, String conVeriFeed, String polLinkSpinner, String overallStatusSpinner,
+                         String reasonNegativeSpinner, String lattitude, String longitude) {
+ */

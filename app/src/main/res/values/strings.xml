@@ -5,6 +5,82 @@
 
     <string name="error">Error finding image</string>
 
+    <string-array name="offOwnership">
+        <item>OWNED</item>
+        <item>RENTED</item>
+        <item>LEASED</item>
+        <item>OTHER</item>
+    </string-array>
+
+    <string-array name="busiSetup">
+        <item>YES</item>
+        <item>NO</item>
+        <item>NA</item>
+    </string-array>
+
+    <string-array name="overAllStatus">
+        <item>RECOMMENDED</item>
+        <item>NOT RECOMMENDED</item>
+        <item>REFFERAL</item>
+    </string-array>
+
+    <string-array name="polLink">
+        <item>YES</item>
+        <item>NO</item>
+        <item>NA</item>
+    </string-array>
+
+    <string-array name="negativeReason">
+        <item>NA</item>
+        <item>POOR LIVING CONITION</item>
+        <item>NEGATIVE AREA</item>
+        <item>DOOR LOCKED</item>
+        <item>PERSON DOES NOT  EXIST</item>
+        <item>NOT READY TO COOPERATE</item>
+        <item>DEAFULTER</item>
+        <item>BAD MARKET REPUTATION</item>
+        <item>ADDRESS NOT TRACEABLE</item>
+        <item>NOT EXIST</item>
+        <item>DETAILS MISMATCH</item>
+        <item>NEGATIVE INFO</item>
+        <item>ANY OTHER REASON</item>
+        <item>RESTRICTED AREA</item>
+        <item>STABILITY LESS THAN 1 YEAR</item>
+    </string-array>
+
+    <string-array name="conVeriFeed">
+        <item>KNOW THE APPLICANT</item>
+        <item>DO NOT KNOW THE APPLICANT</item>
+        <item>NA</item>
+    </string-array>
+
+    <string-array name="appliNameVeriFrom">
+        <item>SELF</item>
+        <item>CO WORKER</item>
+        <item>RECEPTION</item>
+        <item>SECURITY</item>
+        <item>OTHER</item>
+        <item>NA</item>
+    </string-array>
+
+    <string-array name="busiBoard">
+        <item>YES</item>
+        <item>NO</item>
+        <item>NA</item>
+    </string-array>
+
+    <string-array name="visCard">
+        <item>YES</item>
+        <item>NO</item>
+        <item>NA</item>
+    </string-array>
+
+    <string-array name="typeOfLocality">
+        <item>COMMERCIAL</item>
+        <item>RESIDENTIAL</item>
+        <item>RESI CUM COMMERCIAL</item>
+        <item>OTHERS</item>
+    </string-array>
 
     <string-array name="resstatus">
         <item>SELF OWNED</item>
@@ -71,6 +147,11 @@
         <item>MIDDLE CLASS</item>
         <item>RESIDENTIAL COMPLEX</item>
         <item>OTHERS</item>
+    </string-array>
+
+    <string-array name="pda">
+        <item>YES</item>
+        <item>NO</item>
     </string-array>
 
     <string-array name="name_board">
