@@ -10,6 +10,8 @@ public class BusinessModel {
 //
 //    private String contactNo;
 
+    private  String tableName;
+
     @SerializedName("CASENO")
     private String caseNo;
 
@@ -52,7 +54,7 @@ public class BusinessModel {
     @SerializedName("PROOFDETAILS")
     private String addProofDetail;
 
-    private String pdaNoSpinner;
+//    private String pdaNoSpinner;
 
     @SerializedName("EASELOCATE")
     private String easeLocSpinner;
@@ -93,13 +95,15 @@ public class BusinessModel {
     @SerializedName("LONGITUDE")
     private String longitude;
 
-    public BusinessModel(String caseNo, String compName,
+    public BusinessModel(String tableName,
+                         String caseNo, String compName,
                          String businessNature, String designation, String workingSince, String personContacted, String desigPersonMet,
                          String empNo, String landmark, String branchNo, String yearsPresentAdd, String conVer1, String conVer2,
-                         String addProofDetail, String pdaNoSpinner, String easeLocSpinner, String offOwnershipSpinner,
+                         String addProofDetail, String easeLocSpinner, String offOwnershipSpinner,
                          String localityTypeSpinner, String businessSetupSpinner, String businessBoardSpinner, String visCardSpinner,
                          String applVeriFrom, String conVeriFeed, String polLinkSpinner, String overallStatusSpinner,
                          String reasonNegativeSpinner, String lattitude, String longitude) {
+        this.tableName = tableName;
         this.caseNo = caseNo;
 //        this.applName = applName;
 //        this.address = address;
@@ -117,7 +121,7 @@ public class BusinessModel {
         this.conVer1 = conVer1;
         this.conVer2 = conVer2;
         this.addProofDetail = addProofDetail;
-        this.pdaNoSpinner = pdaNoSpinner;
+//        this.pdaNoSpinner = pdaNoSpinner;
         this.easeLocSpinner = easeLocSpinner;
         this.offOwnershipSpinner = offOwnershipSpinner;
         this.localityTypeSpinner = localityTypeSpinner;
@@ -131,6 +135,14 @@ public class BusinessModel {
         this.reasonNegativeSpinner = reasonNegativeSpinner;
         this.lattitude = lattitude;
         this.longitude = longitude;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public String getCaseNo() {
@@ -269,13 +281,13 @@ public class BusinessModel {
         this.addProofDetail = addProofDetail;
     }
 
-    public String getPdaNoSpinner() {
-        return pdaNoSpinner;
-    }
-
-    public void setPdaNoSpinner(String pdaNoSpinner) {
-        this.pdaNoSpinner = pdaNoSpinner;
-    }
+//    public String getPdaNoSpinner() {
+//        return pdaNoSpinner;
+//    }
+//
+//    public void setPdaNoSpinner(String pdaNoSpinner) {
+//        this.pdaNoSpinner = pdaNoSpinner;
+//    }
 
     public String getEaseLocSpinner() {
         return easeLocSpinner;

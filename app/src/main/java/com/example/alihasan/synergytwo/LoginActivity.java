@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
@@ -22,6 +23,10 @@ public class LoginActivity extends AppCompatActivity {
     Button loginButton;
     EditText userEditText;
     EditText passEditText;
+
+    /**
+     * TV
+     */
 
     static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
 
@@ -55,13 +60,17 @@ public class LoginActivity extends AppCompatActivity {
 
                 Client client = retrofit.create(Client.class);
 
+                strID = userEditText.getText().toString();
+                strPass = passEditText.getText().toString();
+
                 Call<String> call = client.getAuth(strID,strPass);
 
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
-                        if(response.body() == "Success")
+
+                        if(response.body().equals("Success"))
                         {
                             //ASSIGNMENT CHOOSE
                             Intent i = new Intent(LoginActivity.this,AssignmentChoose.class);
@@ -71,15 +80,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         else
                         {
-                            Toast.makeText(getApplicationContext(), "INVALID USER OR PASS", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "INV U/P" + response.body(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
                         Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
                     }
                 });
 

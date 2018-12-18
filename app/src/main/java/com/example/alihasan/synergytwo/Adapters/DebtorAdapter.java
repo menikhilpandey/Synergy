@@ -4,24 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.BusinessActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<Debtor> debtorList = new ArrayList<Debtor>();
+    List<Debtor> debtorList;
     static String userName;
 
-    public DebtorAdapter(Context context, ArrayList<Debtor> debtorList, String userName) {
+    public DebtorAdapter(Context context, List<Debtor> debtorList, String userName) {
         this.context = context;
         this.debtorList = debtorList;
         this.userName = userName;
@@ -55,9 +58,9 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
         TextView caseNo, applName, altTele, address, typeCase;
         Context context;
-        ArrayList<Debtor> data = new ArrayList<Debtor>();
+        List<Debtor> data;
 
-        public MyViewHolder(View itemView, Context context, ArrayList<Debtor> data) {
+        public MyViewHolder(View itemView, Context context, List<Debtor> data) {
             super(itemView);
             this.data = data;
             this.context = context;

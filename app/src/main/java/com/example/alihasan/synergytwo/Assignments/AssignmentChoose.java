@@ -3,8 +3,10 @@ package com.example.alihasan.synergytwo.Assignments;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Adapters.DebtorAdapter;
@@ -23,20 +25,29 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AssignmentChoose extends AppCompatActivity {
 
+//    ListView listview;
+
+
     private RecyclerView recyclerView;
     private DebtorAdapter mAdapter;
 
     static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
 
     Intent i = getIntent();
-    String pdaNo = i.getStringExtra("USERNAME");
+//    String pdaNo = i.getStringExtra("USERNAME");
+    String pdaNo = "PDA123";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_choose);
 
+//        listview = findViewById(R.id.listViewData);
         recyclerView = findViewById(R.id.recyclerView);
+
+        LinearLayoutManager manager = new LinearLayoutManager(AssignmentChoose.this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(true);
 
         /**
          * START OF RETROFIT
@@ -49,12 +60,36 @@ public class AssignmentChoose extends AppCompatActivity {
 
         Client client = retrofit.create(Client.class);
 
-        Call<ArrayList<Debtor>> call = client.getDebtors(pdaNo);
+        Call<List<Debtor>> call = client.getDebtors(pdaNo);
 
-        call.enqueue(new Callback<ArrayList<Debtor>>() {
+        call.enqueue(new Callback<List<Debtor>>() {
             @Override
-            public void onResponse(Call<ArrayList<Debtor>> call, Response<ArrayList<Debtor>> response) {
-                ArrayList<Debtor> dataList = response.body();
+            public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
+
+//                List<Debtor> dataList = response.body();
+//
+//                String[] names = new String[dataList.size()];
+//
+//                for(int i = 0 ; i < dataList.size() ; i++)
+//                {
+//                    names[i] = dataList.get(i).getApplName();
+//                }
+//
+//
+//                listview.setAdapter(new ArrayAdapter<>(
+//                        getApplicationContext(),
+//                        android.R.layout.simple_list_item_1, names));
+
+                //fniwnvrnpejnenjp
+
+                Toast.makeText(getApplicationContext(), "GOT RESPONSE", Toast.LENGTH_SHORT).show();
+
+//                Intent i = new Intent(android.content.Intent.ACTION_SEND);
+//                i.setType("text/plain");
+//                i.putExtra(android.content.Intent.EXTRA_TEXT, "HELLO" + response.body().toString());
+//                startActivity(i);
+
+                List<Debtor> dataList = response.body();
 
                 mAdapter = new DebtorAdapter(AssignmentChoose.this,dataList,pdaNo);
                 recyclerView.setAdapter(mAdapter);
@@ -78,7 +113,7 @@ public class AssignmentChoose extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Debtor>> call, Throwable t) {
+            public void onFailure(Call<List<Debtor>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "IN FAILURE"+ pdaNo, Toast.LENGTH_SHORT).show();
             }
         });

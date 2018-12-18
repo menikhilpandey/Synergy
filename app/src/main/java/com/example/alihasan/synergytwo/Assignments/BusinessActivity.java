@@ -110,13 +110,15 @@ public class BusinessActivity extends AppCompatActivity {
     private double longitude = 0;
 
     Intent i = getIntent();
-    //    String StringCaseNo = i.getStringExtra("CASENO");
+//        String StringCaseNo = i.getStringExtra("CASENO");
 //    String userName = i.getStringExtra("USERNAME");
-    String StringCaseNo = "StringCaseNo";
+    String StringCaseNo = "1234";
     String userName = "userName";
 
 
     String BUSINESS_ACTIVITY = "BUSINESS";
+
+    String TABLENAME = "cases-business";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -335,27 +337,49 @@ public class BusinessActivity extends AppCompatActivity {
 
                 //String stypeCompany,svcard,snameboard,sambience,
                 //            sexterior,seaseToLoc,sbact,srecomm;
-
-                BusinessModel data = new BusinessModel(StringCaseNo, scompName,
-                        sbusinessNature, sdesignation, sworkingSince,
-                        spersonContacted, sdesigContacted, sempNo,
-                        slandmark, sbranchNo, syearsPresentAdd,
-                        sconVer1, sconVer2, saddProofDetail,spdaNoSpinner, seaseLocSpinner, soffOwnershipSpinner,
-                        slocalityTypeSpinner, sbusinessSetupSpinner, sbusinessBoardSpinner,
-                        svisCardSpinner,sapplVeriFrom, sconVeriFeed,
-                        spolLinkSpinner, soverallStatusSpinner,sreasonNegativeSpinner,slati,slongi);
-
                 /**
                  * RETROFIT MAGIC
                  */
-                retroFitHelper(data);
+                retroFitHelper(TABLENAME,StringCaseNo,seaseLocSpinner,soffOwnershipSpinner,
+                        scompName,slocalityTypeSpinner, sbusinessNature, sdesignation, sworkingSince,
+                        spersonContacted, sdesigContacted, sempNo,
+                        slandmark, sbranchNo,sbusinessSetupSpinner, sbusinessBoardSpinner, syearsPresentAdd,
+                        svisCardSpinner,sapplVeriFrom,sconVer1, sconVer2,sconVeriFeed, saddProofDetail,
+                        spolLinkSpinner, soverallStatusSpinner,sreasonNegativeSpinner,slati,slongi);
 
             }
         });
 
     }
 
-    public void retroFitHelper(BusinessModel data)
+    public void retroFitHelper(final String TABLENAME,
+                               final String CASENO,
+                               final String EASELOCATE,
+                               final String OFFICEOWNERSHIP,
+                               final String APPLCOMPANYNAME,
+                               final String LOCALITYTYPE,
+                               final String NATUREBUSNIESS,
+                               final String APPLDESIGNATION,
+                               final String WORKINGSINCE,
+                               final String PERSONCONTACTED,
+                               final String PERSONDESIGNATION,
+                               final String NOSEMP,
+                               final String LANDMARK,
+                               final String NOSBRANCHES,
+                               final String BUSINESSSETUP,
+                               final String BUSINESSBOARD,
+                               final String NOSYEARSATADDRESS,
+                               final String VISITINGCARD,
+                               final String APPLNAMEVERIFFROM,
+                               final String CONTACTVERIF1,
+                               final String CONTACTVERIF2,
+                               final String CONTACTFEEDBACK,
+                               final String PROOFDETAILS,
+                               final String POLITICALLINK,
+                               final String OVERALLSTATUS,
+                               final String REASONNEGATIVEFI,
+                               final String LATITUDE,
+                               final String LONGITUDE)
     {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_URL)
@@ -364,13 +388,35 @@ public class BusinessActivity extends AppCompatActivity {
 
         Client client = retrofit.create(Client.class);
 
-        Call<String> call = client.sendBusinessData(data);
+        Call<String> call = client.sendBusinessData(TABLENAME, CASENO, EASELOCATE, OFFICEOWNERSHIP,
+                APPLCOMPANYNAME, LOCALITYTYPE, NATUREBUSNIESS,
+                APPLDESIGNATION, WORKINGSINCE, PERSONCONTACTED,
+                PERSONDESIGNATION, NOSEMP, LANDMARK, NOSBRANCHES,
+                BUSINESSSETUP, BUSINESSBOARD, NOSYEARSATADDRESS,
+                VISITINGCARD, APPLNAMEVERIFFROM, CONTACTVERIF1,
+                CONTACTVERIF2, CONTACTFEEDBACK, PROOFDETAILS,
+                POLITICALLINK, OVERALLSTATUS, REASONNEGATIVEFI,
+                LATITUDE, LONGITUDE);
 
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body() == "Success") {
+                Intent i = new Intent(android.content.Intent.ACTION_SEND);
+                i.setType("text/plain");
+//                i.putExtra(android.content.Intent.EXTRA_TEXT, " " + TABLENAME +"\n"+ CASENO +"\n"+ EASELOCATE+"\n"+ OFFICEOWNERSHIP+"\n"+
+//                        APPLCOMPANYNAME+"\n"+ LOCALITYTYPE+"\n"+ NATUREBUSNIESS+"\n"+
+//                        APPLDESIGNATION+"\n"+ WORKINGSINCE+"\n"+ PERSONCONTACTED+"\n"+
+//                        PERSONDESIGNATION+"\n"+ NOSEMP+"\n"+ LANDMARK+"\n"+ NOSBRANCHES+"\n"+
+//                        BUSINESSSETUP+"\n"+ BUSINESSBOARD+"\n"+ NOSYEARSATADDRESS+"\n"+
+//                        VISITINGCARD+"\n"+ APPLNAMEVERIFFROM+"\n"+ CONTACTVERIF1+"\n"+
+//                        CONTACTVERIF2+"\n"+ CONTACTFEEDBACK+"\n"+ PROOFDETAILS+"\n"+
+//                        POLITICALLINK+"\n"+ OVERALLSTATUS+"\n"+ REASONNEGATIVEFI+"\n"+
+//                        LATITUDE+"\n"+ LONGITUDE);
+                i.putExtra(android.content.Intent.EXTRA_TEXT,"Response : " + response.body());
+                startActivity(i);
+
+                if(response.body().equals("Success")) {
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
                     /**
@@ -382,13 +428,12 @@ public class BusinessActivity extends AppCompatActivity {
                     intent.putExtra("CASENO", StringCaseNo);
                     intent.putExtra("USERNAME", userName);
                     intent.putExtra("TYPEOFCASE", BUSINESS_ACTIVITY);
-
                     startActivity(intent);
                 }
 
                 else
                     {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG"+response.body(), Toast.LENGTH_SHORT).show();
                 }
             }
 

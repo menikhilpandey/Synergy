@@ -69,9 +69,12 @@ public class PhotoActivity extends AppCompatActivity {
     TextView tv;
 
     Intent i = getIntent();
-    String caseNo = i.getStringExtra("CASENO");
-    String ACTIVITY = i.getStringExtra("TYPEOFCASE");
-    String userName = i.getStringExtra("USERANAME");
+//    String caseNo = i.getStringExtra("CASENO");
+//    String ACTIVITY = i.getStringExtra("TYPEOFCASE");
+//    String userName = i.getStringExtra("USERANAME");
+String caseNo = "1234";
+    String ACTIVITY = "BUSINESS";
+    String userName = "PDA123";
 
     static String globalImageFileName;
 
@@ -100,6 +103,7 @@ public class PhotoActivity extends AppCompatActivity {
                             REQUEST_STORAGE_PERMISSION);
                 } else {
                     // Launch the camera if the permission exists
+                    exitButton.setVisibility(View.VISIBLE);
                     launchCamera();
                 }
             }
@@ -108,6 +112,8 @@ public class PhotoActivity extends AppCompatActivity {
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
 
                 retrofitExit(caseNo,ACTIVITY);
 
@@ -205,7 +211,7 @@ public class PhotoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body() == "Success")
+                if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
                 }
@@ -240,7 +246,7 @@ public class PhotoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body() == "Success")
+                if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "COMPLETED", Toast.LENGTH_SHORT).show();
                 }
