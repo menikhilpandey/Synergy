@@ -1,6 +1,8 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,14 +35,19 @@ public class AssignmentChoose extends AppCompatActivity {
 
     static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
 
-    Intent i = getIntent();
+//    Intent i = getIntent();
+
 //    String pdaNo = i.getStringExtra("USERNAME");
-    String pdaNo = "PDA123";
+//    String pdaNo = "PDA123";
+    String pdaNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_choose);
+
+        SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
+        pdaNo = loginData.getString("PDANO", "");
 
 //        listview = findViewById(R.id.listViewData);
         recyclerView = findViewById(R.id.recyclerView);

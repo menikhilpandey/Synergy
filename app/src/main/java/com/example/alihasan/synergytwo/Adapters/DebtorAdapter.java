@@ -2,6 +2,7 @@ package com.example.alihasan.synergytwo.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -78,8 +79,15 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         public void onClick(View v) {
             if(typeCase.getText().toString().equals("BUSINESS")) {
                 Intent intent = new Intent(this.context, BusinessActivity.class);
-                intent.putExtra("CASENO",caseNo.getText().toString());
-                intent.putExtra("USERNAME",userName);
+//                intent.putExtra("CASENO");
+//                intent.putExtra("USERNAME",userName);
+
+                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = caseData.edit();
+                editor.putString("CASENO", caseNo.getText().toString());
+                editor.putString("ACTIVITY", "BUSINESS");
+                editor.apply();
+
                 context.startActivity(intent);
             }
         }

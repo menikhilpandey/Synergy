@@ -1,6 +1,8 @@
 package com.example.alihasan.synergytwo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
+import com.example.alihasan.synergytwo.Encoder.md5;
 import com.example.alihasan.synergytwo.api.service.Client;
+
+import java.math.BigInteger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,18 +68,31 @@ public class LoginActivity extends AppCompatActivity {
                 strID = userEditText.getText().toString();
                 strPass = passEditText.getText().toString();
 
-                Call<String> call = client.getAuth(strID,strPass);
+                SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = loginData.edit();
+                editor.putString("PDANO", strID);
+                editor.apply();
+
+                String enUser = md5encoder(strID);
+                String enPass = md5encoder(strPass);
+
+                Call<String> call = client.getAuth(enUser,enPass);
 
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
 
+                        if(response.body()==null)
+                        {
+                            Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                        }
 
-                        if(response.body().equals("Success"))
+                        else if(response.body().equals("Success"))
                         {
                             //ASSIGNMENT CHOOSE
+
                             Intent i = new Intent(LoginActivity.this,AssignmentChoose.class);
-                            i.putExtra("USERNAME",strID);
+//                            i.putExtra("USERNAME",strID);
                             startActivity(i);
                         }
 
@@ -96,7 +114,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    public String md5encoder(String str)
+    {
+        byte[] md5Input = str.getBytes();
 
+        BigInteger md5data = null;
+
+        try {
+            md5data = new BigInteger(1,md5.encryptMD5(md5Input));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String md5Str =  md5data.toString(16);
+        if(md5Str.length() < 32){
+            md5Str = 0 + md5Str;
+        }
+
+        return md5Str;
     }
 }

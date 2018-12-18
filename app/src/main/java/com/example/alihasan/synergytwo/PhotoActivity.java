@@ -3,6 +3,7 @@ package com.example.alihasan.synergytwo;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -72,9 +73,16 @@ public class PhotoActivity extends AppCompatActivity {
 //    String caseNo = i.getStringExtra("CASENO");
 //    String ACTIVITY = i.getStringExtra("TYPEOFCASE");
 //    String userName = i.getStringExtra("USERANAME");
-String caseNo = "1234";
-    String ACTIVITY = "BUSINESS";
-    String userName = "PDA123";
+//String caseNo = "1234";
+//    String ACTIVITY = "BUSINESS";
+//    String userName = "PDA123";
+
+    String userName;
+    String caseNo;
+    String ACTIVITY;
+
+
+
 
     static String globalImageFileName;
 
@@ -82,6 +90,13 @@ String caseNo = "1234";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+
+        SharedPreferences loginData = getSharedPreferences("PDANO", Context.MODE_PRIVATE);
+        userName = loginData.getString("PDANO", "");
+
+        SharedPreferences caseData = getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+        caseNo = caseData.getString("CASENO","");
+        ACTIVITY = caseData.getString("ACTIVITY","");
 
         tv = findViewById(R.id.textView);
 
@@ -113,9 +128,19 @@ String caseNo = "1234";
             @Override
             public void onClick(View v) {
 
-
-
                 retrofitExit(caseNo,ACTIVITY);
+
+                SharedPreferences preferences =getSharedPreferences("PDANO",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+
+                SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences2.edit();
+                editor2.clear();
+                editor2.apply();
+                finish();
 
                 Intent backToAssignmentChoose = new Intent(PhotoActivity.this,AssignmentChoose.class);
                 startActivity(backToAssignmentChoose);

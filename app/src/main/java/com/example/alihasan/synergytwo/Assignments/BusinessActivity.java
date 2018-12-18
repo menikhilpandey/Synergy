@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -112,8 +113,10 @@ public class BusinessActivity extends AppCompatActivity {
     Intent i = getIntent();
 //        String StringCaseNo = i.getStringExtra("CASENO");
 //    String userName = i.getStringExtra("USERNAME");
-    String StringCaseNo = "1234";
-    String userName = "userName";
+
+    String userName;
+    String StringCaseNo;
+
 
 
     String BUSINESS_ACTIVITY = "BUSINESS";
@@ -124,6 +127,12 @@ public class BusinessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
+
+        SharedPreferences loginData = getSharedPreferences("PDANO", Context.MODE_PRIVATE);
+        userName = loginData.getString("PDANO", "");
+
+        SharedPreferences caseData = getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+        StringCaseNo = caseData.getString("CASENO","");
 
         //        EDITTEXTS
         applName = findViewById(R.id.applName);
