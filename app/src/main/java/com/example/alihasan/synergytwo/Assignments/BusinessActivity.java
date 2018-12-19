@@ -172,51 +172,51 @@ public class BusinessActivity extends AppCompatActivity {
          * SETTING SPINNER ADAPTERS
          */
 
-        spdaNoSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.pda, R.layout.support_simple_spinner_dropdown_item);
+        spdaNoSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.YESNO, R.layout.support_simple_spinner_dropdown_item);
         spdaNoSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         pdaNoSpinner.setAdapter(spdaNoSpinnerAdapter);
 
-        seaseLocSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.easy_locate, R.layout.support_simple_spinner_dropdown_item);
+        seaseLocSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.EASELOCATE2, R.layout.support_simple_spinner_dropdown_item);
         seaseLocSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         easeLocSpinner.setAdapter(seaseLocSpinnerAdapter);
 
-        soffOwnershipSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.offOwnership, R.layout.support_simple_spinner_dropdown_item);
+        soffOwnershipSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.OFFICEOWNERSHIP, R.layout.support_simple_spinner_dropdown_item);
         soffOwnershipSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         offOwnershipSpinner.setAdapter(soffOwnershipSpinnerAdapter);
 
-        slocalityTypeSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.typeOfLocality, R.layout.support_simple_spinner_dropdown_item);
+        slocalityTypeSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.LOCALITYTYPE2, R.layout.support_simple_spinner_dropdown_item);
         slocalityTypeSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         localityTypeSpinner.setAdapter(slocalityTypeSpinnerAdapter);
 
-        sbusinessSetupSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.busiSetup, R.layout.support_simple_spinner_dropdown_item);
+        sbusinessSetupSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.BUSINESSSETUP, R.layout.support_simple_spinner_dropdown_item);
         sbusinessSetupSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         businessSetupSpinner.setAdapter(sbusinessSetupSpinnerAdapter);
 
-        sbusinessBoardSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.busiBoard, R.layout.support_simple_spinner_dropdown_item);
+        sbusinessBoardSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.BUSINESSBOARD, R.layout.support_simple_spinner_dropdown_item);
         sbusinessBoardSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         businessBoardSpinner.setAdapter(sbusinessBoardSpinnerAdapter);
 
-        svisCardSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.visCard, R.layout.support_simple_spinner_dropdown_item);
+        svisCardSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.VISITINGCARD2, R.layout.support_simple_spinner_dropdown_item);
         svisCardSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         visCardSpinner.setAdapter(svisCardSpinnerAdapter);
 
-        sapplVeriFromAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.appliNameVeriFrom, R.layout.support_simple_spinner_dropdown_item);
+        sapplVeriFromAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.APPLNAMEVERIFFROM, R.layout.support_simple_spinner_dropdown_item);
         sapplVeriFromAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         applVeriFrom.setAdapter(sapplVeriFromAdapter);
 
-        sconVeriFeedAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.conVeriFeed, R.layout.support_simple_spinner_dropdown_item);
+        sconVeriFeedAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.CONTACTFEEDBACK, R.layout.support_simple_spinner_dropdown_item);
         sconVeriFeedAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         conVeriFeed.setAdapter(sconVeriFeedAdapter);
 
-        spolLinkSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.polLink, R.layout.support_simple_spinner_dropdown_item);
+        spolLinkSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.POLITICALLINK2, R.layout.support_simple_spinner_dropdown_item);
         spolLinkSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         polLinkSpinner.setAdapter(spolLinkSpinnerAdapter);
 
-        soverallStatusSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.overAllStatus, R.layout.support_simple_spinner_dropdown_item);
+        soverallStatusSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.OVERALLSTATUS2, R.layout.support_simple_spinner_dropdown_item);
         soverallStatusSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         overallStatusSpinner.setAdapter(soverallStatusSpinnerAdapter);
 
-        sreasonNegativeSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.negativeReason, R.layout.support_simple_spinner_dropdown_item);
+        sreasonNegativeSpinnerAdapter = ArrayAdapter.createFromResource(BusinessActivity.this, R.array.REASONNEGATIVEFI2, R.layout.support_simple_spinner_dropdown_item);
         sreasonNegativeSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         reasonNegativeSpinner.setAdapter(sreasonNegativeSpinnerAdapter);
 
@@ -407,20 +407,6 @@ public class BusinessActivity extends AppCompatActivity {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-
-                Intent i = new Intent(android.content.Intent.ACTION_SEND);
-                i.setType("text/plain");
-//                i.putExtra(android.content.Intent.EXTRA_TEXT, " " + TABLENAME +"\n"+ CASENO +"\n"+ EASELOCATE+"\n"+ OFFICEOWNERSHIP+"\n"+
-//                        APPLCOMPANYNAME+"\n"+ LOCALITYTYPE+"\n"+ NATUREBUSNIESS+"\n"+
-//                        APPLDESIGNATION+"\n"+ WORKINGSINCE+"\n"+ PERSONCONTACTED+"\n"+
-//                        PERSONDESIGNATION+"\n"+ NOSEMP+"\n"+ LANDMARK+"\n"+ NOSBRANCHES+"\n"+
-//                        BUSINESSSETUP+"\n"+ BUSINESSBOARD+"\n"+ NOSYEARSATADDRESS+"\n"+
-//                        VISITINGCARD+"\n"+ APPLNAMEVERIFFROM+"\n"+ CONTACTVERIF1+"\n"+
-//                        CONTACTVERIF2+"\n"+ CONTACTFEEDBACK+"\n"+ PROOFDETAILS+"\n"+
-//                        POLITICALLINK+"\n"+ OVERALLSTATUS+"\n"+ REASONNEGATIVEFI+"\n"+
-//                        LATITUDE+"\n"+ LONGITUDE);
-                i.putExtra(android.content.Intent.EXTRA_TEXT,"Response : " + response.body());
-                startActivity(i);
 
                 if(response.body().equals("Success")) {
 

@@ -722,12 +722,101 @@
 
                 <!--Dependent (Adults) Member-->
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Dependent (Adults) Member"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#ee4242"
+                        />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/depAdultMember"
+                    android:inputType="textPersonName"
+                    android:layout_marginRight="30dp"
+                    />
 
+                <!--Dependent (Children) Member-->
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Dependent (Children) Member"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#ee4242"
+                        />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/depChildrenMember"
+                    android:inputType="textPersonName"
+                    android:layout_marginRight="30dp"
+                    />
 
+                <!--Retired/Pensioner Member-->
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Retired/Pensioner Member"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#ee4242"
+                        />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/retiredMember"
+                    android:inputType="textPersonName"
+                    android:layout_marginRight="30dp"
+                    />
 
-                <!--Office Ownership-->
+                <!--Spouse Earning-->
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -739,7 +828,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Office Ownership"
+                        android:text="Spouse Earning"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -755,77 +844,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="50dp"
-                    android:id="@+id/offOwnershipSpinner"
+                    android:id="@+id/spouseEarningSpinner"
                     >
                 </Spinner>
 
-                <!--Company Name-->
-
-                <LinearLayout
-                    android:layout_marginTop="15dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Company Name"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:layout_weight="1"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        />
-                </LinearLayout>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/compName"
-                    android:layout_marginRight="30dp"
-                    android:inputType="text"
-                    />
-
-
-
-                <!--Nature of Business-->
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Nature of Business"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:layout_weight="1"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        />
-                </LinearLayout>
-                <EditText
-                    android:inputType="textPersonName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/businessNature"
-                    android:layout_marginRight="30dp"
-                    />
-
-                <!--Designation Of Applicants-->
+                <!--If Yes Spouse working Employment Details-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -837,7 +860,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Designation "
+                        android:text="If Yes Spouse working Employment Details"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -852,78 +875,12 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/designation"
+                    android:id="@+id/spouseWorkingDetail"
                     android:inputType="textPersonName"
                     android:layout_marginRight="30dp"
                     />
 
-                <!--Working Since-->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Working Since"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:layout_weight="1"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        />
-                </LinearLayout>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/workingSince"
-                    android:inputType="textPersonName"
-                    android:layout_marginRight="30dp"
-                    />
-
-
-
-                <!--Designation of person met-->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Designation of Person Met"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:layout_weight="1"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        />
-                </LinearLayout>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/desigPersonMet"
-                    android:inputType="textPersonName"
-                    android:layout_marginRight="30dp"
-                    />
-
-                <!--No of emp-->
+                <!--Marital Status-->
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -935,75 +892,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Number of Employees"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        android:layout_weight="1"
-                        />
-                </LinearLayout>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/empNo"
-                    android:layout_marginRight="30dp"
-                    android:inputType="number"
-                    android:hint="Total no. of employees in the company"
-                    />
-
-
-
-                <!--No of branches-->
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Number of Branches"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        android:layout_weight="1"
-                        />
-                </LinearLayout>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/branchNo"
-                    android:layout_marginRight="30dp"
-                    android:inputType="number"
-                    android:hint="Total no. of branches"
-                    />
-
-                <!--Business Setup seen-->
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Business Setup Seen"
+                        android:text="Marital Status"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1019,11 +908,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="50dp"
-                    android:id="@+id/businessSetupSpinner"
+                    android:id="@+id/maritalStatusSpinner"
                     >
                 </Spinner>
 
-                <!--Business Board Seen-->
+                <!--Educational Qualification-->
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -1035,7 +924,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Business Board Seen"
+                        android:text="Educational Qualification"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1051,11 +940,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="50dp"
-                    android:id="@+id/businessBoardSpinner"
+                    android:id="@+id/educationalQualiSPinner"
                     >
                 </Spinner>
 
-                <!--No of years at present address-->
+                <!--Neighbour Name 1-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1067,7 +956,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="No. of Years at Present Address "
+                        android:text="Neighbour Name 1"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1082,77 +971,12 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/yearsPresentAdd"
+                    android:id="@+id/neighbourName1"
                     android:inputType="textPersonName"
                     android:layout_marginRight="30dp"
                     />
 
-                <!--Visiting Card Obtained-->
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Visiting card obtained"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:layout_weight="1"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        />
-                </LinearLayout>
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="50dp"
-                    android:id="@+id/visCardSpinner"
-                    >
-                </Spinner>
-
-                <!--Applicant name verified from-->
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Applicant name verified from"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:layout_weight="1"
-                        android:textAppearance="?android:textAppearanceLarge"
-                        android:textColor="#ee4242"
-                        />
-                </LinearLayout>
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="50dp"
-                    android:id="@+id/applVeriFrom"
-                    >
-                </Spinner>
-
-
-                <!--Contact Verification 1-->
+                <!--Address 1-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1164,7 +988,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Contact Verification 1"
+                        android:text="Address 1"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1179,12 +1003,12 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/conVer1"
+                    android:id="@+id/address1"
                     android:inputType="textPersonName"
                     android:layout_marginRight="30dp"
                     />
 
-                <!--Contact Verification 2-->
+                <!--Neighbour Name 2-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1196,7 +1020,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Contact Verification 2"
+                        android:text="Neighbour Name 2"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1211,12 +1035,44 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/conVer2"
+                    android:id="@+id/neighbourName2"
                     android:inputType="textPersonName"
                     android:layout_marginRight="30dp"
                     />
 
-                <!--Contact verification feedback-->
+                <!--Address 2-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Address 2"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#ee4242"
+                        />
+                </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/address2"
+                    android:inputType="textPersonName"
+                    android:layout_marginRight="30dp"
+                    />
+
+                <!--Neighbour Feedback-->
 
                 <LinearLayout
                     android:layout_marginTop="10dp"
@@ -1228,7 +1084,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Contact Verification feedback"
+                        android:text="Neighbour Feedback"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1244,11 +1100,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="50dp"
-                    android:id="@+id/conVeriFeedSpinner"
+                    android:id="@+id/neighbourFeedbackSpinner"
                     >
                 </Spinner>
 
-                <!--Add proof detail-->
+                <!--Add Proof Detail-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1260,7 +1116,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Add Proof  Details"
+                        android:text="Add Proof Detail"
                         android:textAppearance="?android:textAppearanceLarge"
                         />
                     <TextView
@@ -1279,6 +1135,38 @@
                     android:inputType="textPersonName"
                     android:layout_marginRight="30dp"
                     />
+
+                <!--Vehical Seen-->
+
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Vehical Seen"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#ee4242"
+                        />
+                </LinearLayout>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="50dp"
+                    android:id="@+id/vehicalSeenSpinner"
+                    >
+                </Spinner>
 
                 <!--Political Link-->
 
@@ -1311,6 +1199,7 @@
                     android:id="@+id/polLinkSpinner"
                     >
                 </Spinner>
+
 
                 <!--Overall status-->
 
@@ -1374,6 +1263,8 @@
                     android:id="@+id/reasonNegativeSpinner"
                     >
                 </Spinner>
+
+                <!--BUTTON-->
 
                 <Button
                     android:id="@+id/locationButton"
