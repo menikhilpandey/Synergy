@@ -5,6 +5,8 @@
 
     <string name="error">Error finding image</string>
 
+    <string name="BASE_URL">BASE URL</string>
+
     <!--1) Residence-->
     <!--2) Business-->
     <!--3) Employment-->

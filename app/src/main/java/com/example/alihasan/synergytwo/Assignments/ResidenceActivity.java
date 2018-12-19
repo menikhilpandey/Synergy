@@ -1,5 +1,6 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alihasan.synergytwo.PhotoActivity;
@@ -48,7 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ResidenceActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
 
     /**
      * Total 36
@@ -59,7 +60,7 @@ public class ResidenceActivity extends AppCompatActivity {
     EditText caseNo;
 
     EditText age, landmark, stayingSince, personContacted, noFamilyMem, working, dependentAmem,
-            dependentCmem, spouseWorkDetail, neighbourName1, address1, neighbourName2, address2, addProof;
+            dependentCmem,retiredMember, spouseWorkDetail, neighbourName1, address1, neighbourName2, address2, addProof;
 
     Spinner easeToLocSpinner, locTypeSpinner, houseTypeSpinner, houseCondSpinner, owenershipSpinner, livingStandSpinner, appStaySpinner,
             relationshipSpinner, accoTypeSpinner, exteriorSpinner, spouseEarnSpinner, maritalStatSpinner, educatQualSpinner,
@@ -82,6 +83,7 @@ public class ResidenceActivity extends AppCompatActivity {
             sworking,
             sdependentAmem,
             sdependentCmem,
+            sretiredMember,
             sspouseWorkDetail,
             sneighbourName1,
             saddress1,
@@ -183,6 +185,7 @@ public class ResidenceActivity extends AppCompatActivity {
         working = findViewById(R.id.working);
         dependentAmem = findViewById(R.id.depAdultMember);
         dependentCmem = findViewById(R.id.depChildrenMember);
+        retiredMember = findViewById(R.id.retiredMember);
         spouseWorkDetail = findViewById(R.id.spouseWorkingDetail);
         neighbourName1 = findViewById(R.id.neighbourName1);
         address1 = findViewById(R.id.address1);
@@ -419,6 +422,7 @@ public class ResidenceActivity extends AppCompatActivity {
                 sworking = working.getText().toString().trim();
                 sdependentAmem = dependentAmem.getText().toString().trim();
                 sdependentCmem = dependentCmem.getText().toString().trim();
+                sretiredMember = retiredMember.getText().toString().trim();
                 sspouseWorkDetail = spouseWorkDetail.getText().toString().trim();
                 sneighbourName1 = neighbourName1.getText().toString().trim();
                 saddress1 = address1.getText().toString().trim();
@@ -432,7 +436,43 @@ public class ResidenceActivity extends AppCompatActivity {
                 /**
                  * RETROFIT MAGIC
                  */
-                retroFitHelper();
+                retroFitHelper(TABLENAME,
+                        StringCaseNo,
+                        seaseToLocSpinner,
+                        sage,
+                        slocTypeSpinner,
+                        shouseTypeSpinner,
+                        shouseCondSpinner,
+                        sowenershipSpinner,
+                        slivingStandSpinner,
+                        slandmark,
+                        sstayingSince,
+                        sappStaySpinner,
+                        spersonContacted,
+                        srelationshipSpinner,
+                        saccoTypeSpinner,
+                        sexteriorSpinner,
+                        snoFamilyMem,
+                        sworking,
+                        sdependentAmem,
+                        sdependentCmem,
+                        sretiredMember,
+                        sspouseEarnSpinner,
+                        sspouseWorkDetail,
+                        smaritalStatSpinner,
+                        seducatQualSpinner,
+                        sneighbourName1,
+                        saddress1,
+                        sneighbourName2,
+                        saddress2,
+                        sneighbourFeedSpinner,
+                        saddProof,
+                        svehicalSeenSpinner,
+                        spoliticlLinkSpinner,
+                        soverallStatusSpinner,
+                        sreasonNegativeSpinner,
+                        slati,
+                        slongi);
 
             }
         });
@@ -474,7 +514,7 @@ public class ResidenceActivity extends AppCompatActivity {
                                 String OVERALLSTATUS,
                                 String REASONNEGATIVEFI,
                                 String LATITUDE,
-                                String LONGITUDE,)
+                                String LONGITUDE)
     {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -484,7 +524,7 @@ public class ResidenceActivity extends AppCompatActivity {
 
         Client client = retrofit.create(Client.class);
 
-        Call<String> call = client.sendBusinessData(TABLENAME, CASENO,
+        Call<String> call = client.sendResidenceData(TABLENAME, CASENO,
                 EASELOCATE,
                 AGE,
                 LOCALITYTYPE,
@@ -519,7 +559,7 @@ public class ResidenceActivity extends AppCompatActivity {
                 OVERALLSTATUS,
                 REASONNEGATIVEFI,
                 LATITUDE,
-                LONGITUDE,);
+                LONGITUDE);
 
         call.enqueue(new Callback<String>() {
             @Override

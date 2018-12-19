@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -47,7 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PropertyActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
 
     /**
      * Total 23
@@ -344,13 +345,38 @@ public class PropertyActivity extends AppCompatActivity {
                 /**
                  * RETROFIT MAGIC
                  */
-                retroFitHelper();
+                retroFitHelper(TABLENAME,
+                        StringCaseNo,
+                        seaseToLocSpinner,
+                        spersonContacted,
+                        srelationshipSpinner,
+                        snoYearsPresentOwnSpinner,
+                        sarea,
+                        sdocumentVerify,
+                        sneighbourName1,
+                        saddress1,
+                        sneighbourName2,
+                        saddress2,
+                        spropertySoldWhom,
+                        sremarkPurchaser,
+                        scooperativeAppSpinner,
+                        sneighbourFeedSpinner,
+                        slocTypeSpinner,
+                        sambienceSpinner,
+                        sappStaySpinner,
+                        svehicalSeenSpinner,
+                        spoliticalLinkSpinner,
+                        sOverallStatusSpinner,
+                        sreasonNegativeSpinner,
+                        slati,
+                        slongi);
 
             }
         });
     }
 
-    public  void retroFitHelper(String CASENO,
+    public  void retroFitHelper(String TABLENAME,
+                                String CASENO,
                                 String EASELOCATE,
                                 String PERSONCONTACTED,
                                 String RELATIONSHIP,

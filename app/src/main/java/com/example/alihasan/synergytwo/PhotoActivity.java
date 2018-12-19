@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -55,7 +56,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.alihasan.synergytwo.fileprovider";
 
-    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
 
     private String mTempPhotoPath;
 

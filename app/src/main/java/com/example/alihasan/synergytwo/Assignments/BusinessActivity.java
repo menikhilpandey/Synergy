@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -46,7 +47,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BusinessActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
 
     /**
      * 29 ELEMENTS

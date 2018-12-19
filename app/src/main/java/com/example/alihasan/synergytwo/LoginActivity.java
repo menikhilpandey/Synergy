@@ -3,6 +3,7 @@ package com.example.alihasan.synergytwo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
      * TV
      */
 
-    static String SERVER_URL = "http://87408ed5.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
 
     String strID, strPass;
 
