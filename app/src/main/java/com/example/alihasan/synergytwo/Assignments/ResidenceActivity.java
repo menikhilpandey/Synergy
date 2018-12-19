@@ -1,6 +1,8 @@
 package com.example.alihasan.synergytwo.Assignments;
 
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.Client;
 
@@ -436,8 +438,119 @@ public class ResidenceActivity extends AppCompatActivity {
         });
     }
 
-    public  void retroFitHelper()
+    public  void retroFitHelper(String TABLENAME,
+                                String CASENO,
+                                String EASELOCATE,
+                                String AGE,
+                                String LOCALITYTYPE,
+                                String HOUSETYPE,
+                                String HOUSECONDITION,
+                                String OWNERSHIP,
+                                String LIVINGSTANDARD,
+                                String LANDMARK,
+                                String STAYINGSINCE,
+                                String APPLSTAYATADDRESS,
+                                String PERSONCONTACTED,
+                                String RELATIONSHIP,
+                                String ACCOMODATIONTYPE,
+                                String EXTERIOR,
+                                String NOOFFAMILY,
+                                String WORKING,
+                                String DEPENDENTADULTS,
+                                String DEPENDENTCHILDREN,
+                                String RETIREDMEMBER,
+                                String SPOUSEEARNING,
+                                String SPOUSEDETAILS,
+                                String MARITALSTATUS,
+                                String EDUQUAL,
+                                String NEIGHBOURNAME1,
+                                String ADDRESS1,
+                                String NEIGHBOURNAME2,
+                                String ADDRESS2,
+                                String NEIGHBOURFEEDBACK,
+                                String PROOFDETAILS,
+                                String VEHICLESEEN,
+                                String POLITICALLINK,
+                                String OVERALLSTATUS,
+                                String REASONNEGATIVEFI,
+                                String LATITUDE,
+                                String LONGITUDE,)
     {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.sendBusinessData(TABLENAME, CASENO,
+                EASELOCATE,
+                AGE,
+                LOCALITYTYPE,
+                HOUSETYPE,
+                HOUSECONDITION,
+                OWNERSHIP,
+                LIVINGSTANDARD,
+                LANDMARK,
+                STAYINGSINCE,
+                APPLSTAYATADDRESS,
+                PERSONCONTACTED,
+                RELATIONSHIP,
+                ACCOMODATIONTYPE,
+                EXTERIOR,
+                NOOFFAMILY,
+                WORKING,
+                DEPENDENTADULTS,
+                DEPENDENTCHILDREN,
+                RETIREDMEMBER,
+                SPOUSEEARNING,
+                SPOUSEDETAILS,
+                MARITALSTATUS,
+                EDUQUAL,
+                NEIGHBOURNAME1,
+                ADDRESS1,
+                NEIGHBOURNAME2,
+                ADDRESS2,
+                NEIGHBOURFEEDBACK,
+                PROOFDETAILS,
+                VEHICLESEEN,
+                POLITICALLINK,
+                OVERALLSTATUS,
+                REASONNEGATIVEFI,
+                LATITUDE,
+                LONGITUDE,);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body().equals("Success")) {
+
+                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
+                    /**
+                     * Will receive something to verify
+                     * successful upload to table
+                     */
+
+                    Intent intent = new Intent(ResidenceActivity.this, PhotoActivity.class);
+                    intent.putExtra("CASENO", StringCaseNo);
+                    intent.putExtra("USERNAME", userName);
+                    intent.putExtra("TYPEOFCASE", BUSINESS_ACTIVITY);
+                    startActivity(intent);
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG"+response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

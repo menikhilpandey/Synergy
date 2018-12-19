@@ -28,12 +28,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
+import com.example.alihasan.synergytwo.api.service.Client;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PropertyActivity extends AppCompatActivity {
@@ -341,8 +350,96 @@ public class PropertyActivity extends AppCompatActivity {
         });
     }
 
-    public  void retroFitHelper()
+    public  void retroFitHelper(String CASENO,
+                                String EASELOCATE,
+                                String PERSONCONTACTED,
+                                String RELATIONSHIP,
+                                String NOSYEARSOWNER,
+                                String AREA,
+                                String DOCSVERIF,
+                                String NEIGHBOURNAME1,
+                                String ADDRESS1,
+                                String NEIGHBOURNAME2,
+                                String ADDRESS2,
+                                String PROPERTYSOLDTO,
+                                String PURCHASERDETAILS,
+                                String APPLCOOPERATIVE,
+                                String NEIGHBOURFEEDBACK,
+                                String LOCALITYTYPE,
+                                String AMBIENCE,
+                                String APPLSTAYATADDRESS,
+                                String VEHICLESEEN,
+                                String POLITICALLINK,
+                                String OVERALLSTATUS,
+                                String REASONNEGATIVEFI,
+                                String LATITUDE,
+                                String LONGITUDE)
     {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.sendPropertyData(
+                TABLENAME,
+                CASENO,
+                EASELOCATE,
+                PERSONCONTACTED,
+                RELATIONSHIP,
+                NOSYEARSOWNER,
+                AREA,
+                DOCSVERIF,
+                NEIGHBOURNAME1,
+                ADDRESS1,
+                NEIGHBOURNAME2,
+                ADDRESS2,
+                PROPERTYSOLDTO,
+                PURCHASERDETAILS,
+                APPLCOOPERATIVE,
+                NEIGHBOURFEEDBACK,
+                LOCALITYTYPE,
+                AMBIENCE,
+                APPLSTAYATADDRESS,
+                VEHICLESEEN,
+                POLITICALLINK,
+                OVERALLSTATUS,
+                REASONNEGATIVEFI,
+                LATITUDE,
+                LONGITUDE);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body().equals("Success")) {
+
+                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
+                    /**
+                     * Will receive something to verify
+                     * successful upload to table
+                     */
+
+                    Intent intent = new Intent(PropertyActivity.this, PhotoActivity.class);
+                    intent.putExtra("CASENO", StringCaseNo);
+                    intent.putExtra("USERNAME", userName);
+                    intent.putExtra("TYPEOFCASE", BUSINESS_ACTIVITY);
+                    startActivity(intent);
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG"+response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

@@ -90,6 +90,53 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
                 context.startActivity(intent);
             }
+
+            else if(typeCase.getText().toString().equals("PROPERTY")) {
+                Intent intent = new Intent(this.context, BusinessActivity.class);
+//                intent.putExtra("CASENO");
+//                intent.putExtra("USERNAME",userName);
+
+                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = caseData.edit();
+                editor.putString("CASENO", caseNo.getText().toString());
+                editor.putString("ACTIVITY", "PROPERTY");
+                editor.apply();
+
+                context.startActivity(intent);
+            }
+
+            else if(typeCase.getText().toString().equals("RESIDENCE")) {
+                Intent intent = new Intent(this.context, BusinessActivity.class);
+//                intent.putExtra("CASENO");
+//                intent.putExtra("USERNAME",userName);
+
+                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = caseData.edit();
+                editor.putString("CASENO", caseNo.getText().toString());
+                editor.putString("ACTIVITY", "RESIDENCE");
+                editor.apply();
+
+                context.startActivity(intent);
+            }
+
+            else if(typeCase.getText().toString().equals("EMPLOYMENT")) {
+                Intent intent = new Intent(this.context, BusinessActivity.class);
+//                intent.putExtra("CASENO");
+//                intent.putExtra("USERNAME",userName);
+
+                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = caseData.edit();
+                editor.putString("CASENO", caseNo.getText().toString());
+                editor.putString("ACTIVITY", "EMPLOYMENT");
+                editor.apply();
+
+                context.startActivity(intent);
+            }
+
+            else
+            {
+                Toast.makeText(context, "BUSI/EMP/PROP/RESI????? ", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
