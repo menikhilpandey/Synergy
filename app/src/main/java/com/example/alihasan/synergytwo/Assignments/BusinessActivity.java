@@ -1,9 +1,7 @@
 package com.example.alihasan.synergytwo.Assignments;
 
-//import com.example.alihasan.synergytwo.BusinessHelper;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
-import com.example.alihasan.synergytwo.api.model.BusinessModel;
 import com.example.alihasan.synergytwo.api.service.Client;
 
 import android.Manifest;
@@ -29,7 +27,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -135,6 +131,7 @@ public class BusinessActivity extends AppCompatActivity {
         StringCaseNo = caseData.getString("CASENO","");
 
         //        EDITTEXTS
+
         applName = findViewById(R.id.applName);
         address = findViewById(R.id.address) ;
         contactNo = findViewById(R.id.contactNo);

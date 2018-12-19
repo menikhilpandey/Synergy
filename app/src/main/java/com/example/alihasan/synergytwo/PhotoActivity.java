@@ -91,7 +91,7 @@ public class PhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
 
-        SharedPreferences loginData = getSharedPreferences("PDANO", Context.MODE_PRIVATE);
+        SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
 
         SharedPreferences caseData = getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
@@ -130,7 +130,7 @@ public class PhotoActivity extends AppCompatActivity {
 
                 retrofitExit(caseNo,ACTIVITY);
 
-                SharedPreferences preferences =getSharedPreferences("PDANO",Context.MODE_PRIVATE);
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
                 editor.apply();

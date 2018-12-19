@@ -6,7 +6,7 @@
     <string name="error">Error finding image</string>
 
     <string-array name="offOwnership">
-        <item>SELECT</item>
+        <item></item>
         <item>OWNED</item>
         <item>RENTED</item>
         <item>LEASED</item>
@@ -14,28 +14,28 @@
     </string-array>
 
     <string-array name="busiSetup">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
         <item>NA</item>
     </string-array>
 
     <string-array name="overAllStatus">
-        <item>SELECT</item>
+        <item></item>
         <item>RECOMMENDED</item>
         <item>NOT RECOMMENDED</item>
         <item>REFFERAL</item>
     </string-array>
 
     <string-array name="polLink">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
         <item>NA</item>
     </string-array>
 
     <string-array name="negativeReason">
-        <item>SELECT</item>
+        <item></item>
         <item>NA</item>
         <item>POOR LIVING CONITION</item>
         <item>NEGATIVE AREA</item>
@@ -54,14 +54,14 @@
     </string-array>
 
     <string-array name="conVeriFeed">
-        <item>SELECT</item>
+        <item></item>
         <item>KNOW THE APPLICANT</item>
         <item>DO NOT KNOW THE APPLICANT</item>
         <item>NA</item>
     </string-array>
 
     <string-array name="appliNameVeriFrom">
-        <item>SELECT</item>
+        <item></item>
         <item>SELF</item>
         <item>CO WORKER</item>
         <item>RECEPTION</item>
@@ -71,21 +71,21 @@
     </string-array>
 
     <string-array name="busiBoard">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
         <item>NA</item>
     </string-array>
 
     <string-array name="visCard">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
         <item>NA</item>
     </string-array>
 
     <string-array name="typeOfLocality">
-        <item>SELECT</item>
+        <item></item>
         <item>COMMERCIAL</item>
         <item>RESIDENTIAL</item>
         <item>RESI CUM COMMERCIAL</item>
@@ -93,7 +93,7 @@
     </string-array>
 
     <string-array name="resstatus">
-        <item>SELECT</item>
+        <item></item>
         <item>SELF OWNED</item>
         <item>OWNED BY RELATIVES</item>
         <item>RENTED</item>
@@ -104,7 +104,7 @@
     </string-array>
 
     <string-array name="vehicle">
-        <item>SELECT</item>
+        <item></item>
         <item>TWO WHEELER</item>
         <item>FOUR WHEELER</item>
         <item>Other</item>
@@ -112,14 +112,14 @@
 
 
     <string-array name="marital">
-        <item>SELECT</item>
+        <item></item>
         <item>SINGLE</item>
         <item>MARRIED</item>
 
     </string-array>
 
     <string-array name="company">
-        <item>SELECT</item>
+        <item></item>
         <item>PUBLIC LIMITED</item>
         <item>PRIVATE LIMITED</item>
         <item>PARTNERSHIP</item>
@@ -127,7 +127,7 @@
         <item>OTHER</item>
     </string-array>
     <string-array name="transfer">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
 
@@ -135,7 +135,7 @@
 
 
     <string-array name="jobtype">
-        <item>SELECT</item>
+        <item></item>
         <item>"PERMANENT"</item>
         <item>"PROBATION"</item>
         <item>"CONTRACT WORKER"</item>
@@ -144,7 +144,7 @@
     </string-array>
 
     <string-array name="workorg">
-        <item>SELECT</item>
+        <item></item>
         <item>"TYPIST"</item>
         <item>"STENOGRAPHER"</item>
         <item>"SUPERVISOR"</item>
@@ -155,7 +155,7 @@
     </string-array>
 
     <string-array name="locality">
-        <item>SELECT</item>
+        <item></item>
         <item>POSH LOCALITY</item>
         <item>VILLAGE AREA</item>
         <item>LODGING</item>
@@ -168,72 +168,72 @@
     </string-array>
 
     <string-array name="pda">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
     </string-array>
 
     <string-array name="name_board">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
     </string-array>
     <string-array name="ambience">
-        <item>SELECT</item>
+        <item></item>
         <item>AVERAGE</item>
         <item>GOOD</item>
         <item>POOR</item>
     </string-array>
     <string-array name="visitingcard">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
     </string-array>
     <string-array name="exteriors">
-        <item>SELECT</item>
+        <item></item>
         <item>AVERAGE</item>
         <item>GOOD</item>
         <item>POOR</item>
     </string-array>
     <string-array name="easy_locate">
-        <item>SELECT</item>
+        <item></item>
         <item>EASY</item>
         <item>DIFFICULT</item>
     </string-array>
     <string-array name="business_Act">
-        <item>SELECT</item>
+        <item></item>
         <item>HIGH</item>
         <item>MEDIUM</item>
         <item>LOW</item>
     </string-array>
     <string-array name="aff_pol_party">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
     </string-array>
     <string-array name="emp_sighted">
-        <item>SELECT</item>
+        <item></item>
         <item>YES</item>
         <item>NO</item>
     </string-array>
     <string-array name="polite_rude">
-        <item>SELECT</item>
+        <item></item>
         <item>POLITE</item>
         <item>RUDE</item>
     </string-array>
     <string-array name="n_check">
-        <item>SELECT</item>
+        <item></item>
         <item>POSITIVE</item>
         <item>NEGATIVE</item>
     </string-array>
     <string-array name="recom_or_not">
-        <item>SELECT</item>
+        <item></item>
         <item>RECOMMENDED</item>
         <item>NOT RECOMMENDED</item>
     </string-array>
 
     <string-array name="rel_appl">
-        <item>SELECT</item>
+        <item></item>
         <item>MOTHER</item>
         <item>FATHER</item>
         <item>BROTHER</item>
@@ -245,7 +245,7 @@
     </string-array>
 
     <string-array name="edu">
-        <item>SELECT</item>
+        <item></item>
         <item>10TH PASS</item>
         <item>12TH PASS</item>
         <item>GRADUATE</item>

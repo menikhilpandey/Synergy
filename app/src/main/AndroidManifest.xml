@@ -43,8 +43,11 @@
         </activity>
         <activity android:name=".Assignments.AssignmentChoose" />
         <activity android:name=".Assignments.BusinessActivity" />
-         <activity android:name=".PhotoActivity"></activity>
-        <!--<activity android:name=".BusinessHelper"></activity>-->
+        <activity android:name=".PhotoActivity" />
+        <!-- <activity android:name=".BusinessHelper"></activity> -->
+        <activity android:name=".Assignments.ResidenceActivity" />
+        <activity android:name=".Assignments.EmploymentActivity" />
+        <activity android:name=".Assignments.PropertyActivity"></activity>
     </application>
 
 </manifest>
