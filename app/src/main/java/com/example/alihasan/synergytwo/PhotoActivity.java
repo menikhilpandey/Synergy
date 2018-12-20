@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -23,6 +22,9 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -30,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.alihasan.synergytwo.Adapters.AppExecutor;
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
 import com.example.alihasan.synergytwo.api.service.Client;
 
@@ -56,7 +57,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.alihasan.synergytwo.fileprovider";
 
-    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
+    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
 
     private String mTempPhotoPath;
 
@@ -82,15 +83,28 @@ public class PhotoActivity extends AppCompatActivity {
     String caseNo;
     String ACTIVITY;
 
-
-
-
     static String globalImageFileName;
+
+    private int REQUEST_STRING_CODE=1234;
+
+    boolean EXIT_CODE = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+
+        /**
+         * PERMISSION CHECKS
+         */
+
+        String []permissionsList={Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this,
+                permissionsList,
+                REQUEST_STRING_CODE);
 
         SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
@@ -109,18 +123,22 @@ public class PhotoActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(PhotoActivity.this,Manifest.permission.CAMERA)==PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(PhotoActivity.this,Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED) {
 
-                    // If you do not have permission, request it
-                    ActivityCompat.requestPermissions(PhotoActivity.this,
-                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            REQUEST_STORAGE_PERMISSION);
-                } else {
-                    // Launch the camera if the permission exists
                     exitButton.setVisibility(View.VISIBLE);
+                    EXIT_CODE = false;
                     launchCamera();
+                } else {
+                    Toast.makeText(getApplicationContext(), "GRANT STORAGE & CAMERA PERMISSION", Toast.LENGTH_SHORT).show();
+
+                    String []permissionsList={Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE};
+                    ActivityCompat.requestPermissions(PhotoActivity.this,
+                            permissionsList,
+                            REQUEST_STRING_CODE);
+
                 }
             }
         });
@@ -129,22 +147,34 @@ public class PhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                retrofitExit(caseNo,ACTIVITY);
+                if(EXIT_CODE)
+                {
+                    retrofitExit(caseNo,ACTIVITY);
 
-                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
-                editor.apply();
-                finish();
+//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.clear();
+//                editor.apply();
+//                finish();
 
-                SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor2 = preferences2.edit();
-                editor2.clear();
-                editor2.apply();
-                finish();
+                    SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor2 = preferences2.edit();
+                    editor2.clear();
+                    editor2.apply();
+                    finish();
 
-                Intent backToAssignmentChoose = new Intent(PhotoActivity.this,AssignmentChoose.class);
-                startActivity(backToAssignmentChoose);
+                    Intent backToAssignmentChoose = new Intent(PhotoActivity.this,AssignmentChoose.class);
+                    startActivity(backToAssignmentChoose);
+                }
+
+                else{
+                    Toast.makeText(getApplicationContext(), "JUST A MINUTE. UPLOADING IMAGE...", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+
+
             }
         });
 
@@ -240,6 +270,8 @@ public class PhotoActivity extends AppCompatActivity {
                 if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                    EXIT_CODE = true;
+
                 }
                 else
                 {
@@ -389,6 +421,38 @@ public class PhotoActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return "ERROR";
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.logout:
+
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+
+                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences2.edit();
+                editor2.clear();
+                editor2.apply();
+                finish();
+                Intent i = new Intent(PhotoActivity.this,LoginActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

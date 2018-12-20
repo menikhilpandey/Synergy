@@ -34,20 +34,28 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Assignments.AssignmentChoose" />
-        <activity android:name=".Assignments.BusinessActivity" />
+        <activity android:name=".Assignments.AssignmentChoose"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Assignments.BusinessActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".PhotoActivity" />
         <!-- <activity android:name=".BusinessHelper"></activity> -->
-        <activity android:name=".Assignments.ResidenceActivity" />
-        <activity android:name=".Assignments.EmploymentActivity" />
-        <activity android:name=".Assignments.PropertyActivity"></activity>
+        <activity android:name=".Assignments.ResidenceActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Assignments.EmploymentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Assignments.PropertyActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

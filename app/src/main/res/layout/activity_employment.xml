@@ -611,7 +611,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="50dp"
-                    android:id="@+id/jobTypeSpinner"
+                    android:id="@+id/typeOfJobSpinner"
                     >
                 </Spinner>
 
@@ -1041,12 +1041,14 @@
                     android:layout_width="200dp"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:text="get location"
                     android:layout_alignBaseline="@+id/lat"
                     android:layout_alignBottom="@+id/lat"
                     android:layout_centerHorizontal="true" />
 
                 <TextView
+                    android:visibility="gone"
                     android:layout_marginTop="30dp"
                     android:id="@+id/lat"
                     android:textColor="@color/darkblue"
@@ -1060,6 +1062,7 @@
                     android:layout_below="@+id/lng" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/lng"
                     android:padding="20dp"
                     android:text="longitude"
@@ -1067,6 +1070,24 @@
                     android:gravity="center"
                     android:textColor="@color/darkblue"
                     android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"/>
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:id="@+id/progressBar"
+                    android:visibility="gone"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/fetchingLocation"
+                    android:padding="20dp"
+                    android:text="Just a minute. Fetching location..."
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:textColor="@color/darkblue"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"/>
 

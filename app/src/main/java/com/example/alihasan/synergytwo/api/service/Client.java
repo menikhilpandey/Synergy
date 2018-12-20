@@ -1,12 +1,9 @@
 package com.example.alihasan.synergytwo.api.service;
-import com.example.alihasan.synergytwo.api.model.BusinessModel;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;

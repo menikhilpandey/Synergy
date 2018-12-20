@@ -1,5 +1,6 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -27,10 +28,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EmploymentActivity extends AppCompatActivity {
 
-    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
+    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
 
     /**
      * Total 30
@@ -62,7 +67,7 @@ public class EmploymentActivity extends AppCompatActivity {
             personContacted, desigPersonContacted, nameOfRepManager,desigRepoManager, contactNoOfRepoManager, salary, tpcPersonName;
 
     Spinner easeLocSpinner, locTypeSpinner, addConfirmSpinner, doesAppWorkSpinner, officeNameBoardSpinner, orgTypeSpinner,
-            visitingCardObtSpinner, natureBusinessSpinner, jobTypeSpinner, workingAsSpinner, jobTransferSpinner, tpcConfirmSpinner,
+            visitingCardObtSpinner, natureBusinessSpinner, typeOfJobSpinner, workingAsSpinner, jobTransferSpinner, tpcConfirmSpinner,
             overallStatusSpinner, reasonNegativeSpinner;
 
     /**
@@ -74,7 +79,7 @@ public class EmploymentActivity extends AppCompatActivity {
             spersonContacted, sdesigPersonContacted, snameOfRepManager,sdesigRepoManager, scontactNoOfRepoManager, ssalary, stpcPersonName;
 
     String seaseLocSpinner, slocTypeSpinner, saddConfirmSpinner, sdoesAppWorkSpinner, sofficeNameBoardSpinner, sorgTypeSpinner,
-            svisitingCardObtSpinner, snatureBusinessSpinner, sjobTypeSpinner, sworkingAsSpinner, sjobTransferSpinner, stpcConfirmSpinner,
+            svisitingCardObtSpinner, snatureBusinessSpinner, stypeOfJobSpinner, sworkingAsSpinner, sjobTransferSpinner, stpcConfirmSpinner,
             soverallStatusSpinner, sreasonNegativeSpinner;
 
     /**
@@ -83,7 +88,7 @@ public class EmploymentActivity extends AppCompatActivity {
 
     ArrayAdapter<CharSequence> seaseLocSpinnerAdapter, slocTypeSpinnerAdapter, saddConfirmSpinnerAdapter, sdoesAppWorkSpinnerAdapter,
             sofficeNameBoardSpinnerAdapter, sorgTypeSpinnerAdapter,
-            svisitingCardObtSpinnerAdapter, sNatureBusinessSpinnerAdapter, sjobTypeSpinnerAdapter, sworkingAsSpinnerAdapter,
+            svisitingCardObtSpinnerAdapter, sNatureBusinessSpinnerAdapter, stypeOfJobSpinnerAdapter, sworkingAsSpinnerAdapter,
             sjobTransferSpinnerAdapter, stpcConfirmSpinnerAdapter,
             soverallStatusSpinnerAdapter, sreasonNegativeSpinnerAdapter;
 
@@ -114,10 +119,36 @@ public class EmploymentActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-employment";
 
+    ProgressBar progressBar;
+
+    private int REQUEST_STRING_CODE=1234;
+
+    boolean GOT_LOCATION = false;
+
+    TextView fetchingLocation;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employment);
+
+        /**
+         * PERMISSION CHECKS
+         */
+
+        String []permissionsList={Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+
+        progressBar=findViewById(R.id.progressBar);
+        fetchingLocation = findViewById(R.id.fetchingLocation);
+
 
         SharedPreferences loginData = getSharedPreferences("PDANO", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
@@ -153,7 +184,7 @@ public class EmploymentActivity extends AppCompatActivity {
         orgTypeSpinner = findViewById(R.id.orgTypeSpinner);
         visitingCardObtSpinner = findViewById(R.id.visCardSpinner);
         natureBusinessSpinner = findViewById(R.id.businessNatureSpinner);
-        jobTypeSpinner = findViewById(R.id.jobTypeSpinner);
+        typeOfJobSpinner = findViewById(R.id.typeOfJobSpinner);
         workingAsSpinner = findViewById(R.id.workingAsSpinner);
         jobTransferSpinner = findViewById(R.id.jobTransferSpinner);
         tpcConfirmSpinner = findViewById(R.id.tpcConfirmSpinner);
@@ -173,7 +204,7 @@ public class EmploymentActivity extends AppCompatActivity {
 
         //seaseLocSpinnerAdapter, slocTypeSpinnerAdapter, saddConfirmSpinnerAdapter, sdoesAppWorkSpinnerAdapter,
         //            sofficeNameBoardSpinnerAdapter, sorgTypeSpinnerAdapter,
-        //            svisitingCardObtSpinnerAdapter, sNatureBusinessSpinnerAdapter, sjobTypeSpinnerAdapter, sworkingAsSpinnerAdapter,
+        //            svisitingCardObtSpinnerAdapter, sNatureBusinessSpinnerAdapter, stypeOfJobSpinnerAdapter, sworkingAsSpinnerAdapter,
         //            sjobTransferSpinnerAdapter, stpcConfirmSpinnerAdapter,
         //            soverallStatusSpinnerAdapter, sreasonNegativeSpinnerAdapter;
 
@@ -209,9 +240,9 @@ public class EmploymentActivity extends AppCompatActivity {
         sNatureBusinessSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         natureBusinessSpinner.setAdapter(sNatureBusinessSpinnerAdapter);
 
-        sjobTypeSpinnerAdapter = ArrayAdapter.createFromResource(EmploymentActivity.this, R.array.JOBTYPE, R.layout.support_simple_spinner_dropdown_item);
-        sjobTypeSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        jobTransferSpinner.setAdapter(sjobTypeSpinnerAdapter);
+        stypeOfJobSpinnerAdapter = ArrayAdapter.createFromResource(EmploymentActivity.this, R.array.JOBTYPE, R.layout.support_simple_spinner_dropdown_item);
+        stypeOfJobSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        typeOfJobSpinner.setAdapter(stypeOfJobSpinnerAdapter);
 
         sworkingAsSpinnerAdapter = ArrayAdapter.createFromResource(EmploymentActivity.this, R.array.WORKINGAS, R.layout.support_simple_spinner_dropdown_item);
         sworkingAsSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -242,69 +273,81 @@ public class EmploymentActivity extends AppCompatActivity {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(ContextCompat.checkSelfPermission(EmploymentActivity.this,Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED)
+        {
 
-                if (isLocationServicesAvailable(EmploymentActivity.this)) {
+            progressBar.setVisibility(View.VISIBLE);
+            fetchingLocation.setVisibility(View.VISIBLE);
+            GOT_LOCATION = true;
 
-                    Log.d("THIS","HERE");
-                    dialog = new ProgressDialog(EmploymentActivity.this);
-                    dialog.setMessage("Getting Your location....");
-                    dialog.show();
-                    if (ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
-                    dialog.dismiss();
+            if (isLocationServicesAvailable(EmploymentActivity.this)) {
+
+                Log.d("THIS","HERE");
+                dialog = new ProgressDialog(EmploymentActivity.this);
+                dialog.setMessage("Getting Your location....");
+                dialog.show();
+                if (ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
                 }
-                else {
-                    Log.d("THIS","HERE 2");
-                    if (ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    AlertDialog.Builder builder =
-                            new AlertDialog.Builder(EmploymentActivity.this);
-                    final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-                    final String message = "Enable either GPS or any other location"
-                            + " service to find current location.  Click OK to go to"
-                            + " location services settings to let you do so.";
-                    builder.setTitle("Enable Location");
-
-                    builder.setMessage(message)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface d, int id) {
-                                            startActivity(new Intent(action));
-                                            d.dismiss();
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface d, int id) {
-                                            d.cancel();
-                                        }
-                                    }).show();
-                }
-
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
+                dialog.dismiss();
             }
-        });
+            else {
+                Log.d("THIS","HERE 2");
+                if (ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(EmploymentActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(EmploymentActivity.this);
+                final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+                final String message = "Enable either GPS or any other location"
+                        + " service to find current location.  Click OK to go to"
+                        + " location services settings to let you do so.";
+                builder.setTitle("Enable Location");
 
+                builder.setMessage(message)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int id) {
+                                        startActivity(new Intent(action));
+                                        d.dismiss();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int id) {
+                                        d.cancel();
+                                    }
+                                }).show();
+            }
+
+        }
+
+        else
+        {
+            Toast.makeText(getApplicationContext(), "GRANT LOCATION PERMISSION", Toast.LENGTH_SHORT).show();
+
+            String []permissionsList2={Manifest.permission.ACCESS_COARSE_LOCATION};
+
+            ActivityCompat.requestPermissions(EmploymentActivity.this,
+                    permissionsList2,
+                    REQUEST_STRING_CODE);
+        }
         /**
          * LOCATION END
          */
@@ -313,79 +356,88 @@ public class EmploymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                seaseLocSpinner = easeLocSpinner.getSelectedItem().toString();
-                slocTypeSpinner = locTypeSpinner.getSelectedItem().toString();
-                saddConfirmSpinner = addConfirmSpinner.getSelectedItem().toString();
-                sdoesAppWorkSpinner = doesAppWorkSpinner.getSelectedItem().toString();
-                sofficeNameBoardSpinner = officeNameBoardSpinner.getSelectedItem().toString();
-                sorgTypeSpinner = orgTypeSpinner.getSelectedItem().toString();
-                svisitingCardObtSpinner = visitingCardObtSpinner.getSelectedItem().toString();
-                snatureBusinessSpinner = natureBusinessSpinner.getSelectedItem().toString();
-                sjobTypeSpinner = jobTypeSpinner.getSelectedItem().toString();
-                sworkingAsSpinner = workingAsSpinner.getSelectedItem().toString();
-                sjobTransferSpinner = jobTransferSpinner.getSelectedItem().toString();
-                stpcConfirmSpinner = tpcConfirmSpinner.getSelectedItem().toString();
-                soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
-                sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
+                if(GOT_LOCATION)
+                {
+                    seaseLocSpinner = easeLocSpinner.getSelectedItem().toString();
+                    slocTypeSpinner = locTypeSpinner.getSelectedItem().toString();
+                    saddConfirmSpinner = addConfirmSpinner.getSelectedItem().toString();
+                    sdoesAppWorkSpinner = doesAppWorkSpinner.getSelectedItem().toString();
+                    sofficeNameBoardSpinner = officeNameBoardSpinner.getSelectedItem().toString();
+                    sorgTypeSpinner = orgTypeSpinner.getSelectedItem().toString();
+                    svisitingCardObtSpinner = visitingCardObtSpinner.getSelectedItem().toString();
+                    snatureBusinessSpinner = natureBusinessSpinner.getSelectedItem().toString();
+                    stypeOfJobSpinner = (String) typeOfJobSpinner.getSelectedItem().toString();
+                    sworkingAsSpinner = workingAsSpinner.getSelectedItem().toString();
+                    sjobTransferSpinner = jobTransferSpinner.getSelectedItem().toString();
+                    stpcConfirmSpinner = tpcConfirmSpinner.getSelectedItem().toString();
+                    soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
+                    sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
 
-                scompanyName = companyName.getText().toString().trim();
-                slandmark = landmark.getText().toString().trim();
-                sdesignOfApp = designOfApp.getText().toString().trim();
-                spersonMet = personMet.getText().toString().trim();
-                sdesignOfPersonMet = designOfPersonMet.getText().toString().trim();
-                spersonContactNo = personContactNo.getText().toString().trim();
-                sofficeTele = officeTele.getText().toString().trim();
-                sdateOfJoin = dateOfJoin.getText().toString().trim();
-                snoOfEmp = noOfEmp.getText().toString().trim();
-                spersonContacted = personContacted.getText().toString().trim();
-                sdesigPersonContacted = desigPersonContacted.getText().toString().trim();
-                snameOfRepManager = nameOfRepManager.getText().toString().trim();
-                sdesigRepoManager = desigRepoManager.getText().toString().trim();
-                scontactNoOfRepoManager = contactNoOfRepoManager.getText().toString().trim();
-                ssalary = salary.getText().toString().trim();
-                stpcPersonName = tpcPersonName.getText().toString().trim();
+                    scompanyName = companyName.getText().toString().trim();
+                    slandmark = landmark.getText().toString().trim();
+                    sdesignOfApp = designOfApp.getText().toString().trim();
+                    spersonMet = personMet.getText().toString().trim();
+                    sdesignOfPersonMet = designOfPersonMet.getText().toString().trim();
+                    spersonContactNo = personContactNo.getText().toString().trim();
+                    sofficeTele = officeTele.getText().toString().trim();
+                    sdateOfJoin = dateOfJoin.getText().toString().trim();
+                    snoOfEmp = noOfEmp.getText().toString().trim();
+                    spersonContacted = personContacted.getText().toString().trim();
+                    sdesigPersonContacted = desigPersonContacted.getText().toString().trim();
+                    snameOfRepManager = nameOfRepManager.getText().toString().trim();
+                    sdesigRepoManager = desigRepoManager.getText().toString().trim();
+                    scontactNoOfRepoManager = contactNoOfRepoManager.getText().toString().trim();
+                    ssalary = salary.getText().toString().trim();
+                    stpcPersonName = tpcPersonName.getText().toString().trim();
 
-                slati = lat.getText().toString().trim();
-                slongi = lng.getText().toString().trim();
+                    slati = lat.getText().toString().trim();
+                    slongi = lng.getText().toString().trim();
 
-                /**
-                 * RETROFIT MAGIC
-                 */
-                retroFitHelper(TABLENAME,
-                        StringCaseNo,
-                        seaseLocSpinner,
-                        scompanyName,
-                        slocTypeSpinner,
-                        saddConfirmSpinner,
-                        slandmark,
-                        sdesignOfApp,
-                        spersonMet,
-                        sdesignOfPersonMet,
-                        spersonContactNo,
-                        sdoesAppWorkSpinner,
-                        sofficeTele,
-                        sofficeNameBoardSpinner,
-                        sorgTypeSpinner,
-                        sdateOfJoin,
-                        svisitingCardObtSpinner,
-                        snatureBusinessSpinner,
-                        sjobTypeSpinner,
-                        sworkingAsSpinner,
-                        sjobTransferSpinner,
-                        snoOfEmp,
-                        spersonContacted,
-                        sdesigPersonContacted,
-                        snameOfRepManager,
-                        sdesigRepoManager,
-                        scontactNoOfRepoManager,
-                        ssalary,
-                        stpcConfirmSpinner,
-                        stpcPersonName,
-                        soverallStatusSpinner,
-                        sreasonNegativeSpinner,
-                        slati, slongi);
+                    /**
+                     * RETROFIT MAGIC
+                     */
+                    retroFitHelper(TABLENAME,
+                            StringCaseNo,
+                            seaseLocSpinner,
+                            scompanyName,
+                            slocTypeSpinner,
+                            saddConfirmSpinner,
+                            slandmark,
+                            sdesignOfApp,
+                            spersonMet,
+                            sdesignOfPersonMet,
+                            spersonContactNo,
+                            sdoesAppWorkSpinner,
+                            sofficeTele,
+                            sofficeNameBoardSpinner,
+                            sorgTypeSpinner,
+                            sdateOfJoin,
+                            svisitingCardObtSpinner,
+                            snatureBusinessSpinner,
+                            stypeOfJobSpinner,
+                            sworkingAsSpinner,
+                            sjobTransferSpinner,
+                            snoOfEmp,
+                            spersonContacted,
+                            sdesigPersonContacted,
+                            snameOfRepManager,
+                            sdesigRepoManager,
+                            scontactNoOfRepoManager,
+                            ssalary,
+                            stpcConfirmSpinner,
+                            stpcPersonName,
+                            soverallStatusSpinner,
+                            sreasonNegativeSpinner,
+                            slati, slongi);
+                }
+
+                else {
+                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
+                }
 
             }
+
+
         });
     }
 
@@ -470,7 +522,12 @@ public class EmploymentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body().equals("Success")) {
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success")) {
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
                     /**
@@ -520,6 +577,9 @@ public class EmploymentActivity extends AppCompatActivity {
             latitude = location.getLatitude();
             longitude =location.getLongitude();
             if (latitude != 0 && longitude != 0){
+
+                progressBar.setVisibility(View.GONE);
+                fetchingLocation.setVisibility(View.GONE);
 
                 lat.setText(""+location.getLatitude());
                 lng.setText(""+location.getLongitude());
@@ -583,5 +643,38 @@ public class EmploymentActivity extends AppCompatActivity {
         boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
         return isAvailable && (coarsePermissionCheck || finePermissionCheck);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.logout:
+
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+
+                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences2.edit();
+                editor2.clear();
+                editor2.apply();
+                finish();
+
+                Intent i = new Intent(EmploymentActivity.this,LoginActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

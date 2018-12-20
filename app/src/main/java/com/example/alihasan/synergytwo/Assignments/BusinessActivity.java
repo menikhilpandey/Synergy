@@ -1,5 +1,6 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -27,10 +28,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BusinessActivity extends AppCompatActivity {
 
-    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
+    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
 
     /**
      * 29 ELEMENTS
@@ -120,10 +125,36 @@ public class BusinessActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-business";
 
+    ProgressBar progressBar;
+
+    private int REQUEST_STRING_CODE=1234;
+
+    boolean GOT_LOCATION = false;
+
+    TextView fetchingLocation;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
+
+        /**
+         * PERMISSION CHECKS
+         */
+
+        String []permissionsList={Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+
+        progressBar = findViewById(R.id.progressBar);
+        fetchingLocation = findViewById(R.id.fetchingLocation);
 
         SharedPreferences loginData = getSharedPreferences("PDANO", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
@@ -230,68 +261,83 @@ public class BusinessActivity extends AppCompatActivity {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(ContextCompat.checkSelfPermission(BusinessActivity.this,Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED)
+        {
 
-                if (isLocationServicesAvailable(BusinessActivity.this)) {
+            progressBar.setVisibility(View.VISIBLE);
+            fetchingLocation.setVisibility(View.VISIBLE);
+            GOT_LOCATION = true;
 
-                    Log.d("THIS","HERE");
-                    dialog = new ProgressDialog(BusinessActivity.this);
-                    dialog.setMessage("Getting Your location....");
-                    dialog.show();
-                    if (ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
-                    dialog.dismiss();
+            if (isLocationServicesAvailable(BusinessActivity.this)) {
+
+                Log.d("THIS","HERE");
+                dialog = new ProgressDialog(BusinessActivity.this);
+                dialog.setMessage("Getting Your location....");
+                dialog.show();
+                if (ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
                 }
-                else {
-                    Log.d("THIS","HERE 2");
-                    if (ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    AlertDialog.Builder builder =
-                            new AlertDialog.Builder(BusinessActivity.this);
-                    final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-                    final String message = "Enable either GPS or any other location"
-                            + " service to find current location.  Click OK to go to"
-                            + " location services settings to let you do so.";
-                    builder.setTitle("Enable Location");
-
-                    builder.setMessage(message)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface d, int id) {
-                                            startActivity(new Intent(action));
-                                            d.dismiss();
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface d, int id) {
-                                            d.cancel();
-                                        }
-                                    }).show();
-                }
-
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
+                dialog.dismiss();
             }
-        });
+            else {
+                Log.d("THIS","HERE 2");
+                if (ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(BusinessActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(BusinessActivity.this);
+                final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+                final String message = "Enable either GPS or any other location"
+                        + " service to find current location.  Click OK to go to"
+                        + " location services settings to let you do so.";
+                builder.setTitle("Enable Location");
+
+                builder.setMessage(message)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int id) {
+                                        startActivity(new Intent(action));
+                                        d.dismiss();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int id) {
+                                        d.cancel();
+                                    }
+                                }).show();
+            }
+
+        }
+
+
+
+        else
+        {
+            Toast.makeText(getApplicationContext(), "GRANT LOCATION PERMISSION", Toast.LENGTH_SHORT).show();
+
+            String []permissionsList2={Manifest.permission.ACCESS_COARSE_LOCATION};
+
+            ActivityCompat.requestPermissions(BusinessActivity.this,
+                    permissionsList2,
+                    REQUEST_STRING_CODE);
+        }
 
         /**
          * LOCATION END
@@ -301,58 +347,65 @@ public class BusinessActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                spdaNoSpinner = pdaNoSpinner.getSelectedItem().toString();
-                seaseLocSpinner = easeLocSpinner.getSelectedItem().toString();
-                soffOwnershipSpinner = offOwnershipSpinner.getSelectedItem().toString();
-                slocalityTypeSpinner = localityTypeSpinner.getSelectedItem().toString();
-                sbusinessSetupSpinner = businessSetupSpinner.getSelectedItem().toString();
-                sbusinessBoardSpinner = businessBoardSpinner.getSelectedItem().toString();
-                svisCardSpinner = visCardSpinner.getSelectedItem().toString();
-                sapplVeriFrom = applVeriFrom.getSelectedItem().toString();
-                sconVeriFeed = conVeriFeed.getSelectedItem().toString();
-                spolLinkSpinner = polLinkSpinner.getSelectedItem().toString();
-                soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
-                sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
+                if(GOT_LOCATION)
+                {
+                    spdaNoSpinner = pdaNoSpinner.getSelectedItem().toString();
+                    seaseLocSpinner = easeLocSpinner.getSelectedItem().toString();
+                    soffOwnershipSpinner = offOwnershipSpinner.getSelectedItem().toString();
+                    slocalityTypeSpinner = localityTypeSpinner.getSelectedItem().toString();
+                    sbusinessSetupSpinner = businessSetupSpinner.getSelectedItem().toString();
+                    sbusinessBoardSpinner = businessBoardSpinner.getSelectedItem().toString();
+                    svisCardSpinner = visCardSpinner.getSelectedItem().toString();
+                    sapplVeriFrom = applVeriFrom.getSelectedItem().toString();
+                    sconVeriFeed = conVeriFeed.getSelectedItem().toString();
+                    spolLinkSpinner = polLinkSpinner.getSelectedItem().toString();
+                    soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
+                    sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
 
-                /**
-                 * END OF ADAPTERS
-                 */
+                    /**
+                     * END OF ADAPTERS
+                     */
 
-                sapplName = applName.getText().toString().trim();
-                saddress = address.getText().toString().trim();
-                scontactNo = contactNo.getText().toString().trim();
-                scompName = compName.getText().toString().trim();
-                sbusinessNature = businessNature.getText().toString().trim();
-                sdesignation = designation.getText().toString().trim();
-                sworkingSince = workingSince.getText().toString().trim();
-                spersonContacted = personContacted.getText().toString().trim();
-                sdesigContacted = designation.getText().toString().trim();
-                sempNo = empNo.getText().toString().trim();
-                slandmark = landmark.getText().toString().trim();
-                sbranchNo = branchNo.getText().toString().trim();
-                syearsPresentAdd = yearsPresentAdd.getText().toString().trim();
-                sconVer1 = conVer1.getText().toString().trim();
-                sconVer2 = conVer2.getText().toString().trim();
-                saddProofDetail = addProofDetail.getText().toString().trim();
+                    sapplName = applName.getText().toString().trim();
+                    saddress = address.getText().toString().trim();
+                    scontactNo = contactNo.getText().toString().trim();
+                    scompName = compName.getText().toString().trim();
+                    sbusinessNature = businessNature.getText().toString().trim();
+                    sdesignation = designation.getText().toString().trim();
+                    sworkingSince = workingSince.getText().toString().trim();
+                    spersonContacted = personContacted.getText().toString().trim();
+                    sdesigContacted = designation.getText().toString().trim();
+                    sempNo = empNo.getText().toString().trim();
+                    slandmark = landmark.getText().toString().trim();
+                    sbranchNo = branchNo.getText().toString().trim();
+                    syearsPresentAdd = yearsPresentAdd.getText().toString().trim();
+                    sconVer1 = conVer1.getText().toString().trim();
+                    sconVer2 = conVer2.getText().toString().trim();
+                    saddProofDetail = addProofDetail.getText().toString().trim();
 
-                slati = lat.getText().toString().trim();
-                slongi = lng.getText().toString().trim();
+                    slati = lat.getText().toString().trim();
+                    slongi = lng.getText().toString().trim();
 
-                /**
-                 * EDIT TEXTS END
-                 */
+                    /**
+                     * EDIT TEXTS END
+                     */
 
-                //String stypeCompany,svcard,snameboard,sambience,
-                //            sexterior,seaseToLoc,sbact,srecomm;
-                /**
-                 * RETROFIT MAGIC
-                 */
-                retroFitHelper(TABLENAME,StringCaseNo,seaseLocSpinner,soffOwnershipSpinner,
-                        scompName,slocalityTypeSpinner, sbusinessNature, sdesignation, sworkingSince,
-                        spersonContacted, sdesigContacted, sempNo,
-                        slandmark, sbranchNo,sbusinessSetupSpinner, sbusinessBoardSpinner, syearsPresentAdd,
-                        svisCardSpinner,sapplVeriFrom,sconVer1, sconVer2,sconVeriFeed, saddProofDetail,
-                        spolLinkSpinner, soverallStatusSpinner,sreasonNegativeSpinner,slati,slongi);
+                    //String stypeCompany,svcard,snameboard,sambience,
+                    //            sexterior,seaseToLoc,sbact,srecomm;
+                    /**
+                     * RETROFIT MAGIC
+                     */
+                    retroFitHelper(TABLENAME,StringCaseNo,seaseLocSpinner,soffOwnershipSpinner,
+                            scompName,slocalityTypeSpinner, sbusinessNature, sdesignation, sworkingSince,
+                            spersonContacted, sdesigContacted, sempNo,
+                            slandmark, sbranchNo,sbusinessSetupSpinner, sbusinessBoardSpinner, syearsPresentAdd,
+                            svisCardSpinner,sapplVeriFrom,sconVer1, sconVer2,sconVeriFeed, saddProofDetail,
+                            spolLinkSpinner, soverallStatusSpinner,sreasonNegativeSpinner,slati,slongi);
+                }
+
+                else {
+                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -409,7 +462,12 @@ public class BusinessActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body().equals("Success")) {
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success")) {
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
                     /**
@@ -458,10 +516,19 @@ public class BusinessActivity extends AppCompatActivity {
             longitude =location.getLongitude();
             if (latitude != 0 && longitude != 0){
 
-                lat.setText(""+location.getLatitude());
-                lng.setText(""+location.getLongitude());
+                    progressBar.setVisibility(View.GONE);
+                    fetchingLocation.setVisibility(View.GONE);
 
-                dialog.dismiss();
+
+                    lat.setText(""+location.getLatitude());
+                    lng.setText(""+location.getLongitude());
+
+                    dialog.dismiss();
+
+
+
+
+
             }
 
         }
@@ -520,5 +587,41 @@ public class BusinessActivity extends AppCompatActivity {
         boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
         return isAvailable && (coarsePermissionCheck || finePermissionCheck);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.logout:
+
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+
+                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences2.edit();
+                editor2.clear();
+                editor2.apply();
+                finish();
+
+                Toast.makeText(BusinessActivity.this, "LOGGED OUT SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+
+
+                Intent i = new Intent(BusinessActivity.this,LoginActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

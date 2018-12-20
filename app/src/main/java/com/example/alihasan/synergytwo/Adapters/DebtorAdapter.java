@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.BusinessActivity;
+import com.example.alihasan.synergytwo.Assignments.EmploymentActivity;
+import com.example.alihasan.synergytwo.Assignments.PropertyActivity;
+import com.example.alihasan.synergytwo.Assignments.ResidenceActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
@@ -92,7 +96,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             }
 
             else if(typeCase.getText().toString().equals("PROPERTY")) {
-                Intent intent = new Intent(this.context, BusinessActivity.class);
+                Intent intent = new Intent(this.context, PropertyActivity.class);
 //                intent.putExtra("CASENO");
 //                intent.putExtra("USERNAME",userName);
 
@@ -106,7 +110,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             }
 
             else if(typeCase.getText().toString().equals("RESIDENCE")) {
-                Intent intent = new Intent(this.context, BusinessActivity.class);
+                Intent intent = new Intent(this.context, ResidenceActivity.class);
 //                intent.putExtra("CASENO");
 //                intent.putExtra("USERNAME",userName);
 
@@ -120,7 +124,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             }
 
             else if(typeCase.getText().toString().equals("EMPLOYMENT")) {
-                Intent intent = new Intent(this.context, BusinessActivity.class);
+                Intent intent = new Intent(this.context, EmploymentActivity.class);
 //                intent.putExtra("CASENO");
 //                intent.putExtra("USERNAME",userName);
 

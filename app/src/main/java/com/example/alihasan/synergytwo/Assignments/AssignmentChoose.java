@@ -8,11 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Adapters.DebtorAdapter;
+import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -34,7 +38,7 @@ public class AssignmentChoose extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DebtorAdapter mAdapter;
 
-    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
+    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
 
 //    Intent i = getIntent();
 
@@ -56,6 +60,7 @@ public class AssignmentChoose extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(AssignmentChoose.this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
+        recyclerView.invalidate();
 
         /**
          * START OF RETROFIT
@@ -74,50 +79,13 @@ public class AssignmentChoose extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
 
-//                List<Debtor> dataList = response.body();
-//
-//                String[] names = new String[dataList.size()];
-//
-//                for(int i = 0 ; i < dataList.size() ; i++)
-//                {
-//                    names[i] = dataList.get(i).getApplName();
-//                }
-//
-//
-//                listview.setAdapter(new ArrayAdapter<>(
-//                        getApplicationContext(),
-//                        android.R.layout.simple_list_item_1, names));
-
-                //fniwnvrnpejnenjp
-
                 Toast.makeText(getApplicationContext(), "GOT RESPONSE", Toast.LENGTH_SHORT).show();
-
-//                Intent i = new Intent(android.content.Intent.ACTION_SEND);
-//                i.setType("text/plain");
-//                i.putExtra(android.content.Intent.EXTRA_TEXT, "HELLO" + response.body().toString());
-//                startActivity(i);
 
                 List<Debtor> dataList = response.body();
 
                 mAdapter = new DebtorAdapter(AssignmentChoose.this,dataList,pdaNo);
                 recyclerView.setAdapter(mAdapter);
 
-//                int n = dataList.size();
-//
-//                String[] caseNo = new String[n];
-//                String[] applName = new String[n];
-//                String[] address = new String[n];
-//                String[] altTele = new String[n];
-//                String[] typeCase = new String[n];
-//
-//                for(int i = 0 ; i < dataList.size() ; i++)
-//                {
-//                    caseNo[i] = dataList.get(i).getCaseNo();
-//                    applName[i] = dataList.get(i).getApplName();
-//                    address[i] = dataList.get(i).getAddress();
-//                    altTele[i] = dataList.get(i).getAltTele();
-//                    typeCase[i] = dataList.get(i).getTypeCase();
-//                }
             }
 
             @Override
@@ -127,5 +95,38 @@ public class AssignmentChoose extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.logout:
+
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+
+                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences2.edit();
+                editor2.clear();
+                editor2.apply();
+                finish();
+
+                Intent i = new Intent(AssignmentChoose.this,LoginActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

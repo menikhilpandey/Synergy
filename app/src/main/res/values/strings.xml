@@ -5,7 +5,7 @@
 
     <string name="error">Error finding image</string>
 
-    <string name="BASE_URL">BASE URL</string>
+    <string name="BASE_URL">http://b72f4220.ngrok.io/project/aztekgo/android/</string>
 
     <!--1) Residence-->
     <!--2) Business-->

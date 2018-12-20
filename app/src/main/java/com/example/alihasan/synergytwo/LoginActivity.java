@@ -1,9 +1,12 @@
 package com.example.alihasan.synergytwo;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,22 +32,42 @@ public class LoginActivity extends AppCompatActivity {
     EditText userEditText;
     EditText passEditText;
 
+    private int REQUEST_STRING_CODE=1234;
+
     /**
      * TV
      */
 
-    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
+    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
 
     String strID, strPass;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        /**
+         * PERMISSION CHECK
+         */
+
+        String []permissionsList={Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+
+        permissionCheckeToast();
+
         loginButton = findViewById(R.id.loginButton);
         userEditText = findViewById(R.id.userNameEditText);
         passEditText = findViewById(R.id.passEditText);
+
+
 
         /**
          * HAVE TO WRITE CHECK FOR NETWORK
@@ -104,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "FAILURE", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -134,5 +157,17 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return md5Str;
+    }
+
+    public void permissionCheckeToast(){
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)!=PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED||
+                ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED)
+        {
+            Toast.makeText(getApplicationContext(), "GRANT PERMISSIONS", Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
 }

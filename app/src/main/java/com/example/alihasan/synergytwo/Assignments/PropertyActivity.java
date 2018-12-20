@@ -23,14 +23,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -48,7 +53,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PropertyActivity extends AppCompatActivity {
 
-    static String SERVER_URL = Resources.getSystem().getString(R.string.BASE_URL);
+    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
 
     /**
      * Total 23
@@ -140,10 +145,34 @@ public class PropertyActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-property";
 
+    ProgressBar progressBar;
+
+    private int REQUEST_STRING_CODE=1234;
+
+    boolean GOT_LOCATION = false;
+
+    TextView fetchingLocation;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property);
+
+        /**
+         * PERMISSION CHECKS
+         */
+
+        String []permissionsList={Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+        ActivityCompat.requestPermissions(this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+
+        progressBar=findViewById(R.id.progressBar);
+        fetchingLocation = findViewById(R.id.fetchingLocation);
 
         SharedPreferences loginData = getSharedPreferences("PDANO", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
@@ -244,68 +273,79 @@ public class PropertyActivity extends AppCompatActivity {
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if(ContextCompat.checkSelfPermission(PropertyActivity.this,Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED)
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            fetchingLocation.setVisibility(View.VISIBLE);
+            GOT_LOCATION = true;
 
-                if (isLocationServicesAvailable(PropertyActivity.this)) {
+            if (isLocationServicesAvailable(PropertyActivity.this)) {
 
-                    Log.d("THIS","HERE");
-                    dialog = new ProgressDialog(PropertyActivity.this);
-                    dialog.setMessage("Getting Your location....");
-                    dialog.show();
-                    if (ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
-                    dialog.dismiss();
+                Log.d("THIS","HERE");
+                dialog = new ProgressDialog(PropertyActivity.this);
+                dialog.setMessage("Getting Your location....");
+                dialog.show();
+                if (ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
                 }
-                else {
-                    Log.d("THIS","HERE 2");
-                    if (ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    AlertDialog.Builder builder =
-                            new AlertDialog.Builder(PropertyActivity.this);
-                    final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-                    final String message = "Enable either GPS or any other location"
-                            + " service to find current location.  Click OK to go to"
-                            + " location services settings to let you do so.";
-                    builder.setTitle("Enable Location");
-
-                    builder.setMessage(message)
-                            .setPositiveButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface d, int id) {
-                                            startActivity(new Intent(action));
-                                            d.dismiss();
-                                        }
-                                    })
-                            .setNegativeButton("Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface d, int id) {
-                                            d.cancel();
-                                        }
-                                    }).show();
-                }
-
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
+                dialog.dismiss();
             }
-        });
+            else {
+                Log.d("THIS","HERE 2");
+                if (ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(PropertyActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(PropertyActivity.this);
+                final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+                final String message = "Enable either GPS or any other location"
+                        + " service to find current location.  Click OK to go to"
+                        + " location services settings to let you do so.";
+                builder.setTitle("Enable Location");
+
+                builder.setMessage(message)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int id) {
+                                        startActivity(new Intent(action));
+                                        d.dismiss();
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface d, int id) {
+                                        d.cancel();
+                                    }
+                                }).show();
+            }
+        }
+
+        else
+        {
+            Toast.makeText(getApplicationContext(), "GRANT LOCATION PERMISSION", Toast.LENGTH_SHORT).show();
+
+            String []permissionsList2={Manifest.permission.ACCESS_COARSE_LOCATION};
+
+            ActivityCompat.requestPermissions(PropertyActivity.this,
+                    permissionsList2,
+                    REQUEST_STRING_CODE);
+        }
 
         /**
          * LOCATION END
@@ -315,61 +355,68 @@ public class PropertyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                seaseToLocSpinner = easeToLocSpinner.getSelectedItem().toString();
-                srelationshipSpinner = relationshipSpinner.getSelectedItem().toString();
-                spropTypeSpinner = propTypeSpinner.getSelectedItem().toString();
-                snoYearsPresentOwnSpinner = noYearsPresentOwnSpinner.getSelectedItem().toString();
-                scooperativeAppSpinner = cooperativeAppSpinner.getSelectedItem().toString();
-                sneighbourFeedSpinner = neighbourFeedSpinner.getSelectedItem().toString();
-                slocTypeSpinner = locTypeSpinner.getSelectedItem().toString();
-                sambienceSpinner = ambienceSpinner.getSelectedItem().toString();
-                sappStaySpinner = appStaySpinner.getSelectedItem().toString();
-                svehicalSeenSpinner = vehicalSeenSpinner.getSelectedItem().toString();
-                spoliticalLinkSpinner = politicalLinkSpinner.getSelectedItem().toString();
-                sOverallStatusSpinner = OverallStatusSpinner.getSelectedItem().toString();
-                sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
+                if(GOT_LOCATION)
+                {
+                    seaseToLocSpinner = easeToLocSpinner.getSelectedItem().toString();
+                    srelationshipSpinner = relationshipSpinner.getSelectedItem().toString();
+                    spropTypeSpinner = propTypeSpinner.getSelectedItem().toString();
+                    snoYearsPresentOwnSpinner = noYearsPresentOwnSpinner.getSelectedItem().toString();
+                    scooperativeAppSpinner = cooperativeAppSpinner.getSelectedItem().toString();
+                    sneighbourFeedSpinner = neighbourFeedSpinner.getSelectedItem().toString();
+                    slocTypeSpinner = locTypeSpinner.getSelectedItem().toString();
+                    sambienceSpinner = ambienceSpinner.getSelectedItem().toString();
+                    sappStaySpinner = appStaySpinner.getSelectedItem().toString();
+                    svehicalSeenSpinner = vehicalSeenSpinner.getSelectedItem().toString();
+                    spoliticalLinkSpinner = politicalLinkSpinner.getSelectedItem().toString();
+                    sOverallStatusSpinner = OverallStatusSpinner.getSelectedItem().toString();
+                    sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
 
-                spersonContacted = personContacted.getText().toString().trim();
-                sarea = area.getText().toString().trim();
-                sdocumentVerify = documentVerify.getText().toString().trim();
-                sneighbourName1 = neighbourName1.getText().toString().trim();
-                saddress1 = address1.getText().toString().trim();
-                sneighbourName2 = neighbourName2.getText().toString().trim();
-                saddress2 = address2.getText().toString().trim();
-                spropertySoldWhom = propertySoldWhom.getText().toString().trim();
-                sremarkPurchaser = remarkPurchaser.getText().toString().trim();
+                    spersonContacted = personContacted.getText().toString().trim();
+                    sarea = area.getText().toString().trim();
+                    sdocumentVerify = documentVerify.getText().toString().trim();
+                    sneighbourName1 = neighbourName1.getText().toString().trim();
+                    saddress1 = address1.getText().toString().trim();
+                    sneighbourName2 = neighbourName2.getText().toString().trim();
+                    saddress2 = address2.getText().toString().trim();
+                    spropertySoldWhom = propertySoldWhom.getText().toString().trim();
+                    sremarkPurchaser = remarkPurchaser.getText().toString().trim();
 
-                slati = lat.getText().toString().trim();
-                slongi = lng.getText().toString().trim();
+                    slati = lat.getText().toString().trim();
+                    slongi = lng.getText().toString().trim();
 
-                /**
-                 * RETROFIT MAGIC
-                 */
-                retroFitHelper(TABLENAME,
-                        StringCaseNo,
-                        seaseToLocSpinner,
-                        spersonContacted,
-                        srelationshipSpinner,
-                        snoYearsPresentOwnSpinner,
-                        sarea,
-                        sdocumentVerify,
-                        sneighbourName1,
-                        saddress1,
-                        sneighbourName2,
-                        saddress2,
-                        spropertySoldWhom,
-                        sremarkPurchaser,
-                        scooperativeAppSpinner,
-                        sneighbourFeedSpinner,
-                        slocTypeSpinner,
-                        sambienceSpinner,
-                        sappStaySpinner,
-                        svehicalSeenSpinner,
-                        spoliticalLinkSpinner,
-                        sOverallStatusSpinner,
-                        sreasonNegativeSpinner,
-                        slati,
-                        slongi);
+                    /**
+                     * RETROFIT MAGIC
+                     */
+                    retroFitHelper(TABLENAME,
+                            StringCaseNo,
+                            seaseToLocSpinner,
+                            spersonContacted,
+                            srelationshipSpinner,
+                            snoYearsPresentOwnSpinner,
+                            sarea,
+                            sdocumentVerify,
+                            sneighbourName1,
+                            saddress1,
+                            sneighbourName2,
+                            saddress2,
+                            spropertySoldWhom,
+                            sremarkPurchaser,
+                            scooperativeAppSpinner,
+                            sneighbourFeedSpinner,
+                            slocTypeSpinner,
+                            sambienceSpinner,
+                            sappStaySpinner,
+                            svehicalSeenSpinner,
+                            spoliticalLinkSpinner,
+                            sOverallStatusSpinner,
+                            sreasonNegativeSpinner,
+                            slati,
+                            slongi);
+                }
+
+                else {
+                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -440,7 +487,12 @@ public class PropertyActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body().equals("Success")) {
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success")) {
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
                     /**
@@ -489,6 +541,9 @@ public class PropertyActivity extends AppCompatActivity {
             latitude = location.getLatitude();
             longitude =location.getLongitude();
             if (latitude != 0 && longitude != 0){
+
+                progressBar.setVisibility(View.GONE);
+                fetchingLocation.setVisibility(View.GONE);
 
                 lat.setText(""+location.getLatitude());
                 lng.setText(""+location.getLongitude());
@@ -552,6 +607,39 @@ public class PropertyActivity extends AppCompatActivity {
         boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
         return isAvailable && (coarsePermissionCheck || finePermissionCheck);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.logout:
+
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+                finish();
+
+                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor2 = preferences2.edit();
+                editor2.clear();
+                editor2.apply();
+                finish();
+
+                Intent i = new Intent(PropertyActivity.this,LoginActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
