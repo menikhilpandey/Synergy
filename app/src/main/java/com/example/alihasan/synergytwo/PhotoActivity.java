@@ -57,7 +57,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.alihasan.synergytwo.fileprovider";
 
-    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
 
     private String mTempPhotoPath;
 

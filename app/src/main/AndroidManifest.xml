@@ -45,13 +45,19 @@
         <activity android:name=".Assignments.AssignmentChoose"
             android:screenOrientation="portrait"/>
         <activity android:name=".Assignments.BusinessActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+        </activity>
+
+
         <activity android:name=".PhotoActivity" />
         <!-- <activity android:name=".BusinessHelper"></activity> -->
         <activity android:name=".Assignments.ResidenceActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".Assignments.EmploymentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+
+        </activity>
         <activity android:name=".Assignments.PropertyActivity"
             android:screenOrientation="portrait">
 

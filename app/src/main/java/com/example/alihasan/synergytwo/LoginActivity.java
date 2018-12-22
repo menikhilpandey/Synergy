@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
      * TV
      */
 
-    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
 
     String strID, strPass;
 
@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
          */
 
         String []permissionsList={Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE};

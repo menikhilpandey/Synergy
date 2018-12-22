@@ -1,12 +1,23 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+import android.content.IntentSender;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
+import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -54,7 +65,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ResidenceActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
 
     /**
      * Total 36
@@ -193,6 +204,9 @@ public class ResidenceActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this,
                 permissionsList,
                 REQUEST_STRING_CODE);
+
+        displayLocationSettingsRequest(ResidenceActivity.this);
+
 
         progressBar=findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
@@ -350,81 +364,8 @@ public class ResidenceActivity extends AppCompatActivity {
          * LOCATION BUTTON
          */
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        if(ContextCompat.checkSelfPermission(ResidenceActivity.this,Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_GRANTED)
-        {
-            progressBar.setVisibility(View.VISIBLE);
-            fetchingLocation.setVisibility(View.VISIBLE);
-            GOT_LOCATION = true;
-
-            if (isLocationServicesAvailable(ResidenceActivity.this)) {
-
-                Log.d("THIS","HERE");
-                dialog = new ProgressDialog(ResidenceActivity.this);
-                dialog.setMessage("Getting Your location....");
-                dialog.show();
-                if (ActivityCompat.checkSelfPermission(ResidenceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ResidenceActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 100, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 100, locationListener);
-                dialog.dismiss();
-            }
-            else {
-                Log.d("THIS","HERE 2");
-                if (ActivityCompat.checkSelfPermission(ResidenceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ResidenceActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                AlertDialog.Builder builder =
-                        new AlertDialog.Builder(ResidenceActivity.this);
-                final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-                final String message = "Enable either GPS or any other location"
-                        + " service to find current location.  Click OK to go to"
-                        + " location services settings to let you do so.";
-                builder.setTitle("Enable Location");
-
-                builder.setMessage(message)
-                        .setPositiveButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface d, int id) {
-                                        startActivity(new Intent(action));
-                                        d.dismiss();
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface d, int id) {
-                                        d.cancel();
-                                    }
-                                }).show();
-            }
-        }
-
-        else
-        {
-            Toast.makeText(getApplicationContext(), "GRANT LOCATION PERMISSION", Toast.LENGTH_SHORT).show();
-
-            String []permissionsList2={Manifest.permission.ACCESS_COARSE_LOCATION};
-
-            ActivityCompat.requestPermissions(ResidenceActivity.this,
-                    permissionsList2,
-                    REQUEST_STRING_CODE);
-        }
+        final AppLocationService appLocationService = new AppLocationService(
+                this);
 
         /**
          * LOCATION END
@@ -434,7 +375,36 @@ public class ResidenceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(GOT_LOCATION)
+                /**
+                 *LocationFetching
+                 */
+//                final AppLocationService appLocationService = new AppLocationService(
+//                        BusinessActivity.this);
+
+
+                Location nwLocation = appLocationService
+                        .getLocation();
+
+                if (nwLocation != null) {
+
+
+                    double latitude = nwLocation.getLatitude();
+                    double longitude = nwLocation.getLongitude();
+
+//                    locText.setText(latitude + " " + longitude);
+
+                    lat.setText(String.valueOf(latitude));
+                    lng.setText(String.valueOf(longitude));
+
+//                    GOT_LOCATION = true;
+                }
+
+
+                /**
+                 * Fetched
+                 */
+
+                if(nwLocation != null)
                 {
                     seaseToLocSpinner = easeToLocSpinner.getSelectedItem().toString();
                     slocTypeSpinner = locTypeSpinner.getSelectedItem().toString();
@@ -517,7 +487,20 @@ public class ResidenceActivity extends AppCompatActivity {
                 }
 
                 else {
-                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(ResidenceActivity.this, "Click again after a moment", Toast.LENGTH_LONG).show();
+
+                    String []permissionsList={Manifest.permission.CAMERA,
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE};
+                    ActivityCompat.requestPermissions(ResidenceActivity.this,
+                            permissionsList,
+                            REQUEST_STRING_CODE);
+
+                    displayLocationSettingsRequest(ResidenceActivity.this);
                 }
 
             }
@@ -645,94 +628,6 @@ public class ResidenceActivity extends AppCompatActivity {
 
     }
 
-    LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            Geocoder geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
-
-            try {
-                List<Address> addresses=geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-                Address address=addresses.get(0);
-                String useradd="";
-                for(int i=0;i<address.getMaxAddressLineIndex();i++)
-                    useradd=useradd+address.getAddressLine(i).toString()+"\n";
-                useradd=useradd+(address.getCountryName().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            dialog.dismiss();
-            latitude = location.getLatitude();
-            longitude =location.getLongitude();
-            if (latitude != 0 && longitude != 0){
-
-                progressBar.setVisibility(View.GONE);
-                fetchingLocation.setVisibility(View.GONE);
-
-                lat.setText(""+location.getLatitude());
-                lng.setText(""+location.getLongitude());
-
-                dialog.dismiss();
-            }
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            dialog.dismiss();
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            dialog.dismiss();
-        }
-    };
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == LOCATION_REQ_CODE){
-            if(permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION)  {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
-                    dialog.setMessage("Getting Coordinates");
-                    dialog.show();
-                    //noinspection MissingPermission
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
-                    dialog = new ProgressDialog(ResidenceActivity.this);
-                }
-            }
-        }
-    }
-
-    public static boolean isLocationServicesAvailable(Context context) {
-        int locationMode = 0;
-        String locationProviders;
-        boolean isAvailable = false;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            try {
-                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            isAvailable = (locationMode != Settings.Secure.LOCATION_MODE_OFF);
-        } else {
-            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            isAvailable = !TextUtils.isEmpty(locationProviders);
-        }
-
-        boolean coarsePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-        boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-
-        return isAvailable && (coarsePermissionCheck || finePermissionCheck);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -764,6 +659,51 @@ public class ResidenceActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void displayLocationSettingsRequest(Context context) {
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i("TAG", "All location settings are satisfied.");
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i("TAG", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult(ResidenceActivity.this, 1);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i("TAG", "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i("TAG", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+
+
+        });
+
+
     }
 
 }

@@ -38,7 +38,7 @@ public class AssignmentChoose extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DebtorAdapter mAdapter;
 
-    static String SERVER_URL = "http://be15ec7b.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
 
 //    Intent i = getIntent();
 
