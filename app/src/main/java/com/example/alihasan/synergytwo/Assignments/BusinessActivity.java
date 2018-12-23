@@ -65,7 +65,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BusinessActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     /**
      * 29 ELEMENTS

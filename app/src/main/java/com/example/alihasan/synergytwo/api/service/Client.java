@@ -56,6 +56,7 @@ public interface Client {
                                   @Field("EASELOCATE") String EASELOCATE,
                                   @Field("PERSONCONTACTED") String PERSONCONTACTED,
                                   @Field("RELATIONSHIP") String RELATIONSHIP,
+                                  @Field("PROPERTYTYPE") String PROPERTYTYPE,
                                   @Field("NOSYEARSOWNER") String NOSYEARSOWNER,
                                   @Field("AREA") String AREA,
                                   @Field("DOCSVERIF") String DOCSVERIF,

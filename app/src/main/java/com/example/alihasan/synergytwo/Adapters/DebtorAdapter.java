@@ -56,7 +56,11 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return debtorList.size();
+        try {
+            return debtorList.size();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

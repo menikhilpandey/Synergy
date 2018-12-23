@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
+import com.example.alihasan.synergytwo.Assignments.ServerURL;
 import com.example.alihasan.synergytwo.Encoder.md5;
 import com.example.alihasan.synergytwo.api.service.Client;
 
@@ -39,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
      * TV
      */
 
-    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     String strID, strPass;
 
@@ -72,16 +73,18 @@ public class LoginActivity extends AppCompatActivity {
         /**
          * LOGINBUTTON hide for some time while auto login get executed
          */
-        loginButton.setVisibility(View.INVISIBLE);
+//        userEditText.setVisibility(View.INVISIBLE);
+//        passEditText.setVisibility(View.INVISIBLE);
+//        loginButton.setVisibility(View.INVISIBLE);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                loginButton.setVisibility(View.VISIBLE);
-            }
-        }, 2000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                loginButton.setVisibility(View.VISIBLE);
+//            }
+//        }, 2000);
 
         /**
          * Auto LogIn feature
@@ -89,49 +92,16 @@ public class LoginActivity extends AppCompatActivity {
 
         if(!getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE).getString("PDANO", "").equals("")){
 
+            Intent i = new Intent(LoginActivity.this,AssignmentChoose.class);
+            startActivity(i);
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(SERVER_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            Client client = retrofit.create(Client.class);
-
-            String enUser = md5encoder(getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE).getString("PDANO", ""));
-            String enPass = md5encoder(getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE).getString("PASS", ""));
-
-            Call<String> call = client.getAuth(enUser,enPass);
-
-            call.enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
-                    if(response.body()==null)
-                    {
-                        Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                    }
-
-                    else if(response.body().equals("Success"))
-                    {
-                        //ASSIGNMENT CHOOSE
-
-                        Intent i = new Intent(LoginActivity.this,AssignmentChoose.class);
-//                            i.putExtra("USERNAME",strID);
-                        startActivity(i);
-                    }
-
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "PASS CHANGED" + response.body(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "FAILURE", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
+//        else{
+//            userEditText.setVisibility(View.VISIBLE);
+//            passEditText.setVisibility(View.VISIBLE);
+//            loginButton.setVisibility(View.VISIBLE);
+//
+//        }
 
 
         /**
@@ -165,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = loginData.edit();
                 editor.putString("PDANO", strID);
-                editor.putString("PASS", strPass);
+//                editor.putString("PASS", strPass);
                 editor.apply();
 
                 String enUser = md5encoder(strID);
@@ -199,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "FAILURE", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "No Internet/FAILURE", Toast.LENGTH_SHORT).show();
                     }
                 });
 

@@ -64,7 +64,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PropertyActivity extends AppCompatActivity {
 
-    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     /**
      * Total 23
@@ -363,6 +363,7 @@ public class PropertyActivity extends AppCompatActivity {
                             seaseToLocSpinner,
                             spersonContacted,
                             srelationshipSpinner,
+                            spropTypeSpinner,
                             snoYearsPresentOwnSpinner,
                             sarea,
                             sdocumentVerify,
@@ -411,6 +412,7 @@ public class PropertyActivity extends AppCompatActivity {
                                 String EASELOCATE,
                                 String PERSONCONTACTED,
                                 String RELATIONSHIP,
+                                String PROPERTYTYPE,
                                 String NOSYEARSOWNER,
                                 String AREA,
                                 String DOCSVERIF,
@@ -446,6 +448,7 @@ public class PropertyActivity extends AppCompatActivity {
                 EASELOCATE,
                 PERSONCONTACTED,
                 RELATIONSHIP,
+                PROPERTYTYPE,
                 NOSYEARSOWNER,
                 AREA,
                 DOCSVERIF,

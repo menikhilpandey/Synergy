@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
+import com.example.alihasan.synergytwo.Assignments.ServerURL;
 import com.example.alihasan.synergytwo.api.service.Client;
 
 import java.io.ByteArrayOutputStream;
@@ -57,7 +58,7 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.alihasan.synergytwo.fileprovider";
 
-    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     private String mTempPhotoPath;
 

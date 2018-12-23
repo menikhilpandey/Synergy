@@ -38,7 +38,7 @@ public class AssignmentChoose extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DebtorAdapter mAdapter;
 
-    static String SERVER_URL = "http://a7abd7de.ngrok.io/project/aztekgo/android/";
+    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
 //    Intent i = getIntent();
 
@@ -50,6 +50,7 @@ public class AssignmentChoose extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_choose);
+
 
         SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
         pdaNo = loginData.getString("PDANO", "");
@@ -66,33 +67,41 @@ public class AssignmentChoose extends AppCompatActivity {
          * START OF RETROFIT
          */
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        Client client = retrofit.create(Client.class);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(SERVER_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
-        Call<List<Debtor>> call = client.getDebtors(pdaNo);
 
-        call.enqueue(new Callback<List<Debtor>>() {
-            @Override
-            public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
+            Client client = retrofit.create(Client.class);
 
-                Toast.makeText(getApplicationContext(), "GOT RESPONSE", Toast.LENGTH_SHORT).show();
+            Call<List<Debtor>> call = client.getDebtors(pdaNo);
 
-                List<Debtor> dataList = response.body();
+            call.enqueue(new Callback<List<Debtor>>() {
+                @Override
+                public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
 
-                mAdapter = new DebtorAdapter(AssignmentChoose.this,dataList,pdaNo);
-                recyclerView.setAdapter(mAdapter);
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+                else
+                    Toast.makeText(getApplicationContext(), "GOT RESPONSE", Toast.LENGTH_SHORT).show();
 
-            }
+                    List<Debtor> dataList = response.body();
 
-            @Override
-            public void onFailure(Call<List<Debtor>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE"+ pdaNo, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo);
+                    recyclerView.setAdapter(mAdapter);
+
+                }
+
+                @Override
+                public void onFailure(Call<List<Debtor>> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "No Internet/ Failure", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
 
     }
