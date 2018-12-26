@@ -1,11 +1,10 @@
 <resources>
-    <string name="app_name">SynergyTwo</string>
+    <string name="app_name">Aztek Go</string>
 
     <string name="file_provider_authority" translatable="false">com.example.alihasan.synergytwo.fileprovider</string>
 
     <string name="error">Error finding image</string>
 
-    <string name="BASE_URL">http://b72f4220.ngrok.io/project/aztekgo/android/</string>
 
     <!--1) Residence-->
     <!--2) Business-->

@@ -33,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
-import com.example.alihasan.synergytwo.Assignments.ServerURL;
+import com.example.alihasan.synergytwo.api.service.ServerURL;
 import com.example.alihasan.synergytwo.api.service.Client;
 
 import java.io.ByteArrayOutputStream;
@@ -90,11 +90,15 @@ public class PhotoActivity extends AppCompatActivity {
 
     boolean EXIT_CODE = false;
 
+    int counter = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+
+        counter = 0;
 
         /**
          * PERMISSION CHECKS
@@ -168,9 +172,16 @@ public class PhotoActivity extends AppCompatActivity {
                     startActivity(backToAssignmentChoose);
                 }
 
-                else{
-                    Toast.makeText(getApplicationContext(), "JUST A MINUTE. UPLOADING IMAGE...", Toast.LENGTH_SHORT).show();
-
+                else
+                    {
+                    if(counter < 3)
+                    {
+                        Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "JUST A MINUTE. UPLOADING IMAGE...", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
 
@@ -271,7 +282,10 @@ public class PhotoActivity extends AppCompatActivity {
                 if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    EXIT_CODE = true;
+                    counter = counter + 1;
+
+                    if(counter >= 3)
+                        EXIT_CODE = true;
 
                 }
                 else
@@ -438,23 +452,68 @@ public class PhotoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logout:
 
+                String enUser;
                 SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
-                editor.apply();
-                finish();
+                enUser = preferences.getString("ENPDANO", "");
 
-                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor2 = preferences2.edit();
-                editor2.clear();
-                editor2.apply();
-                finish();
-                Intent i = new Intent(PhotoActivity.this,LoginActivity.class);
-                startActivity(i);
+                logout(enUser);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void logout(String enUser)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.logout(enUser);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success"))
+                {
+                    SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    finish();
+
+                    SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor2 = preferences2.edit();
+                    editor2.clear();
+                    editor2.apply();
+                    finish();
+                    Intent i = new Intent(PhotoActivity.this,LoginActivity.class);
+                    startActivity(i);
+
+                    Toast.makeText(getApplicationContext(), "Successfully logged out", Toast.LENGTH_SHORT).show();
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Something went wrong :(" + response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "No Internet/FAILURE", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

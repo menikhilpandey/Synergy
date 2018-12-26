@@ -5,6 +5,7 @@ import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
+import com.example.alihasan.synergytwo.api.service.ServerURL;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -18,28 +19,14 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Handler;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,10 +39,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -583,36 +566,6 @@ public class BusinessActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
-            case R.id.logout:
-
-                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
-                editor.apply();
-                finish();
-
-                SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor2 = preferences2.edit();
-                editor2.clear();
-                editor2.apply();
-                finish();
-
-                Toast.makeText(BusinessActivity.this, "LOGGED OUT SUCCESSFULLY", Toast.LENGTH_SHORT).show();
-
-
-                Intent i = new Intent(BusinessActivity.this,LoginActivity.class);
-                startActivity(i);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void displayLocationSettingsRequest(Context context) {
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API).build();
@@ -657,4 +610,75 @@ public class BusinessActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.logout:
+
+                String enUser;
+                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                enUser = preferences.getString("ENPDANO", "");
+
+                logout(enUser);
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void logout(String enUser)
+    {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.logout(enUser);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success"))
+                {
+                    SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    finish();
+
+                    SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor2 = preferences2.edit();
+                    editor2.clear();
+                    editor2.apply();
+                    finish();
+                    Intent i = new Intent(BusinessActivity.this,LoginActivity.class);
+                    startActivity(i);
+
+                    Toast.makeText(getApplicationContext(), "Successfully logged out", Toast.LENGTH_SHORT).show();
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Something went wrong :(" + response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "No Internet/FAILURE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }

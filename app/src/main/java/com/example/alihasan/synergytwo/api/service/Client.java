@@ -10,9 +10,13 @@ import retrofit2.http.POST;
 
 public interface Client {
 
-    @POST("authorizeandroid.php")
+    @POST("authorize.php")
     @FormUrlEncoded
     Call<String> getAuth(@Field("USERNAME") String ID, @Field("PASSWORD") String PASS);
+
+    @POST("logout.php")
+    @FormUrlEncoded
+    Call<String> logout(@Field("PDANO") String ID);
 
     @POST("fetchcases.php")
     @FormUrlEncoded

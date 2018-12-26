@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
-import com.example.alihasan.synergytwo.Assignments.ServerURL;
+import com.example.alihasan.synergytwo.api.service.ServerURL;
 import com.example.alihasan.synergytwo.Encoder.md5;
 import com.example.alihasan.synergytwo.api.service.Client;
 
@@ -132,13 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 strID = userEditText.getText().toString();
                 strPass = passEditText.getText().toString();
 
-                SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = loginData.edit();
-                editor.putString("PDANO", strID);
-//                editor.putString("PASS", strPass);
-                editor.apply();
-
-                String enUser = md5encoder(strID);
+                final String enUser = md5encoder(strID);
                 String enPass = md5encoder(strPass);
 
                 Call<String> call = client.getAuth(enUser,enPass);
@@ -155,6 +148,12 @@ public class LoginActivity extends AppCompatActivity {
                         else if(response.body().equals("Success"))
                         {
                             //ASSIGNMENT CHOOSE
+
+                            SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = loginData.edit();
+                            editor.putString("PDANO", strID);
+                            editor.putString("ENPDANO",enUser);
+                            editor.apply();
 
                             Intent i = new Intent(LoginActivity.this,AssignmentChoose.class);
 //                            i.putExtra("USERNAME",strID);
