@@ -16,11 +16,15 @@ public interface Client {
 
     @POST("logout.php")
     @FormUrlEncoded
-    Call<String> logout(@Field("PDANO") String ID);
+    Call<String> logout(@Field("USERNAME") String ID);
 
     @POST("fetchcases.php")
     @FormUrlEncoded
     Call<List<Debtor>> getDebtors(@Field("PDANO") String ID);
+
+    @POST("deleteimage.php")
+    @FormUrlEncoded
+    Call<String> deleteImage(@Field("NAME") String ID);
 
     @POST("addtotable.php")
     @FormUrlEncoded

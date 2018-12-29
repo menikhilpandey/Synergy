@@ -3,6 +3,7 @@ package com.example.alihasan.synergytwo.Assignments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,9 +33,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AssignmentChoose extends AppCompatActivity {
 
-//    ListView listview;
-
-
     private RecyclerView recyclerView;
     private DebtorAdapter mAdapter;
 
@@ -42,11 +40,9 @@ public class AssignmentChoose extends AppCompatActivity {
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
-//    Intent i = getIntent();
-
-//    String pdaNo = i.getStringExtra("USERNAME");
-//    String pdaNo = "PDA123";
     String pdaNo;
+
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +56,7 @@ public class AssignmentChoose extends AppCompatActivity {
 //        listview = findViewById(R.id.listViewData);
         recyclerView = findViewById(R.id.recyclerView);
         textView = findViewById(R.id.empty_view);
+        mSwipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
         LinearLayoutManager manager = new LinearLayoutManager(AssignmentChoose.this);
         recyclerView.setLayoutManager(manager);
@@ -111,6 +108,58 @@ public class AssignmentChoose extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<List<Debtor>> call, Throwable t) {
                     Toast.makeText(getApplicationContext(), "No Internet/ Failure", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(SERVER_URL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                    Client client = retrofit.create(Client.class);
+
+                    Call<List<Debtor>> call = client.getDebtors(pdaNo);
+
+                    call.enqueue(new Callback<List<Debtor>>() {
+                        @Override
+                        public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
+
+                            if(response.body()==null)
+                            {
+                                Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                                Toast.makeText(getApplicationContext(), "GOT RESPONSE", Toast.LENGTH_SHORT).show();
+
+                            List<Debtor> dataList = response.body();
+
+                            mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo);
+                            recyclerView.setAdapter(mAdapter);
+
+                            if (mAdapter.getItemCount()==0) {
+                                recyclerView.setVisibility(View.GONE);
+                                textView.setVisibility(View.VISIBLE);
+                            }
+                            else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                textView.setVisibility(View.GONE);
+                            }
+
+                            mSwipeRefreshLayout.setRefreshing(false);
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Debtor>> call, Throwable t) {
+                            Toast.makeText(getApplicationContext(), "No Internet/ Failure", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
             });
 

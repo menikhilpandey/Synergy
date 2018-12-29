@@ -54,7 +54,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PhotoActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_STORAGE_PERMISSION = 1;
 
     private static final String FILE_PROVIDER_AUTHORITY = "com.example.alihasan.synergytwo.fileprovider";
 
@@ -71,14 +70,6 @@ public class PhotoActivity extends AppCompatActivity {
     Button exitButton;
 
     TextView tv;
-
-    Intent i = getIntent();
-//    String caseNo = i.getStringExtra("CASENO");
-//    String ACTIVITY = i.getStringExtra("TYPEOFCASE");
-//    String userName = i.getStringExtra("USERANAME");
-//String caseNo = "1234";
-//    String ACTIVITY = "BUSINESS";
-//    String userName = "PDA123";
 
     String userName;
     String caseNo;

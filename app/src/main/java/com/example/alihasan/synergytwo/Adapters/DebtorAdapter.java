@@ -3,6 +3,7 @@ package com.example.alihasan.synergytwo.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -10,6 +11,7 @@ import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +46,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         Debtor debtor = debtorList.get(position);
 
         holder.caseNo.setText(debtor.getCaseNo());
@@ -52,6 +54,15 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         holder.altTele.setText(debtor.getAltTele());
         holder.address.setText(debtor.getAddress());
         holder.typeCase.setText(debtor.getTypeCase());
+
+        holder.callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+holder.altTele.getText().toString()));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -68,6 +79,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         TextView caseNo, applName, altTele, address, typeCase;
         Context context;
         List<Debtor> data;
+        ImageButton callButton;
 
         public MyViewHolder(View itemView, Context context, List<Debtor> data) {
             super(itemView);
@@ -79,6 +91,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             altTele = itemView.findViewById(R.id.altTele);
             address = itemView.findViewById(R.id.address);
             typeCase = itemView.findViewById(R.id.caseType);
+            callButton = itemView.findViewById(R.id.callButton);
 
             itemView.setOnClickListener(this);
         }
@@ -87,13 +100,13 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         public void onClick(View v) {
             if(typeCase.getText().toString().equals("BUSINESS")) {
                 Intent intent = new Intent(this.context, BusinessActivity.class);
-//                intent.putExtra("CASENO");
-//                intent.putExtra("USERNAME",userName);
 
                 SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = caseData.edit();
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "BUSINESS");
+                editor.putString("PERSONNAME", applName.getText().toString());
+
                 editor.apply();
 
                 context.startActivity(intent);
@@ -101,13 +114,13 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
             else if(typeCase.getText().toString().equals("PROPERTY")) {
                 Intent intent = new Intent(this.context, PropertyActivity.class);
-//                intent.putExtra("CASENO");
-//                intent.putExtra("USERNAME",userName);
 
                 SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = caseData.edit();
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "PROPERTY");
+                editor.putString("PERSONNAME", applName.getText().toString());
+
                 editor.apply();
 
                 context.startActivity(intent);
@@ -115,13 +128,14 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
             else if(typeCase.getText().toString().equals("RESIDENCE")) {
                 Intent intent = new Intent(this.context, ResidenceActivity.class);
-//                intent.putExtra("CASENO");
-//                intent.putExtra("USERNAME",userName);
+
 
                 SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = caseData.edit();
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "RESIDENCE");
+                editor.putString("PERSONNAME", applName.getText().toString());
+
                 editor.apply();
 
                 context.startActivity(intent);
@@ -129,13 +143,13 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
             else if(typeCase.getText().toString().equals("EMPLOYMENT")) {
                 Intent intent = new Intent(this.context, EmploymentActivity.class);
-//                intent.putExtra("CASENO");
-//                intent.putExtra("USERNAME",userName);
 
                 SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = caseData.edit();
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "EMPLOYMENT");
+                editor.putString("PERSONNAME", applName.getText().toString());
+
                 editor.apply();
 
                 context.startActivity(intent);

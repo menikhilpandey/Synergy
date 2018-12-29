@@ -70,6 +70,65 @@
 
                 <!--*********-->
 
+                <!--NAME AND CASE-TYPE-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Name"
+                        android:layout_gravity="center"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:id="@+id/PersonNameMAIN"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Case Type"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:id="@+id/CaseTypeMAIN"
+                        />
+
+                </LinearLayout>
+
+                <!--RECYCLERVIEW + TEXT VIEW-->
+
+                <TextView
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:visibility="visible"
+                    android:textSize="20dp"
+                    android:text="Add at least 3 images..." />
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/recyclerView"
+                    android:visibility="visible"
+                    android:orientation="horizontal">
+
+                </android.support.v7.widget.RecyclerView>
+
+                <View
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000dff"/>
+
+                <!--END of recyclerView-->
+
                 <!--Ease to Locate-->
 
                 <LinearLayout
@@ -1098,7 +1157,7 @@
                     android:layout_marginTop="20dp"
                     android:background="@color/darkblue"
                     android:layout_gravity="center"
-                    android:text="NEXT"
+                    android:text="SUBMIT"
                     android:textColor="#fff"
                     />
                 <View
