@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.R;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
+    private CounterSingleton counter = CounterSingleton.getInstance();
 
 
     //vars
@@ -68,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 deleteImageRetro(mimageName.get(position),position);
                 mimageName.remove(position);
+                counter.decreaseCounter();
             }
         });
 
@@ -101,7 +105,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
-    public  void deleteImageRetro(String mimageName, final int position){
+    private void deleteImageRetro(String mimageName, final int position){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_URL)

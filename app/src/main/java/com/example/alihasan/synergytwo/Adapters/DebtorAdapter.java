@@ -106,6 +106,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "BUSINESS");
                 editor.putString("PERSONNAME", applName.getText().toString());
+                editor.putString("ADDRESS", address.getText().toString());
 
                 editor.apply();
 
@@ -120,6 +121,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "PROPERTY");
                 editor.putString("PERSONNAME", applName.getText().toString());
+                editor.putString("ADDRESS", address.getText().toString());
 
                 editor.apply();
 
@@ -135,6 +137,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "RESIDENCE");
                 editor.putString("PERSONNAME", applName.getText().toString());
+                editor.putString("ADDRESS", address.getText().toString());
 
                 editor.apply();
 
@@ -149,6 +152,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("CASENO", caseNo.getText().toString());
                 editor.putString("ACTIVITY", "EMPLOYMENT");
                 editor.putString("PERSONNAME", applName.getText().toString());
+                editor.putString("ADDRESS", address.getText().toString());
 
                 editor.apply();
 

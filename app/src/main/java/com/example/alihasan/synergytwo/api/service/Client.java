@@ -30,6 +30,7 @@ public interface Client {
     @FormUrlEncoded
     Call<String> sendBusinessData(@Field("TABLENAME") String TABLENAME,
                                   @Field("CASENO") String CASENO,
+                                  @Field("ADDRESS") String ADDRESS,
                                   @Field("EASELOCATE") String EASELOCATE,
                                   @Field("OFFICEOWNERSHIP") String OFFICEOWNERSHIP,
                                   @Field("APPLCOMPANYNAME") String APPLCOMPANYNAME,
@@ -61,6 +62,7 @@ public interface Client {
     @FormUrlEncoded
     Call<String> sendPropertyData(@Field("TABLENAME") String TABLENAME,
                                   @Field("CASENO") String CASENO,
+                                  @Field("ADDRESS") String ADDRESS,
                                   @Field("EASELOCATE") String EASELOCATE,
                                   @Field("PERSONCONTACTED") String PERSONCONTACTED,
                                   @Field("RELATIONSHIP") String RELATIONSHIP,
@@ -90,6 +92,7 @@ public interface Client {
     @FormUrlEncoded
     Call<String> sendResidenceData(@Field("TABLENAME") String TABLENAME,
                                    @Field("CASENO") String CASENO,
+                                   @Field("ADDRESS") String ADDRESS,
                                    @Field("EASELOCATE") String EASELOCATE,
                                    @Field("AGE") String AGE,
                                    @Field("LOCALITYTYPE") String LOCALITYTYPE,
@@ -130,6 +133,7 @@ public interface Client {
     @FormUrlEncoded
     Call<String> sendEmploymentData(@Field("TABLENAME") String TABLENAME,
                                     @Field("CASENO") String CASENO,
+                                    @Field("ADDRESS") String ADDRESS,
                                     @Field("EASELOCATE") String EASELOCATE,
                                     @Field("APPLCOMPANYNAME") String APPLCOMPANYNAME,
                                     @Field("LOCALITYTYPE") String LOCALITYTYPE,

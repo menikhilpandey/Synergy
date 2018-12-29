@@ -9,6 +9,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
+import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
@@ -48,6 +49,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,7 +80,8 @@ public class ResidenceActivity extends AppCompatActivity {
      * Spinner 18
      */
 
-    EditText caseNo;
+    EditText address;
+    String saddress;
 
     EditText age, landmark, stayingSince, personContacted, noFamilyMem, working, dependentAmem,
             dependentCmem,retiredMember, spouseWorkDetail, neighbourName1, address1, neighbourName2, address2, addProof;
@@ -94,7 +97,6 @@ public class ResidenceActivity extends AppCompatActivity {
      */
 
     String sapplicantName,
-            saddress,
             salternateTele,
             sage,
             slandmark,
@@ -183,6 +185,8 @@ public class ResidenceActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-residence";
 
+    String ADDRESS;
+
     ProgressBar progressBar;
 
     private int REQUEST_STRING_CODE=1234;
@@ -206,7 +210,7 @@ public class ResidenceActivity extends AppCompatActivity {
     File photoFile = null;
 
     static String globalImageFileName;
-    int counter = 0;
+    private CounterSingleton counter;
 
     boolean EXIT_CODE = false;
 
@@ -229,6 +233,8 @@ public class ResidenceActivity extends AppCompatActivity {
         /**
          * PERMISSION CHECKS
          */
+
+        counter = CounterSingleton.getInstance();
 
         String []permissionsList={Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -257,6 +263,8 @@ public class ResidenceActivity extends AppCompatActivity {
         SharedPreferences caseData = getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
         StringCaseNo = caseData.getString("CASENO", "");
         PERSONNAME = caseData.getString("PERSONNAME","");
+        ADDRESS = caseData.getString("ADDRESS","");
+
 
 
         if(PERSONNAME!=null) {
@@ -265,6 +273,10 @@ public class ResidenceActivity extends AppCompatActivity {
         }
 
         //EditText
+
+        address = findViewById(R.id.address);
+        address.setText(ADDRESS);
+
         age = findViewById(R.id.age);
         landmark = findViewById(R.id.landmark);
         stayingSince = findViewById(R.id.stayingSince);
@@ -423,7 +435,7 @@ public class ResidenceActivity extends AppCompatActivity {
 
                 if(!EXIT_CODE)
                 {
-                    if(counter < 3)
+                    if(counter.getCounter() < 3)
                     {
                         Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                     }
@@ -485,6 +497,7 @@ public class ResidenceActivity extends AppCompatActivity {
                     soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
                     sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
 
+                    saddress = address.getText().toString().trim();
                     sage = age.getText().toString().trim();
                     slandmark = landmark.getText().toString().trim();
                     sstayingSince = stayingSince.getText().toString().trim();
@@ -509,6 +522,7 @@ public class ResidenceActivity extends AppCompatActivity {
                      */
                     retroFitHelper(TABLENAME,
                             StringCaseNo,
+                            saddress,
                             seaseToLocSpinner,
                             sage,
                             slocTypeSpinner,
@@ -563,12 +577,35 @@ public class ResidenceActivity extends AppCompatActivity {
                     displayLocationSettingsRequest(ResidenceActivity.this);
                 }
 
+                onSubmit();
+
             }
         });
     }
 
+    public void onSubmit()
+    {
+        retrofitExit(StringCaseNo,ACTIVITY);
+
+//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.clear();
+//                editor.apply();
+//                finish();
+
+        SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = preferences2.edit();
+        editor2.clear();
+        editor2.apply();
+        finish();
+
+        Intent backToAssignmentChoose = new Intent(ResidenceActivity.this,AssignmentChoose.class);
+        startActivity(backToAssignmentChoose);
+    }
+
     public  void retroFitHelper(String TABLENAME,
                                 String CASENO,
+                                String ADDRESS,
                                 String EASELOCATE,
                                 String AGE,
                                 String LOCALITYTYPE,
@@ -614,6 +651,7 @@ public class ResidenceActivity extends AppCompatActivity {
         Client client = retrofit.create(Client.class);
 
         Call<String> call = client.sendResidenceData(TABLENAME, CASENO,
+                ADDRESS,
                 EASELOCATE,
                 AGE,
                 LOCALITYTYPE,
@@ -921,9 +959,9 @@ public class ResidenceActivity extends AppCompatActivity {
                 else if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    counter = counter + 1;
+                    counter.addCounter();
 
-                    if(counter >= 3)
+                    if(counter.getCounter() >= 3)
                         EXIT_CODE = true;
 
                 }

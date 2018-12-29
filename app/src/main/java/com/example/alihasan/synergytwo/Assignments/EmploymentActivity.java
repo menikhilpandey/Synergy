@@ -1,6 +1,7 @@
 package com.example.alihasan.synergytwo.Assignments;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
+import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
@@ -78,7 +79,8 @@ public class EmploymentActivity extends AppCompatActivity {
      */
 
 
-    EditText caseNo;
+    EditText address;
+    String saddress;
 
     EditText companyName, landmark, designOfApp, personMet, designOfPersonMet, personContactNo, officeTele, dateOfJoin, noOfEmp,
             personContacted, desigPersonContacted, nameOfRepManager,desigRepoManager, contactNoOfRepoManager, salary, tpcPersonName;
@@ -136,6 +138,8 @@ public class EmploymentActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-employment";
 
+    String ADDRESS;
+
     ProgressBar progressBar;
 
     private int REQUEST_STRING_CODE=1234;
@@ -159,7 +163,7 @@ public class EmploymentActivity extends AppCompatActivity {
     File photoFile = null;
 
     static String globalImageFileName;
-    int counter = 0;
+    private CounterSingleton counter;
 
     boolean EXIT_CODE = false;
 
@@ -185,6 +189,8 @@ public class EmploymentActivity extends AppCompatActivity {
          * PERMISSION CHECKS
          */
 
+        counter = CounterSingleton.getInstance();
+
         String []permissionsList={Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -209,10 +215,11 @@ public class EmploymentActivity extends AppCompatActivity {
         SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
 
-
         SharedPreferences caseData = getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
         StringCaseNo = caseData.getString("CASENO", "");
         PERSONNAME = caseData.getString("PERSONNAME","");
+        ADDRESS = caseData.getString("ADDRESS","");
+
 
         if(PERSONNAME!=null) {
             personName.setText(PERSONNAME);
@@ -221,6 +228,10 @@ public class EmploymentActivity extends AppCompatActivity {
 
 
         //EditText
+
+        address = findViewById(R.id.address);
+        address.setText(ADDRESS);
+
         companyName = findViewById(R.id.compName);
         landmark = findViewById(R.id.landmark);
         designOfApp = findViewById(R.id.designation);
@@ -346,7 +357,7 @@ public class EmploymentActivity extends AppCompatActivity {
 
                 if(!EXIT_CODE)
                 {
-                    if(counter < 3)
+                    if(counter.getCounter() < 3)
                     {
                         Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                     }
@@ -404,6 +415,7 @@ public class EmploymentActivity extends AppCompatActivity {
                     soverallStatusSpinner = overallStatusSpinner.getSelectedItem().toString();
                     sreasonNegativeSpinner = reasonNegativeSpinner.getSelectedItem().toString();
 
+                    saddress = address.getText().toString().trim();
                     scompanyName = companyName.getText().toString().trim();
                     slandmark = landmark.getText().toString().trim();
                     sdesignOfApp = designOfApp.getText().toString().trim();
@@ -432,6 +444,7 @@ public class EmploymentActivity extends AppCompatActivity {
                      */
                     retroFitHelper(TABLENAME,
                             StringCaseNo,
+                            saddress,
                             seaseLocSpinner,
                             scompanyName,
                             slocTypeSpinner,
@@ -483,14 +496,16 @@ public class EmploymentActivity extends AppCompatActivity {
 
                 }
 
-            }
 
+                onSubmit();
+            }
 
         });
     }
 
     public  void retroFitHelper(String TABLENAME,
                                 String CASENO,
+                                String ADDRESS,
                                 String EASELOCATE,
                                 String APPLCOMPANYNAME,
                                 String LOCALITYTYPE,
@@ -533,6 +548,7 @@ public class EmploymentActivity extends AppCompatActivity {
 
         Call<String> call = client.sendEmploymentData(TABLENAME,
                 CASENO,
+                ADDRESS,
                 EASELOCATE,
                 APPLCOMPANYNAME,
                 LOCALITYTYPE,
@@ -837,9 +853,9 @@ public class EmploymentActivity extends AppCompatActivity {
                 else if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    counter = counter + 1;
+                    counter.addCounter();
 
-                    if(counter >= 3)
+                    if(counter.getCounter() >= 3)
                         EXIT_CODE = true;
 
                 }
@@ -857,6 +873,26 @@ public class EmploymentActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void onSubmit()
+    {
+        retrofitExit(StringCaseNo,ACTIVITY);
+
+//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.clear();
+//                editor.apply();
+//                finish();
+
+        SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = preferences2.edit();
+        editor2.clear();
+        editor2.apply();
+        finish();
+
+        Intent backToAssignmentChoose = new Intent(EmploymentActivity.this,AssignmentChoose.class);
+        startActivity(backToAssignmentChoose);
     }
 
     public  void retrofitExit(String caseNo, String caseType){

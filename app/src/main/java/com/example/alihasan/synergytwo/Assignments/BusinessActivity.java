@@ -1,7 +1,7 @@
 package com.example.alihasan.synergytwo.Assignments;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
-import com.example.alihasan.synergytwo.LoginActivity;
+import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
@@ -71,6 +71,8 @@ public class BusinessActivity extends AppCompatActivity {
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
+    EditText address;
+
     /**
      * 29 ELEMENTS
      * 18 EDITTEXTS
@@ -81,7 +83,7 @@ public class BusinessActivity extends AppCompatActivity {
 
     TextView personName,caseType;
 
-    EditText applName,address, contactNo, compName,
+    EditText applName, contactNo, compName,
             businessNature, designation, workingSince,
             personContacted, desigPersonMet, empNo,
             landmark, branchNo, yearsPresentAdd,
@@ -146,6 +148,8 @@ public class BusinessActivity extends AppCompatActivity {
 
     String PERSONNAME;
 
+    String ADDRESS;
+
     ProgressBar progressBar;
 
     private int REQUEST_STRING_CODE=1234;
@@ -171,7 +175,9 @@ public class BusinessActivity extends AppCompatActivity {
     File photoFile = null;
 
     static String globalImageFileName;
-    int counter = 0;
+//    int counter = 0;
+
+    private CounterSingleton counter;
 
     boolean EXIT_CODE = false;
 
@@ -188,6 +194,8 @@ public class BusinessActivity extends AppCompatActivity {
         /**
          * PERMISSION CHECKS
          */
+
+        counter = CounterSingleton.getInstance();
 
         String []permissionsList={Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -216,6 +224,7 @@ public class BusinessActivity extends AppCompatActivity {
         SharedPreferences caseData = getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
         StringCaseNo = caseData.getString("CASENO","");
         PERSONNAME = caseData.getString("PERSONNAME","");
+        ADDRESS = caseData.getString("ADDRESS","");
 
         if(PERSONNAME!=null) {
             personName.setText(PERSONNAME);
@@ -224,8 +233,10 @@ public class BusinessActivity extends AppCompatActivity {
 
         //        EDITTEXTS
 
+        address = findViewById(R.id.address);
+        address.setText(ADDRESS);
+
         applName = findViewById(R.id.applName);
-        address = findViewById(R.id.address) ;
         contactNo = findViewById(R.id.contactNo);
         compName = findViewById(R.id.compName);
         businessNature = findViewById(R.id.businessNature);
@@ -333,7 +344,7 @@ public class BusinessActivity extends AppCompatActivity {
 
                 if(!EXIT_CODE)
                 {
-                        if(counter < 3)
+                        if(counter.getCounter() < 3)
                         {
                             Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                         }
@@ -394,6 +405,7 @@ public class BusinessActivity extends AppCompatActivity {
                      * END OF ADAPTERS
                      */
 
+                    saddress = address.getText().toString().trim();
                     sapplName = applName.getText().toString().trim();
                     saddress = address.getText().toString().trim();
                     scontactNo = contactNo.getText().toString().trim();
@@ -424,7 +436,7 @@ public class BusinessActivity extends AppCompatActivity {
                     /**
                      * RETROFIT MAGIC
                      */
-                    retroFitHelper(TABLENAME,StringCaseNo,seaseLocSpinner,soffOwnershipSpinner,
+                    retroFitHelper(TABLENAME,StringCaseNo,saddress,seaseLocSpinner,soffOwnershipSpinner,
                             scompName,slocalityTypeSpinner, sbusinessNature, sdesignation, sworkingSince,
                             spersonContacted, sdesigContacted, sempNo,
                             slandmark, sbranchNo,sbusinessSetupSpinner, sbusinessBoardSpinner, syearsPresentAdd,
@@ -451,14 +463,37 @@ public class BusinessActivity extends AppCompatActivity {
 
                 }
 
+                onSubmit();
             }
+
         });
 
+    }
+
+    public void onSubmit()
+    {
+        retrofitExit(StringCaseNo,ACTIVITY);
+
+//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.clear();
+//                editor.apply();
+//                finish();
+
+        SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = preferences2.edit();
+        editor2.clear();
+        editor2.apply();
+        finish();
+
+        Intent backToAssignmentChoose = new Intent(BusinessActivity.this,AssignmentChoose.class);
+        startActivity(backToAssignmentChoose);
     }
 
 
     public void retroFitHelper(final String TABLENAME,
                                final String CASENO,
+                               final String ADDRESS,
                                final String EASELOCATE,
                                final String OFFICEOWNERSHIP,
                                final String APPLCOMPANYNAME,
@@ -493,7 +528,7 @@ public class BusinessActivity extends AppCompatActivity {
 
         Client client = retrofit.create(Client.class);
 
-        Call<String> call = client.sendBusinessData(TABLENAME, CASENO, EASELOCATE, OFFICEOWNERSHIP,
+        Call<String> call = client.sendBusinessData(TABLENAME, CASENO,ADDRESS, EASELOCATE, OFFICEOWNERSHIP,
                 APPLCOMPANYNAME, LOCALITYTYPE, NATUREBUSNIESS,
                 APPLDESIGNATION, WORKINGSINCE, PERSONCONTACTED,
                 PERSONDESIGNATION, NOSEMP, LANDMARK, NOSBRANCHES,
@@ -813,9 +848,9 @@ public class BusinessActivity extends AppCompatActivity {
                 else if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    counter = counter + 1;
+                    counter.addCounter();
 
-                    if(counter >= 3)
+                    if(counter.getCounter() >= 3)
                         EXIT_CODE = true;
 
                 }
