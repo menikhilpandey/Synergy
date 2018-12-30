@@ -54,6 +54,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         holder.altTele.setText(debtor.getAltTele());
         holder.address.setText(debtor.getAddress());
         holder.typeCase.setText(debtor.getTypeCase());
+        holder.bankType.setText(debtor.getClientCode());
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +77,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView caseNo, applName, altTele, address, typeCase;
+        TextView caseNo, applName, altTele, address, typeCase, bankType;
         Context context;
         List<Debtor> data;
         ImageButton callButton;
@@ -91,6 +92,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             altTele = itemView.findViewById(R.id.altTele);
             address = itemView.findViewById(R.id.address);
             typeCase = itemView.findViewById(R.id.caseType);
+            bankType = itemView.findViewById(R.id.bankType);
             callButton = itemView.findViewById(R.id.callButton);
 
             itemView.setOnClickListener(this);
@@ -107,6 +109,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("ACTIVITY", "BUSINESS");
                 editor.putString("PERSONNAME", applName.getText().toString());
                 editor.putString("ADDRESS", address.getText().toString());
+                editor.putString("CLIENTCODE", bankType.getText().toString());
 
                 editor.apply();
 
@@ -122,6 +125,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("ACTIVITY", "PROPERTY");
                 editor.putString("PERSONNAME", applName.getText().toString());
                 editor.putString("ADDRESS", address.getText().toString());
+                editor.putString("CLIENTCODE", bankType.getText().toString());
 
                 editor.apply();
 
@@ -138,6 +142,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("ACTIVITY", "RESIDENCE");
                 editor.putString("PERSONNAME", applName.getText().toString());
                 editor.putString("ADDRESS", address.getText().toString());
+                editor.putString("CLIENTCODE", bankType.getText().toString());
 
                 editor.apply();
 
@@ -153,6 +158,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 editor.putString("ACTIVITY", "EMPLOYMENT");
                 editor.putString("PERSONNAME", applName.getText().toString());
                 editor.putString("ADDRESS", address.getText().toString());
+                editor.putString("CLIENTCODE", bankType.getText().toString());
 
                 editor.apply();
 

@@ -81,6 +81,7 @@
                 android:paddingRight="7dp"
                 android:id="@+id/address"
                 />
+
             <TextView
                 android:textColor="#000"
                 android:hint="CASE"
@@ -91,6 +92,19 @@
                 android:paddingLeft="7dp"
                 android:paddingTop="7dp"
                 />
+
+            <TextView
+                android:textColor="#000"
+                android:hint="BANK"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bankType"
+                android:paddingLeft="7dp"
+                android:paddingTop="7dp"
+                />
+
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

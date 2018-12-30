@@ -164,7 +164,7 @@ public class PropertyActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-property";
 
-    String ADDRESS;
+    String ADDRESS,CLIENTCODE;
 
     ProgressBar progressBar;
 
@@ -200,7 +200,7 @@ public class PropertyActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     String PERSONNAME;
 
-    TextView personName,caseType;
+    TextView personName,caseType,bankType;
 
 
     @Override
@@ -234,6 +234,7 @@ public class PropertyActivity extends AppCompatActivity {
 
         personName = findViewById(R.id.PersonNameMAIN);
         caseType = findViewById(R.id.CaseTypeMAIN);
+        bankType = findViewById(R.id.bankTypeMAIN);
 
         SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
@@ -242,11 +243,13 @@ public class PropertyActivity extends AppCompatActivity {
         StringCaseNo = caseData.getString("CASENO", "");
         PERSONNAME = caseData.getString("PERSONNAME","");
         ADDRESS = caseData.getString("ADDRESS","");
+        CLIENTCODE = caseData.getString("CLIENTCODE","");
 
 
         if(PERSONNAME!=null) {
             personName.setText(PERSONNAME);
             caseType.setText(ACTIVITY);
+            bankType.setText(CLIENTCODE);
         }
 
         //EditText

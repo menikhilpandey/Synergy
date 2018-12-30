@@ -80,7 +80,7 @@ public class BusinessActivity extends AppCompatActivity {
 
     EditText caseNo;
 
-    TextView personName,caseType;
+    TextView personName,caseType,bankType;
 
     EditText applName, contactNo, compName,
             businessNature, designation, workingSince,
@@ -145,7 +145,7 @@ public class BusinessActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-business";
 
-    String PERSONNAME;
+    String PERSONNAME,CLIENTCODE;
 
     String ADDRESS;
 
@@ -219,6 +219,7 @@ public class BusinessActivity extends AppCompatActivity {
 
         personName = findViewById(R.id.PersonNameMAIN);
         caseType = findViewById(R.id.CaseTypeMAIN);
+        bankType = findViewById(R.id.bankTypeMAIN);
 
         SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
         userName = loginData.getString("PDANO", "");
@@ -227,10 +228,12 @@ public class BusinessActivity extends AppCompatActivity {
         StringCaseNo = caseData.getString("CASENO","");
         PERSONNAME = caseData.getString("PERSONNAME","");
         ADDRESS = caseData.getString("ADDRESS","");
+        CLIENTCODE = caseData.getString("CLIENTCODE","");
 
         if(PERSONNAME!=null) {
             personName.setText(PERSONNAME);
             caseType.setText(ACTIVITY);
+            bankType.setText(CLIENTCODE);
         }
 
         //        EDITTEXTS

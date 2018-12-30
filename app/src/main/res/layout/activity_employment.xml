@@ -99,6 +99,16 @@
                         android:id="@+id/CaseTypeMAIN"
                         />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BANK NAME"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:id="@+id/bankTypeMAIN"
+                        />
+
                 </LinearLayout>
 
                 <!--RECYCLERVIEW + TEXT VIEW-->
@@ -158,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/address"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Ease to Locate-->
@@ -222,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/compName"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Type Of Locality-->
@@ -319,7 +329,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/landmark"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Designation Of Applicant-->
@@ -351,7 +361,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/designation"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Person Met-->
@@ -383,7 +393,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/personMet"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Designation of Person Met-->
@@ -415,7 +425,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/desigPersonMet"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Person Contact No-->
@@ -447,7 +457,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/personContactNo"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Does the applicant Work-->
@@ -511,7 +521,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/officeTele"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="number|textMultiLine"
                     />
 
                 <!--Office Name Board Seen-->
@@ -607,7 +617,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dateOfJoin"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="date"
                     />
 
                 <!--Visiting card Obtained-->
@@ -799,7 +809,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/empNo"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="number"
                     />
 
                 <!--Person Contacted-->
@@ -831,7 +841,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/personContacted"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Designation of Person Contacted-->
@@ -863,7 +873,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/desigPersonContacted"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Name of Reporting Manager-->
@@ -895,7 +905,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/nameReportManager"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Designation of Reporting Manager-->
@@ -927,7 +937,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/desigRepoManager"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Contact No of Reporting manager-->
@@ -959,7 +969,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/contactNoRepoManager"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="number"
                     />
 
                 <!--Salary-->
@@ -991,7 +1001,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/salary"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="number"
                     />
 
                 <!--TPC Confirmation-->
@@ -1055,7 +1065,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/tpcPersonName"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Overall Status-->

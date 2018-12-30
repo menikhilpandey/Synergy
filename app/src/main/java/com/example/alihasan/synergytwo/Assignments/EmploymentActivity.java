@@ -138,7 +138,7 @@ public class EmploymentActivity extends AppCompatActivity {
 
     String TABLENAME = "cases-employment";
 
-    String ADDRESS;
+    String ADDRESS,CLIENTCODE;
 
     ProgressBar progressBar;
 
@@ -174,7 +174,7 @@ public class EmploymentActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     String PERSONNAME;
 
-    TextView personName,caseType;
+    TextView personName,caseType,bankType;
 
 
 
@@ -211,6 +211,7 @@ public class EmploymentActivity extends AppCompatActivity {
 
         personName = findViewById(R.id.PersonNameMAIN);
         caseType = findViewById(R.id.CaseTypeMAIN);
+        bankType = findViewById(R.id.bankTypeMAIN);
 
 
         SharedPreferences loginData = getSharedPreferences("PDANOSHARED", Context.MODE_PRIVATE);
@@ -220,11 +221,13 @@ public class EmploymentActivity extends AppCompatActivity {
         StringCaseNo = caseData.getString("CASENO", "");
         PERSONNAME = caseData.getString("PERSONNAME","");
         ADDRESS = caseData.getString("ADDRESS","");
+        CLIENTCODE = caseData.getString("CLIENTCODE","");
 
 
         if(PERSONNAME!=null) {
             personName.setText(PERSONNAME);
             caseType.setText(ACTIVITY);
+            bankType.setText(CLIENTCODE);
         }
 
 

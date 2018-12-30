@@ -19,15 +19,19 @@ public class Debtor {
     @SerializedName("CASETYPE")
     private String typeCase;
 
+        @SerializedName("CLIENTCODE")
+    private String clientCode;
+
 //    private String productType;
 
 
-    public Debtor(String caseNo, String applName, String address, String altTele, String typeCase) {
+    public Debtor(String caseNo, String applName, String address, String altTele, String typeCase,String clientCode) {
         this.caseNo = caseNo;
         this.applName = applName;
         this.address = address;
         this.altTele = altTele;
         this.typeCase = typeCase;
+        this.clientCode = clientCode;
     }
 
     public String getCaseNo() {
@@ -68,5 +72,13 @@ public class Debtor {
 
     public void setTypeCase(String typeCase) {
         this.typeCase = typeCase;
+    }
+
+    public String getClientCode() {
+        return clientCode;
+    }
+
+    public void setClientCode(String clientCode) {
+        this.clientCode = clientCode;
     }
 }

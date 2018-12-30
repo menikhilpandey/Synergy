@@ -99,6 +99,16 @@
                         android:id="@+id/CaseTypeMAIN"
                         />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BANK NAME"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:id="@+id/bankTypeMAIN"
+                        />
+
                 </LinearLayout>
 
                 <!--RECYCLERVIEW + TEXT VIEW-->
@@ -158,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/address"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Ease To Locate-->
@@ -222,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/personContacted"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Relationship-->
@@ -350,7 +360,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/area"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Document Verified-->
@@ -382,7 +392,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/docVerify"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Neighbour Name 1-->
@@ -414,7 +424,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/neighbourName1"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Address 1-->
@@ -446,7 +456,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/address1"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Neibhour Name 2-->
@@ -478,7 +488,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/neighbourName2"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Address 2-->
@@ -510,7 +520,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/address2"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Property Being sold to whom-->
@@ -542,7 +552,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/propertySoldWhom"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textPersonName|textMultiLine"
                     />
 
                 <!--Other Remarks about purchaser-->
@@ -574,7 +584,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/remarkPurchaser"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--How Cooperative Was Applicant-->

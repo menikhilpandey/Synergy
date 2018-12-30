@@ -204,6 +204,16 @@
                     android:id="@+id/CaseTypeMAIN"
                     />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BANK NAME"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:id="@+id/bankTypeMAIN"
+                    />
+
             </LinearLayout>
 
                 <!--RECYCLERVIEW + TEXT VIEW-->
@@ -258,12 +268,13 @@
                         android:textColor="#ee4242"
                         />
                 </LinearLayout>
+
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/address"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
 
@@ -361,7 +372,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/compName"
                     android:layout_marginRight="30dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     />
 
                 <!--Type of Locality-->
@@ -421,7 +432,7 @@
                         />
                 </LinearLayout>
                 <EditText
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/businessNature"
@@ -456,7 +467,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/designation"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -488,7 +499,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/workingSince"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -520,7 +531,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/personContacted"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -552,7 +563,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/desigPersonMet"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -585,7 +596,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/empNo"
                     android:layout_marginRight="30dp"
-                    android:inputType="number"
+                    android:inputType="number|textMultiLine"
                     android:hint="Total no. of employees in the company"
                     />
 
@@ -617,7 +628,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/landmark"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -650,7 +661,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/branchNo"
                     android:layout_marginRight="30dp"
-                    android:inputType="number"
+                    android:inputType="number|textMultiLine"
                     android:hint="Total no. of branches"
                     />
 
@@ -746,7 +757,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/yearsPresentAdd"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -843,7 +854,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/conVer1"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -875,7 +886,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/conVer2"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
@@ -939,7 +950,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/addProofDetail"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textMultiLine"
                     android:layout_marginRight="30dp"
                     />
 
