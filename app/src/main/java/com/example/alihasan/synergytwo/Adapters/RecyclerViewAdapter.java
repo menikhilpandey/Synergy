@@ -36,7 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
-    private CounterSingleton counter = CounterSingleton.getInstance();
+    private CounterSingleton counter;
 
 
     //vars
@@ -71,6 +71,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void onClick(View v) {
                 deleteImageRetro(mimageName.get(position),position);
                 mimageName.remove(position);
+                counter = CounterSingleton.getInstance();
                 counter.decreaseCounter();
             }
         });

@@ -2,7 +2,6 @@ package com.example.alihasan.synergytwo.Assignments;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.CounterSingleton;
-import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -179,6 +178,8 @@ public class BusinessActivity extends AppCompatActivity {
 
     private CounterSingleton counter;
 
+
+
     boolean EXIT_CODE = false;
 
     private ArrayList<Bitmap> mImageUrls = new ArrayList<>();
@@ -196,6 +197,7 @@ public class BusinessActivity extends AppCompatActivity {
          */
 
         counter = CounterSingleton.getInstance();
+        counter.setCounter(0);
 
         String []permissionsList={Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -341,6 +343,9 @@ public class BusinessActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(counter.getCounter() <  3)
+                    EXIT_CODE = false;
 
                 if(!EXIT_CODE)
                 {

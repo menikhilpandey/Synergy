@@ -116,6 +116,9 @@ public class AssignmentChoose extends AppCompatActivity {
                 @Override
                 public void onRefresh() {
 
+                    Toast.makeText(getApplicationContext(), "Refreshed", Toast.LENGTH_SHORT).show();
+
+
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(SERVER_URL)
                             .addConverterFactory(GsonConverterFactory.create())
@@ -190,6 +193,11 @@ public class AssignmentChoose extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     public void logout(String enUser)

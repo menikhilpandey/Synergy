@@ -235,6 +235,7 @@ public class ResidenceActivity extends AppCompatActivity {
          */
 
         counter = CounterSingleton.getInstance();
+        counter.setCounter(0);
 
         String []permissionsList={Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -432,6 +433,9 @@ public class ResidenceActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(counter.getCounter() <  3)
+                    EXIT_CODE = false;
 
                 if(!EXIT_CODE)
                 {
