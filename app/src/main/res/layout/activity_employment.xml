@@ -617,7 +617,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dateOfJoin"
                     android:layout_marginRight="30dp"
-                    android:inputType="date"
+                    android:inputType="textPersonName"
                     />
 
                 <!--Visiting card Obtained-->
@@ -1131,6 +1131,40 @@
                     android:id="@+id/reasonNegativeSpinner"
                     >
                 </Spinner>
+
+                <!--Remarks-->
+
+                <LinearLayout
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="Remarks"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="*"
+                        android:layout_weight="1"
+                        android:textAppearance="?android:textAppearanceLarge"
+                        android:textColor="#ee4242"
+                        />
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/remarks"
+                    android:layout_marginRight="30dp"
+                    android:inputType="textMultiLine"
+                    />
+
 
                 <!--*******-->
 

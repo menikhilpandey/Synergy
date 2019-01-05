@@ -56,7 +56,8 @@ public interface Client {
                                   @Field("OVERALLSTATUS") String OVERALLSTATUS,
                                   @Field("REASONNEGATIVEFI") String REASONNEGATIVEFI,
                                   @Field("LATITUDE") String LATITUDE,
-                                  @Field("LONGITUDE") String LONGITUDE);
+                                  @Field("LONGITUDE") String LONGITUDE,
+                                  @Field("REMARKS") String REMARKS);
 
     @POST("addtotable.php")
     @FormUrlEncoded
@@ -86,7 +87,8 @@ public interface Client {
                                   @Field("OVERALLSTATUS") String OVERALLSTATUS,
                                   @Field("REASONNEGATIVEFI") String REASONNEGATIVEFI,
                                   @Field("LATITUDE") String LATITUDE,
-                                  @Field("LONGITUDE") String LONGITUDE);
+                                  @Field("LONGITUDE") String LONGITUDE,
+                                  @Field("REMARKS") String REMARKS);
 
     @POST("addtotable.php")
     @FormUrlEncoded
@@ -127,7 +129,8 @@ public interface Client {
                                    @Field("OVERALLSTATUS") String OVERALLSTATUS,
                                    @Field("REASONNEGATIVEFI") String REASONNEGATIVEFI,
                                    @Field("LATITUDE") String LATITUDE,
-                                   @Field("LONGITUDE") String LONGITUDE);
+                                   @Field("LONGITUDE") String LONGITUDE,
+                                   @Field("REMARKS") String REMARKS);
 
     @POST("addtotable.php")
     @FormUrlEncoded
@@ -165,7 +168,8 @@ public interface Client {
                                     @Field("OVERALLSTATUS") String OVERALLSTATUS,
                                     @Field("REASONNEGATIVEFI") String REASONNEGATIVEFI,
                                     @Field("LATITUDE") String LATITUDE,
-                                    @Field("LONGITUDE") String LONGITUDE);
+                                    @Field("LONGITUDE") String LONGITUDE,
+                                    @Field("REMARKS") String REMARKS);
 
 
     @POST("imageupload.php")

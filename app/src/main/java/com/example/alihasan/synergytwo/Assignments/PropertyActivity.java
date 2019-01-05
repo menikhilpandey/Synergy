@@ -57,6 +57,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +83,8 @@ public class PropertyActivity extends AppCompatActivity {
     EditText address;
     String saddress;
 
-    EditText personContacted, area, documentVerify, neighbourName1, address1, neighbourName2, address2, propertySoldWhom, remarkPurchaser;
+    EditText personContacted, area, documentVerify, neighbourName1, address1,
+            neighbourName2, address2, propertySoldWhom, remarkPurchaser,remark;
 
     Spinner easeToLocSpinner, relationshipSpinner, propTypeSpinner, noYearsPresentOwnSpinner, cooperativeAppSpinner, neighbourFeedSpinner,
             locTypeSpinner, ambienceSpinner, appStaySpinner, vehicalSeenSpinner ,politicalLinkSpinner, OverallStatusSpinner,
@@ -101,7 +103,8 @@ public class PropertyActivity extends AppCompatActivity {
             sneighbourName2,
             saddress2,
             spropertySoldWhom,
-            sremarkPurchaser;
+            sremarkPurchaser,
+            sremark;
 
     String  seaseToLocSpinner,
             srelationshipSpinner,
@@ -266,6 +269,7 @@ public class PropertyActivity extends AppCompatActivity {
         address2 = findViewById(R.id.address2);
         propertySoldWhom = findViewById(R.id.propertySoldWhom);
         remarkPurchaser = findViewById(R.id.remarkPurchaser);
+        remark = findViewById(R.id.remarks);
 
         //Spinner
         easeToLocSpinner = findViewById(R.id.easeLocSpinner);
@@ -431,6 +435,7 @@ public class PropertyActivity extends AppCompatActivity {
                     saddress2 = address2.getText().toString().trim();
                     spropertySoldWhom = propertySoldWhom.getText().toString().trim();
                     sremarkPurchaser = remarkPurchaser.getText().toString().trim();
+                    sremark = remark.getText().toString().trim();
 
                     slati = lat.getText().toString().trim();
                     slongi = lng.getText().toString().trim();
@@ -464,7 +469,8 @@ public class PropertyActivity extends AppCompatActivity {
                             sOverallStatusSpinner,
                             sreasonNegativeSpinner,
                             slati,
-                            slongi);
+                            slongi,
+                            sremark);
                 }
 
                 else {
@@ -536,7 +542,8 @@ public class PropertyActivity extends AppCompatActivity {
                                 String OVERALLSTATUS,
                                 String REASONNEGATIVEFI,
                                 String LATITUDE,
-                                String LONGITUDE)
+                                String LONGITUDE,
+                                String REMARKS)
     {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -573,7 +580,8 @@ public class PropertyActivity extends AppCompatActivity {
                 OVERALLSTATUS,
                 REASONNEGATIVEFI,
                 LATITUDE,
-                LONGITUDE);
+                LONGITUDE,
+                REMARKS);
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -790,21 +798,12 @@ public class PropertyActivity extends AppCompatActivity {
      */
     private void processAndSetImage() {
 
-        // Resample the saved image to fit the ImageView
-        mResultsBitmap = resamplePic(this, mTempPhotoPath);
-
-//        tv.setText(base64conversion(photoFile));
-//
-//        Intent intent = new Intent(Intent.ACTION_SEND);
-//        intent.setType("text/plain");
-//        intent.putExtra(Intent.EXTRA_TEXT, base64conversion(photoFile));
-//        startActivity(intent);
-
+        mResultsBitmap = getBitmap(mTempPhotoPath);
         /**
          * UPLOAD IMAGE USING RETROFIT
          */
 
-        retroFitHelper(base64conversion(photoFile));
+        retroFitHelper(encodeImage(mResultsBitmap));
 
         // Set the new bitmap to the ImageView of RecyclerView
         mImageUrls.add(mResultsBitmap);
@@ -984,24 +983,79 @@ public class PropertyActivity extends AppCompatActivity {
         return deleted;
     }
 
-    public String base64conversion(File destination)
-    {
-        try {
-            FileInputStream in = new FileInputStream(destination);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 10; //Downsample 10x
-            Log.d("PP", " bitmap factory=========="+options);
-            Bitmap user_picture_bmp = BitmapFactory.decodeStream(in, null, options);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            user_picture_bmp.compress(Bitmap.CompressFormat.JPEG, 20, bos);
-            byte[] bArray = bos.toByteArray();
-            String encodedImage = Base64.encodeToString(bArray, Base64.DEFAULT);
-            return encodedImage;
+    private Bitmap getBitmap(String path) {
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "ERROR";
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 1200000; // 1.2MP
+            in = getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = false;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+
+            Bitmap b = null;
+            in = getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+
+//                mod_width = actual_width*(180/actual_height)
+
+                double y = 300;
+                double x = ((double) width)*(y/((double) height));
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
         }
+    }
+
+
+    private String encodeImage(Bitmap bm)
+    {
+
+        Toast.makeText(getApplicationContext(), "In encodemessage", Toast.LENGTH_SHORT).show();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] b = baos.toByteArray();
+        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+        Toast.makeText(getApplicationContext(), "About TO return", Toast.LENGTH_SHORT).show();
+
+
+        return encImage;
     }
 
 

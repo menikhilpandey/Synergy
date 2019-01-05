@@ -69,10 +69,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteImageRetro(mimageName.get(position),position);
-                mimageName.remove(position);
-                counter = CounterSingleton.getInstance();
-                counter.decreaseCounter();
+                deleteImageRetro(mimageName,mimageName.get(position),position);
+
             }
         });
 
@@ -106,7 +104,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
-    private void deleteImageRetro(String mimageName, final int position){
+    private void deleteImageRetro(final ArrayList<String> mimageNameList, String mimageName, final int position){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_URL)
@@ -138,6 +136,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     {
                         memptyView.setVisibility(View.VISIBLE);
                     }
+                    mimageNameList.remove(position);
+                    counter = CounterSingleton.getInstance();
+                    counter.decreaseCounter();
                 }
                 else
                 {
