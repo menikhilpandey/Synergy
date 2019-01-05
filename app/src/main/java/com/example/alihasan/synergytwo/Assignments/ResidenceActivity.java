@@ -1161,16 +1161,10 @@ public class ResidenceActivity extends AppCompatActivity {
 
     private String encodeImage(Bitmap bm)
     {
-
-        Toast.makeText(getApplicationContext(), "In encodemessage", Toast.LENGTH_SHORT).show();
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
         byte[] b = baos.toByteArray();
         String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-
-        Toast.makeText(getApplicationContext(), "About TO return", Toast.LENGTH_SHORT).show();
-
 
         return encImage;
     }
