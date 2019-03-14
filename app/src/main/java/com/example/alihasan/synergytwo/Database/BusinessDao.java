@@ -18,7 +18,7 @@ public interface BusinessDao {
     @Update
     void update(Business business);
 
-    @Query("DELETE FROM business_table WHERE id = (SELECT MAX(id) FROM business_table)")
+    @Query("DELETE FROM business_table WHERE id = (SELECT MIN(id) FROM business_table)")
     void delete();
 
     @Query("DELETE FROM business_table")
