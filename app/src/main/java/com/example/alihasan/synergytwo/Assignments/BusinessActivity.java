@@ -3,6 +3,12 @@ package com.example.alihasan.synergytwo.Assignments;
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.CounterSingleton;
+import com.example.alihasan.synergytwo.Database.AssignmentDatabase;
+import com.example.alihasan.synergytwo.Database.Business;
+import com.example.alihasan.synergytwo.Database.BusinessDao;
+//import com.example.alihasan.synergytwo.Database.BusinessRepo;
+//import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -19,6 +25,9 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
+import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -69,6 +78,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BusinessActivity extends AppCompatActivity {
+
+    /**
+     * DD test
+     */
+    private BusinessViewModel businessViewModel;
+    /**
+     *
+     */
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
@@ -196,6 +213,11 @@ public class BusinessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business);
+
+        /**
+         * DD test
+         */
+        businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
 
         /**
          * PERMISSION CHECKS
@@ -488,6 +510,9 @@ public class BusinessActivity extends AppCompatActivity {
 
     public void onSubmit()
     {
+
+
+
         retrofitExit(StringCaseNo,ACTIVITY);
 
 //                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);

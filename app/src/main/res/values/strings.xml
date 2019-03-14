@@ -182,13 +182,7 @@
     </string-array>
 
 
-
-
-
-
     <!--BUSINESS-->
-
-
 
 
     <string-array name="EASELOCATE2">
@@ -276,13 +270,7 @@
     </string-array>
 
 
-
-
-
     <!--EMPLOYMENT-->
-
-
-
 
 
     <string-array name="EASELOCATE3">
@@ -386,12 +374,7 @@
     </string-array>
 
 
-
-
-
-
     <!--Property-->
-
 
 
     <string-array name="EASELOCATE">
@@ -502,8 +485,6 @@
         <item>Restricted area</item>
         <item>Stability less than 1 year</item>
     </string-array>
-
-
 
 
 </resources>
