@@ -1,6 +1,7 @@
 package com.example.alihasan.synergytwo.Assignments;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
+import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
@@ -180,6 +181,8 @@ public class BusinessActivity extends AppCompatActivity {
 
     private CounterSingleton counter;
 
+    PhotoHelper photoHelper;
+
 
 
     boolean EXIT_CODE = false;
@@ -212,6 +215,7 @@ public class BusinessActivity extends AppCompatActivity {
 
         displayLocationSettingsRequest(BusinessActivity.this);
 
+        photoHelper = new PhotoHelper(BusinessActivity.this);
 
         progressBar = findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
@@ -587,101 +591,6 @@ public class BusinessActivity extends AppCompatActivity {
             }
         });
     }
-
-//    LocationListener locationListener = new LocationListener() {
-//        @Override
-//        public void onLocationChanged(Location location) {
-//            Geocoder geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
-//
-//            try {
-//                List<Address> addresses=geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
-//                Address address=addresses.get(0);
-//                String useradd="";
-//                for(int i=0;i<address.getMaxAddressLineIndex();i++)
-//                    useradd=useradd+address.getAddressLine(i).toString()+"\n";
-//                useradd=useradd+(address.getCountryName().toString());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            dialog.dismiss();
-//            latitude = location.getLatitude();
-//            longitude =location.getLongitude();
-//            if (latitude != 0 && longitude != 0){
-//
-//                    progressBar.setVisibility(View.GONE);
-//                    fetchingLocation.setVisibility(View.GONE);
-//
-//
-//                    lat.setText(""+location.getLatitude());
-//                    lng.setText(""+location.getLongitude());
-//
-//                    dialog.dismiss();
-//
-//
-//
-//
-//
-//            }
-//
-//        }
-//
-//        @Override
-//        public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//        }
-//
-//        @Override
-//        public void onProviderEnabled(String provider) {
-//            dialog.dismiss();
-//        }
-//
-//        @Override
-//        public void onProviderDisabled(String provider) {
-//            dialog.dismiss();
-//        }
-//    };
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if(requestCode == LOCATION_REQ_CODE){
-//            if(permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION)  {
-//                if(grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
-//                    dialog.setMessage("Getting Coordinates");
-//                    dialog.show();
-//                    //noinspection MissingPermission
-//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
-//                    dialog = new ProgressDialog(BusinessActivity.this);
-//                }
-//            }
-//        }
-//    }
-
-//    public static boolean isLocationServicesAvailable(Context context) {
-//        int locationMode = 0;
-//        String locationProviders;
-//        boolean isAvailable = false;
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-//            try {
-//                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-//            } catch (Settings.SettingNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//
-//            isAvailable = (locationMode != Settings.Secure.LOCATION_MODE_OFF);
-//        } else {
-//            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-//            isAvailable = !TextUtils.isEmpty(locationProviders);
-//        }
-//
-//        boolean coarsePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-//        boolean finePermissionCheck = (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
-//
-//        return isAvailable && (coarsePermissionCheck || finePermissionCheck);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -761,7 +670,7 @@ public class BusinessActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the temporary File where the photo should go
             try {
-                photoFile = createTempImageFile(BusinessActivity.this);
+                photoFile = photoHelper.createTempImageFile(BusinessActivity.this);
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
@@ -795,7 +704,7 @@ public class BusinessActivity extends AppCompatActivity {
         } else {
 
             // Otherwise, delete the temporary image file
-            deleteImageFile(this, mTempPhotoPath);
+            photoHelper.deleteImageFile(this, mTempPhotoPath);
         }
     }
 
@@ -804,12 +713,12 @@ public class BusinessActivity extends AppCompatActivity {
      */
     private void processAndSetImage() {
 
-        mResultsBitmap = getBitmap(mTempPhotoPath);
+        mResultsBitmap = photoHelper.getBitmap(mTempPhotoPath,BusinessActivity.this);
         /**
          * UPLOAD IMAGE USING RETROFIT
          */
 
-        retroFitHelper(encodeImage(mResultsBitmap));
+        retroFitHelper(photoHelper.encodeImage(mResultsBitmap));
 
         // Set the new bitmap to the ImageView of RecyclerView
         mImageUrls.add(mResultsBitmap);
@@ -909,155 +818,6 @@ public class BusinessActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Resamples the captured photo to fit the screen for better memory usage.
-     *
-     * @param context   The application context.
-     * @param imagePath The path of the photo to be resampled.
-     * @return The resampled bitmap
-     */
-    static Bitmap resamplePic(Context context, String imagePath) {
-
-        // Get device screen size information
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        manager.getDefaultDisplay().getMetrics(metrics);
-
-        int targetH = metrics.heightPixels;
-        int targetW = metrics.widthPixels;
-
-        // Get the dimensions of the original bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imagePath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        return BitmapFactory.decodeFile(imagePath);
-    }
-
-    /**
-     * Creates the temporary image file in the cache directory.
-     *
-     * @return The temporary image file.
-     * @throws IOException Thrown if there is an error creating the file
-     */
-    static File createTempImageFile(Context context)
-            throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        String imageFileName = "AZTEK" + timeStamp + "_";
-
-        globalImageFileName = imageFileName;
-
-        File storageDir = context.getExternalCacheDir();
-
-        return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-    }
-
-    /**
-     * Deletes image file for a given path.
-     *
-     * @param context   The application context.
-     * @param imagePath The path of the photo to be deleted.
-     */
-    static boolean deleteImageFile(Context context, String imagePath) {
-
-        // Get the file
-        File imageFile = new File(imagePath);
-
-        // Delete the image
-        boolean deleted = imageFile.delete();
-
-        // If there is an error deleting the file, show a Toast
-        if (!deleted) {
-            String errorMessage = context.getString(R.string.error);
-
-        }
-
-        return deleted;
-    }
-
-    private Bitmap getBitmap(String path) {
-
-        Uri uri = Uri.fromFile(new File(path));
-        InputStream in = null;
-        try {
-            final int IMAGE_MAX_SIZE = 1200000; // 1.2MP
-            in = getContentResolver().openInputStream(uri);
-
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = false;
-            BitmapFactory.decodeStream(in, null, o);
-            in.close();
-
-
-            int scale = 1;
-            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
-                    IMAGE_MAX_SIZE) {
-                scale++;
-            }
-
-            Bitmap b = null;
-            in = getContentResolver().openInputStream(uri);
-            if (scale > 1) {
-                scale--;
-                // scale to max possible inSampleSize that still yields an image
-                // larger than target
-                o = new BitmapFactory.Options();
-                o.inSampleSize = scale;
-                b = BitmapFactory.decodeStream(in, null, o);
-
-                // resize to desired dimensions
-                int height = b.getHeight();
-                int width = b.getWidth();
-
-//                mod_width = actual_width*(180/actual_height)
-
-                double y = 300;
-                double x = ((double) width)*(y/((double) height));
-
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
-                        (int) y, true);
-                b.recycle();
-                b = scaledBitmap;
-
-                System.gc();
-            } else {
-                b = BitmapFactory.decodeStream(in);
-            }
-            in.close();
-
-            return b;
-        } catch (IOException e) {
-            Log.e("", e.getMessage(), e);
-            return null;
-        }
-    }
-
-
-    private String encodeImage(Bitmap bm)
-    {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-
-        return encImage;
-    }
 
 
 

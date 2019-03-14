@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
+import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
@@ -205,6 +206,8 @@ public class PropertyActivity extends AppCompatActivity {
 
     TextView personName,caseType,bankType;
 
+    PhotoHelper photoHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,6 +230,8 @@ public class PropertyActivity extends AppCompatActivity {
                 REQUEST_STRING_CODE);
 
         displayLocationSettingsRequest(PropertyActivity.this);
+
+        photoHelper = new PhotoHelper(PropertyActivity.this);
 
 
         progressBar=findViewById(R.id.progressBar);
@@ -703,7 +708,7 @@ public class PropertyActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the temporary File where the photo should go
             try {
-                photoFile = createTempImageFile(PropertyActivity.this);
+                photoFile = photoHelper.createTempImageFile(PropertyActivity.this);
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
@@ -728,58 +733,6 @@ public class PropertyActivity extends AppCompatActivity {
         }
     }
 
-    public void logout(String enUser)
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.logout(enUser);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success"))
-                {
-                    SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.clear();
-                    editor.apply();
-                    finish();
-
-                    SharedPreferences preferences2 = getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor2 = preferences2.edit();
-                    editor2.clear();
-                    editor2.apply();
-                    finish();
-                    Intent i = new Intent(PropertyActivity.this,LoginActivity.class);
-                    startActivity(i);
-
-                    Toast.makeText(getApplicationContext(), "Successfully logged out", Toast.LENGTH_SHORT).show();
-                }
-
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Something went wrong :(" + response.body(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "No Internet/FAILURE", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // If the image capture activity was called and was successful
@@ -789,7 +742,7 @@ public class PropertyActivity extends AppCompatActivity {
         } else {
 
             // Otherwise, delete the temporary image file
-            deleteImageFile(this, mTempPhotoPath);
+            photoHelper.deleteImageFile(this, mTempPhotoPath);
         }
     }
 
@@ -798,12 +751,12 @@ public class PropertyActivity extends AppCompatActivity {
      */
     private void processAndSetImage() {
 
-        mResultsBitmap = getBitmap(mTempPhotoPath);
+        mResultsBitmap = photoHelper.getBitmap(mTempPhotoPath,PropertyActivity.this);
         /**
          * UPLOAD IMAGE USING RETROFIT
          */
 
-        retroFitHelper(encodeImage(mResultsBitmap));
+        retroFitHelper(photoHelper.encodeImage(mResultsBitmap));
 
         // Set the new bitmap to the ImageView of RecyclerView
         mImageUrls.add(mResultsBitmap);
@@ -902,158 +855,6 @@ public class PropertyActivity extends AppCompatActivity {
         });
 
     }
-
-    /**
-     * Resamples the captured photo to fit the screen for better memory usage.
-     *
-     * @param context   The application context.
-     * @param imagePath The path of the photo to be resampled.
-     * @return The resampled bitmap
-     */
-    static Bitmap resamplePic(Context context, String imagePath) {
-
-        // Get device screen size information
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        manager.getDefaultDisplay().getMetrics(metrics);
-
-        int targetH = metrics.heightPixels;
-        int targetW = metrics.widthPixels;
-
-        // Get the dimensions of the original bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imagePath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        return BitmapFactory.decodeFile(imagePath);
-    }
-
-    /**
-     * Creates the temporary image file in the cache directory.
-     *
-     * @return The temporary image file.
-     * @throws IOException Thrown if there is an error creating the file
-     */
-    static File createTempImageFile(Context context)
-            throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        String imageFileName = "AZTEK" + timeStamp + "_";
-
-        globalImageFileName = imageFileName;
-
-        File storageDir = context.getExternalCacheDir();
-
-        return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-    }
-
-    /**
-     * Deletes image file for a given path.
-     *
-     * @param context   The application context.
-     * @param imagePath The path of the photo to be deleted.
-     */
-    static boolean deleteImageFile(Context context, String imagePath) {
-
-        // Get the file
-        File imageFile = new File(imagePath);
-
-        // Delete the image
-        boolean deleted = imageFile.delete();
-
-        // If there is an error deleting the file, show a Toast
-        if (!deleted) {
-            String errorMessage = context.getString(R.string.error);
-
-        }
-
-        return deleted;
-    }
-
-    private Bitmap getBitmap(String path) {
-
-        Uri uri = Uri.fromFile(new File(path));
-        InputStream in = null;
-        try {
-            final int IMAGE_MAX_SIZE = 1200000; // 1.2MP
-            in = getContentResolver().openInputStream(uri);
-
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = false;
-            BitmapFactory.decodeStream(in, null, o);
-            in.close();
-
-
-            int scale = 1;
-            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
-                    IMAGE_MAX_SIZE) {
-                scale++;
-            }
-
-            Bitmap b = null;
-            in = getContentResolver().openInputStream(uri);
-            if (scale > 1) {
-                scale--;
-                // scale to max possible inSampleSize that still yields an image
-                // larger than target
-                o = new BitmapFactory.Options();
-                o.inSampleSize = scale;
-                b = BitmapFactory.decodeStream(in, null, o);
-
-                // resize to desired dimensions
-                int height = b.getHeight();
-                int width = b.getWidth();
-
-//                mod_width = actual_width*(180/actual_height)
-
-                double y = 300;
-                double x = ((double) width)*(y/((double) height));
-
-                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
-                        (int) y, true);
-                b.recycle();
-                b = scaledBitmap;
-
-                System.gc();
-            } else {
-                b = BitmapFactory.decodeStream(in);
-            }
-            in.close();
-
-            return b;
-        } catch (IOException e) {
-            Log.e("", e.getMessage(), e);
-            return null;
-        }
-    }
-
-
-    private String encodeImage(Bitmap bm)
-    {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-
-        return encImage;
-    }
-
-
 
 }
 
