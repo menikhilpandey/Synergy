@@ -32,6 +32,38 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/pendingUploadLinearLayout"
+        android:layout_weight="40"
+        android:layout_alignParentBottom="true"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="#ff0000"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/pendingUploadTextView"
+            android:paddingLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PENDING UPLOAD"
+            android:layout_gravity="center_vertical"
+            android:textColor="#ffff"
+            android:textStyle="bold"
+            android:textSize="20dp"/>
+
+        <Button
+            android:id="@+id/pendingUploadButton"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UPLOAD NOW"
+            android:layout_marginLeft="40dp"
+        />
+
+    </LinearLayout>
 
 
     <!--<ListView-->

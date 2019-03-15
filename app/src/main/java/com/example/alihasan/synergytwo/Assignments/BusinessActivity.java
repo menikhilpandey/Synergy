@@ -474,7 +474,7 @@ public class BusinessActivity extends AppCompatActivity {
                     /**
                      * RETROFIT MAGIC
                      */
-                    retroFitHelper(TABLENAME,StringCaseNo,saddress,seaseLocSpinner,soffOwnershipSpinner,
+                    storeData(TABLENAME,StringCaseNo,saddress,seaseLocSpinner,soffOwnershipSpinner,
                             scompName,slocalityTypeSpinner, sbusinessNature, sdesignation, sworkingSince,
                             spersonContacted, sdesigContacted, sempNo,
                             slandmark, sbranchNo,sbusinessSetupSpinner, sbusinessBoardSpinner, syearsPresentAdd,
@@ -531,91 +531,139 @@ public class BusinessActivity extends AppCompatActivity {
         startActivity(backToAssignmentChoose);
     }
 
+    public void storeData(final String TABLENAME,
+                          final String CASENO,
+                          final String ADDRESS,
+                          final String EASELOCATE,
+                          final String OFFICEOWNERSHIP,
+                          final String APPLCOMPANYNAME,
+                          final String LOCALITYTYPE,
+                          final String NATUREBUSNIESS,
+                          final String APPLDESIGNATION,
+                          final String WORKINGSINCE,
+                          final String PERSONCONTACTED,
+                          final String PERSONDESIGNATION,
+                          final String NOSEMP,
+                          final String LANDMARK,
+                          final String NOSBRANCHES,
+                          final String BUSINESSSETUP,
+                          final String BUSINESSBOARD,
+                          final String NOSYEARSATADDRESS,
+                          final String VISITINGCARD,
+                          final String APPLNAMEVERIFFROM,
+                          final String CONTACTVERIF1,
+                          final String CONTACTVERIF2,
+                          final String CONTACTFEEDBACK,
+                          final String PROOFDETAILS,
+                          final String POLITICALLINK,
+                          final String OVERALLSTATUS,
+                          final String REASONNEGATIVEFI,
+                          final String LATITUDE,
+                          final String LONGITUDE,
+                          final String REMARKS){
 
-    public void retroFitHelper(final String TABLENAME,
-                               final String CASENO,
-                               final String ADDRESS,
-                               final String EASELOCATE,
-                               final String OFFICEOWNERSHIP,
-                               final String APPLCOMPANYNAME,
-                               final String LOCALITYTYPE,
-                               final String NATUREBUSNIESS,
-                               final String APPLDESIGNATION,
-                               final String WORKINGSINCE,
-                               final String PERSONCONTACTED,
-                               final String PERSONDESIGNATION,
-                               final String NOSEMP,
-                               final String LANDMARK,
-                               final String NOSBRANCHES,
-                               final String BUSINESSSETUP,
-                               final String BUSINESSBOARD,
-                               final String NOSYEARSATADDRESS,
-                               final String VISITINGCARD,
-                               final String APPLNAMEVERIFFROM,
-                               final String CONTACTVERIF1,
-                               final String CONTACTVERIF2,
-                               final String CONTACTFEEDBACK,
-                               final String PROOFDETAILS,
-                               final String POLITICALLINK,
-                               final String OVERALLSTATUS,
-                               final String REASONNEGATIVEFI,
-                               final String LATITUDE,
-                               final String LONGITUDE,
-                               final String REMARKS)
-    {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
+        businessViewModel.insert(new Business(TABLENAME,CASENO,ADDRESS,EASELOCATE,
+                OFFICEOWNERSHIP,APPLCOMPANYNAME,LOCALITYTYPE,
+                NATUREBUSNIESS,APPLDESIGNATION,WORKINGSINCE,
+                PERSONCONTACTED,PERSONDESIGNATION,NOSEMP,
+                LANDMARK,NOSBRANCHES,BUSINESSSETUP,
+                BUSINESSBOARD,NOSYEARSATADDRESS,
+                VISITINGCARD,APPLNAMEVERIFFROM,CONTACTVERIF1,
+                CONTACTVERIF2,CONTACTFEEDBACK,PROOFDETAILS,
+                POLITICALLINK,OVERALLSTATUS,REASONNEGATIVEFI,
+                LATITUDE,LONGITUDE,REMARKS));
 
-        Client client = retrofit.create(Client.class);
 
-        Call<String> call = client.sendBusinessData(TABLENAME, CASENO,ADDRESS, EASELOCATE, OFFICEOWNERSHIP,
-                APPLCOMPANYNAME, LOCALITYTYPE, NATUREBUSNIESS,
-                APPLDESIGNATION, WORKINGSINCE, PERSONCONTACTED,
-                PERSONDESIGNATION, NOSEMP, LANDMARK, NOSBRANCHES,
-                BUSINESSSETUP, BUSINESSBOARD, NOSYEARSATADDRESS,
-                VISITINGCARD, APPLNAMEVERIFFROM, CONTACTVERIF1,
-                CONTACTVERIF2, CONTACTFEEDBACK, PROOFDETAILS,
-                POLITICALLINK, OVERALLSTATUS, REASONNEGATIVEFI,
-                LATITUDE, LONGITUDE,REMARKS);
+        Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPDATED IN DB  ", Toast.LENGTH_SHORT).show();
 
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
 
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success")) {
-
-                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
-                    /**
-                     * Will receive something to verify
-                     * successful upload to table
-                     */
-
-                    Intent intent = new Intent(BusinessActivity.this, AssignmentChoose.class);
-                    intent.putExtra("CASENO", StringCaseNo);
-                    intent.putExtra("USERNAME", userName);
-                    intent.putExtra("TYPEOFCASE", ACTIVITY);
-                    startActivity(intent);
-                }
-
-                else
-                    {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG "+response.body(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
+
+
+//    public void retroFitHelper(final String TABLENAME,
+//                               final String CASENO,
+//                               final String ADDRESS,
+//                               final String EASELOCATE,
+//                               final String OFFICEOWNERSHIP,
+//                               final String APPLCOMPANYNAME,
+//                               final String LOCALITYTYPE,
+//                               final String NATUREBUSNIESS,
+//                               final String APPLDESIGNATION,
+//                               final String WORKINGSINCE,
+//                               final String PERSONCONTACTED,
+//                               final String PERSONDESIGNATION,
+//                               final String NOSEMP,
+//                               final String LANDMARK,
+//                               final String NOSBRANCHES,
+//                               final String BUSINESSSETUP,
+//                               final String BUSINESSBOARD,
+//                               final String NOSYEARSATADDRESS,
+//                               final String VISITINGCARD,
+//                               final String APPLNAMEVERIFFROM,
+//                               final String CONTACTVERIF1,
+//                               final String CONTACTVERIF2,
+//                               final String CONTACTFEEDBACK,
+//                               final String PROOFDETAILS,
+//                               final String POLITICALLINK,
+//                               final String OVERALLSTATUS,
+//                               final String REASONNEGATIVEFI,
+//                               final String LATITUDE,
+//                               final String LONGITUDE,
+//                               final String REMARKS)
+//    {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(SERVER_URL)
+//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+//                .build();
+//
+//        Client client = retrofit.create(Client.class);
+//
+//        Call<String> call = client.sendBusinessData(TABLENAME, CASENO,ADDRESS, EASELOCATE, OFFICEOWNERSHIP,
+//                APPLCOMPANYNAME, LOCALITYTYPE, NATUREBUSNIESS,
+//                APPLDESIGNATION, WORKINGSINCE, PERSONCONTACTED,
+//                PERSONDESIGNATION, NOSEMP, LANDMARK, NOSBRANCHES,
+//                BUSINESSSETUP, BUSINESSBOARD, NOSYEARSATADDRESS,
+//                VISITINGCARD, APPLNAMEVERIFFROM, CONTACTVERIF1,
+//                CONTACTVERIF2, CONTACTFEEDBACK, PROOFDETAILS,
+//                POLITICALLINK, OVERALLSTATUS, REASONNEGATIVEFI,
+//                LATITUDE, LONGITUDE,REMARKS);
+//
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//
+//                if(response.body()==null)
+//                {
+//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if(response.body().equals("Success")) {
+//
+//                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
+//                    /**
+//                     * Will receive something to verify
+//                     * successful upload to table
+//                     */
+//
+//                    Intent intent = new Intent(BusinessActivity.this, AssignmentChoose.class);
+//                    intent.putExtra("CASENO", StringCaseNo);
+//                    intent.putExtra("USERNAME", userName);
+//                    intent.putExtra("TYPEOFCASE", ACTIVITY);
+//                    startActivity(intent);
+//                }
+//
+//                else
+//                    {
+//                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG "+response.body(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

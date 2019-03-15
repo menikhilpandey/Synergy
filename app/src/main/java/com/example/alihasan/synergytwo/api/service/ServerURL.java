@@ -2,7 +2,7 @@ package com.example.alihasan.synergytwo.api.service;
 
 public class ServerURL {
 
-    private String SERVER_URL = "http://142.93.722.116/android/";
+    private String SERVER_URL = "http://8425af1e.ngrok.io/project/aztekgo/android/";
 
     public String getSERVER_URL() {
         return SERVER_URL;
