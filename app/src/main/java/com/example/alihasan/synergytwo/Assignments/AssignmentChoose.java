@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -146,7 +147,6 @@ public class AssignmentChoose extends AppCompatActivity {
                 }
             });
 
-
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -214,52 +214,65 @@ public class AssignmentChoose extends AppCompatActivity {
 
     public void uploadData(){
 
-        List<Business> businessList = businessViewModel.testGetAllData();
-        while(businessViewModel.getCount()>0)
-            retroFitHelper(businessList);
+        final List<Business> businessList = businessViewModel.testGetAllData();
 
-    }
+//        int count = businessViewModel.getCount();
+        for(int i = businessViewModel.getCount(), j = 1 ;i > 0; i--, j++) {
 
-        public void retroFitHelper(final List<Business> businessList)
+            Handler handler = new Handler();
+            final int finalJ = j;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    retroFitHelper(businessList, finalJ);
+                }
+            },10 * j);
+        }
+        }
+
+
+
+        public void retroFitHelper(final List<Business> businessList, final int j)
     {
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_URL)
                 .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
                 .build();
 
-        Client client = retrofit.create(Client.class);
+        final Client client = retrofit.create(Client.class);
 
         Call<String> call = client.sendBusinessData(
-                businessList.get(0).getBusiness(),
-                businessList.get(0).getCASENO(),
-                businessList.get(0).getADDRESS(),
-                businessList.get(0).getEASELOCATE(),
-                businessList.get(0).getOFFICEOWNERSHIP(),
-                businessList.get(0).getAPPLCOMPANYNAME(),
-                businessList.get(0).getLOCALITYTYPE(),
-                businessList.get(0).getNATUREBUSNIESS(),
-                businessList.get(0).getAPPLDESIGNATION(),
-                businessList.get(0).getWORKINGSINCE(),
-                businessList.get(0).getPERSONCONTACTED(),
-                businessList.get(0).getPERSONDESIGNATION(),
-                businessList.get(0).getNOSEMP(),
-                businessList.get(0).getLANDMARK(),
-                businessList.get(0).getNOSBRANCHES(),
-                businessList.get(0).getBUSINESSSETUP(),
-                businessList.get(0).getBUSINESSBOARD(),
-                businessList.get(0).getNOSYEARSATADDRESS(),
-                businessList.get(0).getVISITINGCARD(),
-                businessList.get(0).getAPPLNAMEVERIFFROM(),
-                businessList.get(0).getCONTACTVERIF1(),
-                businessList.get(0).getCONTACTVERIF2(),
-                businessList.get(0).getCONTACTFEEDBACK(),
-                businessList.get(0).getPROOFDETAILS(),
-                businessList.get(0).getPOLITICALLINK(),
-                businessList.get(0).getOVERALLSTATUS(),
-                businessList.get(0).getREASONNEGATIVEFI(),
-                businessList.get(0).getLATITUDE(),
-                businessList.get(0).getLONGITUDE(),
-                businessList.get(0).getREMARKS());
+                businessList.get(j-1).getBusiness(),
+                businessList.get(j-1).getCASENO(),
+                businessList.get(j-1).getADDRESS(),
+                businessList.get(j-1).getEASELOCATE(),
+                businessList.get(j-1).getOFFICEOWNERSHIP(),
+                businessList.get(j-1).getAPPLCOMPANYNAME(),
+                businessList.get(j-1).getLOCALITYTYPE(),
+                businessList.get(j-1).getNATUREBUSNIESS(),
+                businessList.get(j-1).getAPPLDESIGNATION(),
+                businessList.get(j-1).getWORKINGSINCE(),
+                businessList.get(j-1).getPERSONCONTACTED(),
+                businessList.get(j-1).getPERSONDESIGNATION(),
+                businessList.get(j-1).getNOSEMP(),
+                businessList.get(j-1).getLANDMARK(),
+                businessList.get(j-1).getNOSBRANCHES(),
+                businessList.get(j-1).getBUSINESSSETUP(),
+                businessList.get(j-1).getBUSINESSBOARD(),
+                businessList.get(j-1).getNOSYEARSATADDRESS(),
+                businessList.get(j-1).getVISITINGCARD(),
+                businessList.get(j-1).getAPPLNAMEVERIFFROM(),
+                businessList.get(j-1).getCONTACTVERIF1(),
+                businessList.get(j-1).getCONTACTVERIF2(),
+                businessList.get(j-1).getCONTACTFEEDBACK(),
+                businessList.get(j-1).getPROOFDETAILS(),
+                businessList.get(j-1).getPOLITICALLINK(),
+                businessList.get(j-1).getOVERALLSTATUS(),
+                businessList.get(j-1).getREASONNEGATIVEFI(),
+                businessList.get(j-1).getLATITUDE(),
+                businessList.get(j-1).getLONGITUDE(),
+                businessList.get(j-1).getREMARKS());
 
         call.enqueue(new Callback<String>() {
             @Override
@@ -273,9 +286,10 @@ public class AssignmentChoose extends AppCompatActivity {
                 else if(response.body().equals("Success")) {
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
-                    retrofitExit(businessList.get(0).getCASENO(),businessList.get(0).getBusiness());
-                    businessViewModel.delete();
-                    businessList.remove(0);
+                    retrofitExit(businessList.get(j-1).getCASENO(),businessList.get(j-1).getBusiness());
+                    businessViewModel.deleteTest(businessList.get(j-1));
+
+                    businessList.remove(j-1);
 
                     /**
                      * Will receive something to verify

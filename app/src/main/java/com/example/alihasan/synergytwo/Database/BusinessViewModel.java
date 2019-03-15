@@ -30,6 +30,10 @@ public class BusinessViewModel extends AndroidViewModel {
         mRepository.delete();
     }
 
+    public void deleteTest(Business business) {
+        mRepository.deleteTest(business);
+    }
+
     public List<Business> testGetAllData() {
         return mRepository.testGetAllData();
     }

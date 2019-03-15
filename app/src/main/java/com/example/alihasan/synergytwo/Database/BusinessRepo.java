@@ -67,6 +67,10 @@ public class BusinessRepo {
         new insertAsyncTask(mBusinessDao).execute(business);
     }
 
+    public void deleteTest(Business business) {
+        new deleteTestAsyncTask(mBusinessDao).execute(business);
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<Business, Void, Void> {
 
@@ -79,6 +83,22 @@ public class BusinessRepo {
         @Override
         protected Void doInBackground(final Business... params) {
             mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
+    }
+
+
+    private static class deleteTestAsyncTask extends AsyncTask<Business, Void, Void> {
+
+        private BusinessDao mAsyncTaskDao;
+
+        deleteTestAsyncTask(BusinessDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Business... params) {
+            mAsyncTaskDao.deleteTest(params[0]);
             return null;
         }
     }

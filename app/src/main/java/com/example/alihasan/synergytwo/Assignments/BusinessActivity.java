@@ -377,7 +377,7 @@ public class BusinessActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(counter.getCounter() <  3)
-                    EXIT_CODE = false;
+                    EXIT_CODE = true;
 
                 if(!EXIT_CODE)
                 {

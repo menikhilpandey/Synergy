@@ -21,6 +21,9 @@ public interface BusinessDao {
     @Query("DELETE FROM business_table WHERE id = (SELECT MIN(id) FROM business_table)")
     void delete();
 
+    @Delete
+    void deleteTest(Business business);
+
     @Query("DELETE FROM business_table")
     void deleteAll();
 
