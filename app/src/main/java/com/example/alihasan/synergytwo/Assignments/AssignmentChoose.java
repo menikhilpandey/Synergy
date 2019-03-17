@@ -219,14 +219,14 @@ public class AssignmentChoose extends AppCompatActivity {
 //        int count = businessViewModel.getCount();
         for(int i = businessViewModel.getCount(), j = 1 ;i > 0; i--, j++) {
 
-//            Handler handler = new Handler();
-//            final int finalJ = j;
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-                    retroFitHelper(businessList, j);
-//                }
-//            },100 * j);
+            Handler handler = new Handler();
+            final int finalJ = j;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    retroFitHelper(businessList, finalJ);
+                }
+            },1000 * j);
         }
         }
 
