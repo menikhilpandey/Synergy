@@ -219,14 +219,14 @@ public class AssignmentChoose extends AppCompatActivity {
 //        int count = businessViewModel.getCount();
         for(int i = businessViewModel.getCount(), j = 1 ;i > 0; i--, j++) {
 
-            Handler handler = new Handler();
-            final int finalJ = j;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    retroFitHelper(businessList, finalJ);
-                }
-            },10 * j);
+//            Handler handler = new Handler();
+//            final int finalJ = j;
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+                    retroFitHelper(businessList, j);
+//                }
+//            },100 * j);
         }
         }
 
@@ -289,7 +289,7 @@ public class AssignmentChoose extends AppCompatActivity {
                     retrofitExit(businessList.get(j-1).getCASENO(),businessList.get(j-1).getBusiness());
                     businessViewModel.deleteTest(businessList.get(j-1));
 
-                    businessList.remove(j-1);
+//                    businessList.remove(j-1);
 
                     /**
                      * Will receive something to verify
