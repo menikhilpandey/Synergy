@@ -151,6 +151,13 @@ public class AssignmentChoose extends AppCompatActivity {
                 @Override
                 public void onRefresh() {
 
+                    if(businessViewModel.getCount()>0)
+                    {
+                        pendingCount = businessViewModel.getCount();
+                        pendingUploadTextView.setText(pendingCount + " PENDING UPLOAD");
+                        pendingUploadLinearLayout.setVisibility(View.VISIBLE);
+                    }
+
                     if(businessViewModel.getCount()<=0)
                     {
                         pendingUploadLinearLayout.setVisibility(View.GONE);
