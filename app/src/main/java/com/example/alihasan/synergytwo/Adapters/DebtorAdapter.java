@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.example.alihasan.synergytwo.Assignments.ResidenceActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHolder> {
@@ -30,11 +32,16 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     Context context;
     List<Debtor> debtorList;
     static String userName;
+    static ArrayList<String> negativeCaseNo;
 
-    public DebtorAdapter(Context context, List<Debtor> debtorList, String userName) {
+    //DATABSE
+
+
+    public DebtorAdapter(Context context, List<Debtor> debtorList, String userName, ArrayList<String> negativeCaseNo) {
         this.context = context;
         this.debtorList = debtorList;
         this.userName = userName;
+        this.negativeCaseNo = negativeCaseNo;
     }
 
     @NonNull
@@ -48,6 +55,15 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Debtor debtor = debtorList.get(position);
+
+        Log.v("HELLO", position+" ");
+        Log.v("HOLDER", debtor.getCaseNo()+"FUCK");
+
+        if(negativeCaseNo.contains(debtor.getCaseNo()))
+        {
+            holder.inUploads.setText("IN UPLOAD");
+            holder.inUploads.setVisibility(View.VISIBLE);
+        }
 
         holder.caseNo.setText(debtor.getCaseNo());
         holder.applName.setText(debtor.getApplName());
@@ -77,7 +93,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView caseNo, applName, altTele, address, typeCase, bankType;
+        TextView caseNo, applName, altTele, address, typeCase, bankType,inUploads;
         Context context;
         List<Debtor> data;
         ImageButton callButton;
@@ -93,6 +109,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             address = itemView.findViewById(R.id.address);
             typeCase = itemView.findViewById(R.id.caseType);
             bankType = itemView.findViewById(R.id.bankType);
+            inUploads = itemView.findViewById(R.id.inUploads);
             callButton = itemView.findViewById(R.id.callButton);
 
             itemView.setOnClickListener(this);
@@ -100,74 +117,72 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
         @Override
         public void onClick(View v) {
-            if(typeCase.getText().toString().equals("BUSINESS")) {
-                Intent intent = new Intent(this.context, BusinessActivity.class);
 
-                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = caseData.edit();
-                editor.putString("CASENO", caseNo.getText().toString());
-                editor.putString("ACTIVITY", "BUSINESS");
-                editor.putString("PERSONNAME", applName.getText().toString());
-                editor.putString("ADDRESS", address.getText().toString());
-                editor.putString("CLIENTCODE", bankType.getText().toString());
-
-                editor.apply();
-
-                context.startActivity(intent);
+            if (inUploads.getText().toString().equals("IN UPLOAD")) {
+                Toast.makeText(context, "In uploads. Press UPLOAD", Toast.LENGTH_SHORT).show();
             }
+            else {
 
-            else if(typeCase.getText().toString().equals("PROPERTY")) {
-                Intent intent = new Intent(this.context, PropertyActivity.class);
+                if (typeCase.getText().toString().equals("BUSINESS")) {
+                    Intent intent = new Intent(this.context, BusinessActivity.class);
 
-                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = caseData.edit();
-                editor.putString("CASENO", caseNo.getText().toString());
-                editor.putString("ACTIVITY", "PROPERTY");
-                editor.putString("PERSONNAME", applName.getText().toString());
-                editor.putString("ADDRESS", address.getText().toString());
-                editor.putString("CLIENTCODE", bankType.getText().toString());
+                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = caseData.edit();
+                    editor.putString("CASENO", caseNo.getText().toString());
+                    editor.putString("ACTIVITY", "BUSINESS");
+                    editor.putString("PERSONNAME", applName.getText().toString());
+                    editor.putString("ADDRESS", address.getText().toString());
+                    editor.putString("CLIENTCODE", bankType.getText().toString());
 
-                editor.apply();
+                    editor.apply();
 
-                context.startActivity(intent);
-            }
+                    context.startActivity(intent);
+                } else if (typeCase.getText().toString().equals("PROPERTY")) {
+                    Intent intent = new Intent(this.context, PropertyActivity.class);
 
-            else if(typeCase.getText().toString().equals("RESIDENCE")) {
-                Intent intent = new Intent(this.context, ResidenceActivity.class);
+                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = caseData.edit();
+                    editor.putString("CASENO", caseNo.getText().toString());
+                    editor.putString("ACTIVITY", "PROPERTY");
+                    editor.putString("PERSONNAME", applName.getText().toString());
+                    editor.putString("ADDRESS", address.getText().toString());
+                    editor.putString("CLIENTCODE", bankType.getText().toString());
+
+                    editor.apply();
+
+                    context.startActivity(intent);
+                } else if (typeCase.getText().toString().equals("RESIDENCE")) {
+                    Intent intent = new Intent(this.context, ResidenceActivity.class);
 
 
-                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = caseData.edit();
-                editor.putString("CASENO", caseNo.getText().toString());
-                editor.putString("ACTIVITY", "RESIDENCE");
-                editor.putString("PERSONNAME", applName.getText().toString());
-                editor.putString("ADDRESS", address.getText().toString());
-                editor.putString("CLIENTCODE", bankType.getText().toString());
+                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = caseData.edit();
+                    editor.putString("CASENO", caseNo.getText().toString());
+                    editor.putString("ACTIVITY", "RESIDENCE");
+                    editor.putString("PERSONNAME", applName.getText().toString());
+                    editor.putString("ADDRESS", address.getText().toString());
+                    editor.putString("CLIENTCODE", bankType.getText().toString());
 
-                editor.apply();
+                    editor.apply();
 
-                context.startActivity(intent);
-            }
+                    context.startActivity(intent);
+                } else if (typeCase.getText().toString().equals("EMPLOYMENT")) {
+                    Intent intent = new Intent(this.context, EmploymentActivity.class);
 
-            else if(typeCase.getText().toString().equals("EMPLOYMENT")) {
-                Intent intent = new Intent(this.context, EmploymentActivity.class);
+                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = caseData.edit();
+                    editor.putString("CASENO", caseNo.getText().toString());
+                    editor.putString("ACTIVITY", "EMPLOYMENT");
+                    editor.putString("PERSONNAME", applName.getText().toString());
+                    editor.putString("ADDRESS", address.getText().toString());
+                    editor.putString("CLIENTCODE", bankType.getText().toString());
 
-                SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = caseData.edit();
-                editor.putString("CASENO", caseNo.getText().toString());
-                editor.putString("ACTIVITY", "EMPLOYMENT");
-                editor.putString("PERSONNAME", applName.getText().toString());
-                editor.putString("ADDRESS", address.getText().toString());
-                editor.putString("CLIENTCODE", bankType.getText().toString());
+                    editor.apply();
 
-                editor.apply();
-
-                context.startActivity(intent);
-            }
-
-            else
-            {
-                Toast.makeText(context, "BUSI/EMP/PROP/RESI????? ", Toast.LENGTH_SHORT).show();
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "BUSI/EMP/PROP/RESI????? ", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

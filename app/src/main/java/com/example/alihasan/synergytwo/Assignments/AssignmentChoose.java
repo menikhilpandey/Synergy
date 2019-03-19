@@ -127,7 +127,7 @@ public class AssignmentChoose extends AppCompatActivity {
 
                     List<Debtor> dataList = response.body();
 
-                    mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo);
+                    mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
                     recyclerView.setAdapter(mAdapter);
 
                     if (mAdapter.getItemCount()==0) {
@@ -150,6 +150,11 @@ public class AssignmentChoose extends AppCompatActivity {
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
+
+                    if(businessViewModel.getCount()<=0)
+                    {
+                        pendingUploadLinearLayout.setVisibility(View.GONE);
+                    }
 
                     Toast.makeText(getApplicationContext(), "Refreshed", Toast.LENGTH_SHORT).show();
 
@@ -176,7 +181,7 @@ public class AssignmentChoose extends AppCompatActivity {
 
                             List<Debtor> dataList = response.body();
 
-                            mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo);
+                            mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
                             recyclerView.setAdapter(mAdapter);
 
                             if (mAdapter.getItemCount()==0) {
@@ -284,6 +289,11 @@ public class AssignmentChoose extends AppCompatActivity {
                 }
 
                 else if(response.body().equals("Success")) {
+
+                    String CASENO = businessList.get(j-1).getCASENO();
+                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+
+                    retrofitExit(CASENO,"BUSINESS");
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
                     retrofitExit(businessList.get(j-1).getCASENO(),businessList.get(j-1).getBusiness());
@@ -416,7 +426,7 @@ public class AssignmentChoose extends AppCompatActivity {
                 if (response.body().equals("Success")) {
                     Toast.makeText(getApplicationContext(), "COMPLETED", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG"+response.body()+"exit", Toast.LENGTH_SHORT).show();
                 }
             }
 

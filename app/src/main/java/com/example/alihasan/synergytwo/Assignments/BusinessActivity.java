@@ -501,19 +501,21 @@ public class BusinessActivity extends AppCompatActivity {
 
                 }
 
-                onSubmit();
+                onSubmit(StringCaseNo);
             }
 
         });
 
     }
 
-    public void onSubmit()
+    public void onSubmit(String stringCaseNo)
     {
 
 
 
-        retrofitExit(StringCaseNo,ACTIVITY);
+//        retrofitExit(StringCaseNo,ACTIVITY);
+        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
+
 
 //                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
 //                SharedPreferences.Editor editor = preferences.edit();
