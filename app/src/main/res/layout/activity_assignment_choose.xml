@@ -41,7 +41,7 @@
         android:layout_height="50dp"
         android:background="#ff0000"
         android:orientation="horizontal"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
         <TextView
