@@ -9,8 +9,6 @@ public class MyApplication extends Application {
 
     public ArrayList<String> myGlobalArray = null;
 
-    public ArrayList<String>
-
     public MyApplication() {
         myGlobalArray = new ArrayList<String>();
     }

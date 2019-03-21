@@ -25,10 +25,11 @@ import com.example.alihasan.synergytwo.Adapters.DebtorAdapter;
 import com.example.alihasan.synergytwo.Database.Business;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.DebtorDatabase.DebtorViewModel;
+import com.example.alihasan.synergytwo.Database.EmploymentDatabase.Employment;
+import com.example.alihasan.synergytwo.Database.EmploymentDatabase.EmploymentViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
-import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -50,6 +51,8 @@ public class AssignmentChoose extends AppCompatActivity {
     private BusinessViewModel businessViewModel;
     private ImageViewModel imageViewModel;
     private DebtorViewModel   debtorViewModel;
+
+    private EmploymentViewModel employmentViewModel;
     /**
      *
      */
@@ -84,13 +87,14 @@ public class AssignmentChoose extends AppCompatActivity {
          * DD test
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
+        employmentViewModel = ViewModelProviders.of(this).get(EmploymentViewModel.class);
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         debtorViewModel   = ViewModelProviders.of(this).get(DebtorViewModel.class);
 
 
-        if(businessViewModel.getCount()>0)
+        if(businessViewModel.getCount() + employmentViewModel.getCount()>0)
         {
-            pendingCount = businessViewModel.getCount();
+            pendingCount = businessViewModel.getCount()+employmentViewModel.getCount();
             pendingUploadTextView.setText(pendingCount + " PENDING UPLOAD");
             pendingUploadLinearLayout.setVisibility(View.VISIBLE);
         }
@@ -192,14 +196,14 @@ public class AssignmentChoose extends AppCompatActivity {
                 @Override
                 public void onRefresh() {
 
-                    if(businessViewModel.getCount()>0)
+                    if(businessViewModel.getCount()+employmentViewModel.getCount()>0)
                     {
-                        pendingCount = businessViewModel.getCount();
+                        pendingCount = businessViewModel.getCount()+employmentViewModel.getCount();
                         pendingUploadTextView.setText(pendingCount + " PENDING UPLOAD");
                         pendingUploadLinearLayout.setVisibility(View.VISIBLE);
                     }
 
-                    if(businessViewModel.getCount()<=0)
+                    if(businessViewModel.getCount()+employmentViewModel.getCount()<=0)
                     {
                         pendingUploadLinearLayout.setVisibility(View.GONE);
                     }
@@ -283,9 +287,27 @@ public class AssignmentChoose extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    retroFitHelper(businessList, finalJ);
+                    businessRetroFitUpload(businessList, finalJ);
                 }
             },1000 * j);
+        }
+
+        /*
+        EMPLOYMENT VIEWMODEL
+         */
+        final List<Employment> employmentList = employmentViewModel.getAllData();
+
+//        int count = businessViewModel.getCount();
+        for(int i = employmentViewModel.getCount(), j3 = 1 ;i > 0; i--, j3++) {
+
+            Handler handler = new Handler();
+            final int finalJ3 = j3;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    employmentRetroFitUpload(employmentList, finalJ3);
+                }
+            },1000 * j3);
         }
 
 
@@ -354,9 +376,102 @@ public class AssignmentChoose extends AppCompatActivity {
         });
         }
 
+    public void employmentRetroFitUpload(final List<Employment> employmentList, final int j)
+    {
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
 
-        public void retroFitHelper(final List<Business> businessList, final int j)
+        final Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.sendEmploymentData(
+                employmentList.get(j-1).getEMPLOYMENT(),
+                employmentList.get(j-1).getCASENO(),
+                employmentList.get(j-1).getADDRESS(),
+                employmentList.get(j-1).getEASELOCATE(),
+                employmentList.get(j-1).getAPPLCOMPANYNAME(),
+                employmentList.get(j-1).getLOCALITYTYPE(),
+                employmentList.get(j-1).getADDRESSCONF(),
+                employmentList.get(j-1).getLANDMARK(),
+                employmentList.get(j-1).getAPPLDESIGNATION(),
+                employmentList.get(j-1).getPERSONMET(),
+                employmentList.get(j-1).getPERSONDESIGNATION(),
+                employmentList.get(j-1).getPERSONCONTACT(),
+                employmentList.get(j-1).getDOESAPPLWORK(),
+                employmentList.get(j-1).getOFFICETEL(),
+                employmentList.get(j-1).getOFFICEBOARD(),
+                employmentList.get(j-1).getORGANISATIONTYPE(),
+                employmentList.get(j-1).getDOJ(),
+                employmentList.get(j-1).getVISITINGCARD(),
+                employmentList.get(j-1).getNATUREBUSNIESS(),
+                employmentList.get(j-1).getJOBTYPE(),
+                employmentList.get(j-1).getWORKINGAS(),
+                employmentList.get(j-1).getJOBTRANSFER(),
+                employmentList.get(j-1).getNOSEMP(),
+                employmentList.get(j-1).getPERSONCONTACTED(),
+                employmentList.get(j-1).getPERSONCONDESIGNATION(),
+                employmentList.get(j-1).getMANAGER(),
+                employmentList.get(j-1).getMANAGERDESIGNATION(),
+                employmentList.get(j-1).getMANAGERCONTACT(),
+                employmentList.get(j-1).getSALARY(),
+                employmentList.get(j-1).getTPCCONFIRM(),
+                employmentList.get(j-1).getTPCNAME(),
+                employmentList.get(j-1).getOVERALLSTATUS(),
+                employmentList.get(j-1).getREASONNEGATIVEFI(),
+                employmentList.get(j-1).getLATITUDE(),
+                employmentList.get(j-1).getLONGITUDE(),
+                employmentList.get(j-1).getREMARKS());
+
+                call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success")) {
+
+                    String CASENO = employmentList.get(j-1).getCASENO();
+                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+
+                    retrofitExit(CASENO,"BUSINESS");
+
+                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
+                    retrofitExit(employmentList.get(j-1).getCASENO(),employmentList.get(j-1).getEMPLOYMENT());
+                    employmentViewModel.delete(employmentList.get(j-1));
+
+//                    businessList.remove(j-1);
+
+                    /**
+                     * Will receive something to verify
+                     * successful upload to table
+                     */
+
+//                    Intent intent = new Intent(BusinessActivity.this, AssignmentChoose.class);
+//                    intent.putExtra("CASENO", StringCaseNo);
+//                    intent.putExtra("USERNAME", userName);
+//                    intent.putExtra("TYPEOFCASE", ACTIVITY);
+//                    startActivity(intent);
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG "+response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+        public void businessRetroFitUpload(final List<Business> businessList, final int j)
     {
 
         Retrofit retrofit = new Retrofit.Builder()

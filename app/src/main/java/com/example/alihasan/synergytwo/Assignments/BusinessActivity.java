@@ -587,7 +587,7 @@ public class BusinessActivity extends AppCompatActivity {
     }
 
 
-//    public void retroFitHelper(final String TABLENAME,
+//    public void businessRetroFitUpload(final String TABLENAME,
 //                               final String CASENO,
 //                               final String ADDRESS,
 //                               final String EASELOCATE,
