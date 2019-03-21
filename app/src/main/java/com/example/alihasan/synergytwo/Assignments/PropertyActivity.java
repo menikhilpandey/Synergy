@@ -772,8 +772,8 @@ public class PropertyActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView);
-        recyclerView.setAdapter(adapter);
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView);
+//        recyclerView.setAdapter(adapter);
     }
 
     public void retroFitHelper(String encodedImage)

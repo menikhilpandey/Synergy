@@ -25,8 +25,8 @@ public class ImageViewModel extends AndroidViewModel {
         mImageRepo.insert(imageParam);
     }
 
-    public void delete(ImageParam imageParam) {
-        mImageRepo.delete(imageParam);
+    public void delete(String globalImageFileName) {
+        mImageRepo.delete(globalImageFileName);
     }
 
     public List<ImageParam> getAllData() {

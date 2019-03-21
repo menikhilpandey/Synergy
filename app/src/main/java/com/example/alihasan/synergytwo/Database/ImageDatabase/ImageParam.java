@@ -13,7 +13,7 @@ public class ImageParam {
 
     private String encodedImage;
 
-    private String StringCaseNo;
+    private String stringCaseNo;
 
     private String ACTIVITY;
 
@@ -22,7 +22,7 @@ public class ImageParam {
     public ImageParam(@NonNull String globalImageFileName, String encodedImage, String stringCaseNo, String ACTIVITY, String userName) {
         this.globalImageFileName = globalImageFileName;
         this.encodedImage = encodedImage;
-        StringCaseNo = stringCaseNo;
+        this.stringCaseNo = stringCaseNo;
         this.ACTIVITY = ACTIVITY;
         this.userName = userName;
     }
@@ -37,7 +37,7 @@ public class ImageParam {
     }
 
     public String getStringCaseNo() {
-        return StringCaseNo;
+        return stringCaseNo;
     }
 
     public String getACTIVITY() {

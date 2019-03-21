@@ -9,6 +9,8 @@ import com.example.alihasan.synergytwo.Database.BusinessDao;
 //import com.example.alihasan.synergytwo.Database.BusinessRepo;
 //import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -83,6 +85,7 @@ public class BusinessActivity extends AppCompatActivity {
      * DD test
      */
     private BusinessViewModel businessViewModel;
+    private ImageViewModel    imageViewModel   ;
     /**
      *
      */
@@ -218,6 +221,8 @@ public class BusinessActivity extends AppCompatActivity {
          * DD test
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
+        imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+
 
         /**
          * PERMISSION CHECKS
@@ -809,52 +814,59 @@ public class BusinessActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView, imageViewModel);
         recyclerView.setAdapter(adapter);
     }
 
     public void retroFitHelper(String encodedImage)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
 
-        Client client = retrofit.create(Client.class);
+        /**
+         * DD change
+         */
 
-        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
+        imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success"))
-                {
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    counter.addCounter();
-
-                    if(counter.getCounter() >= 3)
-                        EXIT_CODE = true;
-
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(SERVER_URL)
+//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+//                .build();
+//
+//        Client client = retrofit.create(Client.class);
+//
+//        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
+//
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//
+//                if(response.body()==null)
+//                {
+//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if(response.body().equals("Success"))
+//                {
+//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+//                    counter.addCounter();
+//
+//                    if(counter.getCounter() >= 3)
+//                        EXIT_CODE = true;
+//
+//                }
+//                else
+//                {
+//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
 
     }
 

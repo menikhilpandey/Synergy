@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.CounterSingleton;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.R;
 
 import com.bumptech.glide.Glide;
@@ -38,6 +39,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private CounterSingleton counter;
 
+    /**
+     * DD changes
+     */
+
+    private ImageViewModel imageViewModel;
+    /**
+     *
+     */
+
 
     //vars
     private ArrayList<Bitmap> mImageUrls = new ArrayList<>();
@@ -45,11 +55,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context mContext;
     TextView memptyView;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Bitmap> imageUrls, ArrayList<String> imageName, TextView emptyView) {
+    public RecyclerViewAdapter(Context context, ArrayList<Bitmap> imageUrls, ArrayList<String> imageName, TextView emptyView, ImageViewModel mImageViewModel) {
         mImageUrls = imageUrls;
         mContext = context;
         memptyView = emptyView;
         mimageName = imageName;
+        imageViewModel = mImageViewModel;
     }
 
     @Override
@@ -106,53 +117,71 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void deleteImageRetro(final ArrayList<String> mimageNameList, String mimageName, final int position){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
+        imageViewModel.delete(mimageName);
 
-        Client client = retrofit.create(Client.class);
+        /**
+         * Delete Image from View
+         */
+        Toast.makeText(mContext, "Image Removed", Toast.LENGTH_SHORT).show();
+        mImageUrls.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mImageUrls.size());
 
-        Call<String> call = client.deleteImage(mimageName);
+        if(mImageUrls.size() == 0)
+        {
+            memptyView.setVisibility(View.VISIBLE);
+        }
+        mimageNameList.remove(position);
+        counter = CounterSingleton.getInstance();
+        counter.decreaseCounter();
 
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body() == null)
-                {
-                    Toast.makeText(mContext, "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-
-                }
-
-                else if(response.body().equals("Success"))
-                {
-                    Toast.makeText(mContext, "Image Removed", Toast.LENGTH_SHORT).show();
-                    mImageUrls.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, mImageUrls.size());
-
-                    if(mImageUrls.size() == 0)
-                    {
-                        memptyView.setVisibility(View.VISIBLE);
-                    }
-                    mimageNameList.remove(position);
-                    counter = CounterSingleton.getInstance();
-                    counter.decreaseCounter();
-                }
-                else
-                {
-                    Toast.makeText(mContext, "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(mContext, "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(SERVER_URL)
+//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+//                .build();
+//
+//        Client client = retrofit.create(Client.class);
+//
+//        Call<String> call = client.deleteImage(mimageName);
+//
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//
+//                if(response.body() == null)
+//                {
+//                    Toast.makeText(mContext, "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+//
+//                }
+//
+//                else if(response.body().equals("Success"))
+//                {
+//                    Toast.makeText(mContext, "Image Removed", Toast.LENGTH_SHORT).show();
+//                    mImageUrls.remove(position);
+//                    notifyItemRemoved(position);
+//                    notifyItemRangeChanged(position, mImageUrls.size());
+//
+//                    if(mImageUrls.size() == 0)
+//                    {
+//                        memptyView.setVisibility(View.VISIBLE);
+//                    }
+//                    mimageNameList.remove(position);
+//                    counter = CounterSingleton.getInstance();
+//                    counter.decreaseCounter();
+//                }
+//                else
+//                {
+//                    Toast.makeText(mContext, "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(mContext, "IN FAILURE", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
 
     }
 

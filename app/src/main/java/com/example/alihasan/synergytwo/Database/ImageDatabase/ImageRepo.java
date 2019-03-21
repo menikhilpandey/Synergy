@@ -27,8 +27,8 @@ public class ImageRepo {
         new insertAsyncTask(mImageDao).execute(imageParam);
     }
 
-    public void delete(ImageParam imageParam){
-        new deleteAsyncTask(mImageDao).execute(imageParam);
+    public void delete(String globalImageFileName){
+        new deleteAsyncTask(mImageDao).execute(globalImageFileName);
     }
 
 
@@ -54,7 +54,7 @@ public class ImageRepo {
         }
     }
 
-    private static class deleteAsyncTask extends android.os.AsyncTask<ImageParam, Void, Void> {
+    private static class deleteAsyncTask extends android.os.AsyncTask<String, Void, Void> {
 
         private ImageDao mAsyncTaskDao;
 
@@ -63,7 +63,7 @@ public class ImageRepo {
         }
 
         @Override
-        protected Void doInBackground(final ImageParam... params) {
+        protected Void doInBackground(final String... params) {
             mAsyncTaskDao.delete(params[0]);
             return null;
         }

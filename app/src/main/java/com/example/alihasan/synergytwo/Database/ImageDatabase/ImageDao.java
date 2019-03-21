@@ -15,8 +15,8 @@ public interface ImageDao {
     @Insert
     void insert(ImageParam imageParam);
 
-    @Delete
-    void delete(ImageParam imageParam);
+    @Query("DELETE FROM image_table WHERE globalImageFileName = :mGlobalImageFileName")
+    void delete(String mGlobalImageFileName);
 
     @Query("SELECT count(*) FROM image_table")
     int getCount();
