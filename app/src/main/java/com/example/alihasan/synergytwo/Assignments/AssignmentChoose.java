@@ -412,6 +412,7 @@ public class AssignmentChoose extends AppCompatActivity {
                 else if(response.body().equals("Success"))
                 {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                    imageViewModel.delete(imageParamList.get(j-1).getGlobalImageFileName());
                 }
                 else
                 {
