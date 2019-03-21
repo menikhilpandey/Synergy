@@ -36,4 +36,12 @@ public class DebtorViewModel extends AndroidViewModel {
     public void deleteAll(){
         mDebtorRepo.deleteAll();
     }
+
+    public void updateInUploads(String typeCase, String caseNo) {
+        mDebtorRepo.updateInUpload(typeCase,caseNo);
+    }
+
+    public String fetchInUploads(String typeCase, String caseNo) {
+        return mDebtorRepo.fetchInUpload(typeCase, caseNo);
+    }
 }

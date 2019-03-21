@@ -25,4 +25,9 @@ public interface DebtorDao {
     @Query("SELECT * FROM debtor_table")
     LiveData<List<Debtor>> getAllDebtor();
 
+    @Query("UPDATE debtor_table SET inUpload = 'true' WHERE typeCase = :typeCase AND caseNo = :caseNo")
+    void updateInUpload(String typeCase, String caseNo);
+
+    @Query("SELECT inUpload FROM debtor_table WHERE typeCase = :typeCase AND caseNo = :caseNo")
+    String fetchInUpload(String typeCase, String caseNo);
 }

@@ -29,6 +29,8 @@ public class Debtor {
         @SerializedName("CLIENTCODE")
     private String clientCode;
 
+        private String inUpload;
+
 //    private String productType;
 
 
@@ -39,6 +41,14 @@ public class Debtor {
         this.altTele = altTele;
         this.typeCase = typeCase;
         this.clientCode = clientCode;
+    }
+
+    public void setInUpload(String inUpload) {
+        this.inUpload = inUpload;
+    }
+
+    public String getInUpload() {
+        return inUpload;
     }
 
     public String getCaseNo() {

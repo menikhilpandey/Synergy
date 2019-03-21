@@ -36,6 +36,14 @@ public class DebtorRepo {
         new deleteAllAsyncTask(mDebtorDao).execute();
     }
 
+    public void updateInUpload(String typeCase, String caseNo) {
+        new updateInUploadsAsyncTask(mDebtorDao, caseNo).execute(typeCase);
+    }
+
+    public String fetchInUpload(String typeCase, String caseNo) {
+        return new fetchInUploadsAsyncTask(mDebtorDao, caseNo, typeCase).doInBackground();
+    }
+
     private static class insertAsyncTask extends AsyncTask<Debtor, Void, Void> {
 
         private DebtorDao mAsyncTaskDao;
@@ -78,6 +86,42 @@ public class DebtorRepo {
         protected Void doInBackground(final Void... params) {
             mAsyncTaskDao.deleteAll();
             return null;
+        }
+    }
+
+    private static class updateInUploadsAsyncTask extends AsyncTask<String, Void, Void> {
+
+        private DebtorDao mAsyncTaskDao;
+        private String caseNo;
+
+        updateInUploadsAsyncTask(DebtorDao dao, String caseNo) {
+            mAsyncTaskDao = dao;
+            this.caseNo = caseNo;
+        }
+
+        @Override
+        protected Void doInBackground(final String... params) {
+            mAsyncTaskDao.updateInUpload(params[0], caseNo);
+            return null;
+        }
+    }
+
+    private static class fetchInUploadsAsyncTask extends AsyncTask<Void, Void, String> {
+
+        private DebtorDao mAsyncTaskDao;
+        private String caseNo;
+        private String typeCase;
+
+        fetchInUploadsAsyncTask(DebtorDao dao, String caseNo, String typeCase) {
+            mAsyncTaskDao = dao;
+            this.caseNo = caseNo;
+            this.typeCase = typeCase;
+        }
+
+        @Override
+        protected String doInBackground(final Void... params) {
+
+            return mAsyncTaskDao.fetchInUpload(typeCase ,caseNo);
         }
     }
 }
