@@ -10,11 +10,13 @@ import com.example.alihasan.synergytwo.Database.EmploymentDatabase.Employment;
 import com.example.alihasan.synergytwo.Database.EmploymentDatabase.EmploymentDao;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageDao;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
+import com.example.alihasan.synergytwo.Database.PropertyDatabase.Property;
+import com.example.alihasan.synergytwo.Database.PropertyDatabase.PropertyDao;
 import com.example.alihasan.synergytwo.Database.ResidenceDatabase.Residence;
 import com.example.alihasan.synergytwo.Database.ResidenceDatabase.ResidenceDao;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
-@Database(entities = {Business.class, Employment.class, Residence.class, Debtor.class, ImageParam.class}, version = 1)
+@Database(entities = {Business.class, Employment.class, Residence.class, Property.class, Debtor.class, ImageParam.class}, version = 1)
 public abstract class AssignmentDatabase extends RoomDatabase {
 
     public abstract BusinessDao   businessdao  ();
@@ -22,6 +24,7 @@ public abstract class AssignmentDatabase extends RoomDatabase {
     public abstract ImageDao      imageDao     ();
     public abstract EmploymentDao employmentDao();
     public abstract ResidenceDao  residenceDao ();
+    public abstract PropertyDao   propertyDao  ();
 
     private static volatile AssignmentDatabase INSTANCE;
 
