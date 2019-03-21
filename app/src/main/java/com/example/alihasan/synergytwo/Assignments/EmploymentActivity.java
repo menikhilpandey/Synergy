@@ -4,6 +4,8 @@ import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.EmploymentDatabase.Employment;
+import com.example.alihasan.synergytwo.Database.EmploymentDatabase.EmploymentViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
@@ -784,7 +786,7 @@ public class EmploymentActivity extends AppCompatActivity {
     public void retroFitHelper(String encodedImage)
     {
         globalImageFileName = photoHelper.getGlobalImageFileName();
-        employmentViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
+        imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
 //        Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl(SERVER_URL)
