@@ -26,8 +26,8 @@ import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
 
-    private ImageViewModel imageViewModel;
-//    private RecyclerView recyclerView;
+    private DebtorViewModel imageViewModel;
+    private RecyclerView recyclerView;
     private TextView textText;
     private DebtorAdapter mAdapter;
     private Button button;
@@ -38,19 +38,29 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-//        recyclerView = findViewById(R.id.recyclerViewTest);
-//        LinearLayoutManager manager = new LinearLayoutManager(TestActivity.this);
-//        recyclerView.setLayoutManager(manager);
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.invalidate();
+        recyclerView = findViewById(R.id.testRecyclerView);
+        LinearLayoutManager manager = new LinearLayoutManager(TestActivity.this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.invalidate();
 //
-        imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        imageViewModel = ViewModelProviders.of(this).get(DebtorViewModel.class);
 //
-        imageViewModel.insert(new ImageParam("qwerty","rg","qwer","asdf","afaf"));
+        imageViewModel.insert(new Debtor("plm","rg","qwer","asdf", "pqa", "afsd"));
+
+        imageViewModel.updateInUploads("eyt", "ryte");
 
         textText = findViewById(R.id.textTester);
+
+        imageViewModel.getAllDebtor().observe(this, new Observer<List<Debtor>>() {
+            @Override
+            public void onChanged(@Nullable List<Debtor> debtors) {
+                mAdapter = new DebtorAdapter(TestActivity.this, debtors, "afa",((MyApplication)getApplicationContext()).myGlobalArray);
+                recyclerView.setAdapter(mAdapter);
+            }
+        });
 //
-        textText.setText(String.valueOf(imageViewModel.getCount()));
+        textText.setText(imageViewModel.fetchInUploads("eyt", "ryte") + "Hi");
 
 
 
