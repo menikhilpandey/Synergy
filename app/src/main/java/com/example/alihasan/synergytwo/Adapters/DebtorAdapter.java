@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Assignments.BusinessActivity;
 import com.example.alihasan.synergytwo.Assignments.EmploymentActivity;
-import com.example.alihasan.synergytwo.Assignments.PropertyActivity;
-import com.example.alihasan.synergytwo.Assignments.ResidenceActivity;
+//import com.example.alihasan.synergytwo.Assignments.PropertyActivity;
+//import com.example.alihasan.synergytwo.Assignments.ResidenceActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
@@ -137,36 +137,38 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                     editor.apply();
 
                     context.startActivity(intent);
-                } else if (typeCase.getText().toString().equals("PROPERTY")) {
-                    Intent intent = new Intent(this.context, PropertyActivity.class);
-
-                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = caseData.edit();
-                    editor.putString("CASENO", caseNo.getText().toString());
-                    editor.putString("ACTIVITY", "PROPERTY");
-                    editor.putString("PERSONNAME", applName.getText().toString());
-                    editor.putString("ADDRESS", address.getText().toString());
-                    editor.putString("CLIENTCODE", bankType.getText().toString());
-
-                    editor.apply();
-
-                    context.startActivity(intent);
-                } else if (typeCase.getText().toString().equals("RESIDENCE")) {
-                    Intent intent = new Intent(this.context, ResidenceActivity.class);
-
-
-                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = caseData.edit();
-                    editor.putString("CASENO", caseNo.getText().toString());
-                    editor.putString("ACTIVITY", "RESIDENCE");
-                    editor.putString("PERSONNAME", applName.getText().toString());
-                    editor.putString("ADDRESS", address.getText().toString());
-                    editor.putString("CLIENTCODE", bankType.getText().toString());
-
-                    editor.apply();
-
-                    context.startActivity(intent);
-                } else if (typeCase.getText().toString().equals("EMPLOYMENT")) {
+                }
+//                 else if (typeCase.getText().toString().equals("PROPERTY")) {
+//                    Intent intent = new Intent(this.context, PropertyActivity.class);
+//
+//                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = caseData.edit();
+//                    editor.putString("CASENO", caseNo.getText().toString());
+//                    editor.putString("ACTIVITY", "PROPERTY");
+//                    editor.putString("PERSONNAME", applName.getText().toString());
+//                    editor.putString("ADDRESS", address.getText().toString());
+//                    editor.putString("CLIENTCODE", bankType.getText().toString());
+//
+//                    editor.apply();
+//
+//                    context.startActivity(intent);
+//                } else if (typeCase.getText().toString().equals("RESIDENCE")) {
+//                    Intent intent = new Intent(this.context, ResidenceActivity.class);
+//
+//
+//                    SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = caseData.edit();
+//                    editor.putString("CASENO", caseNo.getText().toString());
+//                    editor.putString("ACTIVITY", "RESIDENCE");
+//                    editor.putString("PERSONNAME", applName.getText().toString());
+//                    editor.putString("ADDRESS", address.getText().toString());
+//                    editor.putString("CLIENTCODE", bankType.getText().toString());
+//
+//                    editor.apply();
+//
+//                    context.startActivity(intent);
+//                }
+                    else if (typeCase.getText().toString().equals("EMPLOYMENT")) {
                     Intent intent = new Intent(this.context, EmploymentActivity.class);
 
                     SharedPreferences caseData = context.getSharedPreferences("CASEDATA", Context.MODE_PRIVATE);
