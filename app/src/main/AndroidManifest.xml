@@ -62,9 +62,9 @@
         <activity
             android:name=".Assignments.EmploymentActivity"
             android:screenOrientation="portrait"></activity>
-        <!--<activity-->
-            <!--android:name=".Assignments.PropertyActivity"-->
-            <!--android:screenOrientation="portrait"></activity>-->
+        <activity
+            android:name=".Assignments.PropertyActivity"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".Assignments.TestActivity">
 
         </activity>
