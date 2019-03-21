@@ -11,6 +11,8 @@ import com.example.alihasan.synergytwo.Database.BusinessDao;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewModel;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
@@ -86,6 +88,7 @@ public class BusinessActivity extends AppCompatActivity {
      */
     private BusinessViewModel businessViewModel;
     private ImageViewModel    imageViewModel   ;
+    private InUploadViewModel inUploadViewModel;
     /**
      *
      */
@@ -222,6 +225,7 @@ public class BusinessActivity extends AppCompatActivity {
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);
 
 
         /**
@@ -519,7 +523,9 @@ public class BusinessActivity extends AppCompatActivity {
 
 
 //        retrofitExit(StringCaseNo,ACTIVITY);
-        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
+//        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
+        inUploadViewModel.insert(new InUplaod(stringCaseNo,"BUSINESS"));
+
 
 
 //                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
@@ -782,7 +788,6 @@ public class BusinessActivity extends AppCompatActivity {
             // Process the image and set it to the TextView
             processAndSetImage();
         } else {
-
             // Otherwise, delete the temporary image file
             photoHelper.deleteImageFile(this, mTempPhotoPath);
         }

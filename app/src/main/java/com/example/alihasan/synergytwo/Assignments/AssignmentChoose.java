@@ -29,6 +29,8 @@ import com.example.alihasan.synergytwo.Database.EmploymentDatabase.Employment;
 import com.example.alihasan.synergytwo.Database.EmploymentDatabase.EmploymentViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewModel;
 import com.example.alihasan.synergytwo.Database.PropertyDatabase.Property;
 import com.example.alihasan.synergytwo.Database.PropertyDatabase.PropertyViewModel;
 import com.example.alihasan.synergytwo.Database.ResidenceDatabase.Residence;
@@ -58,6 +60,7 @@ public class AssignmentChoose extends AppCompatActivity {
     private PropertyViewModel propertyViewModel;
     private ImageViewModel imageViewModel;
     private DebtorViewModel   debtorViewModel;
+    private InUploadViewModel inUploadViewModel;
 
     /**
      *
@@ -98,6 +101,8 @@ public class AssignmentChoose extends AppCompatActivity {
         propertyViewModel = ViewModelProviders.of(this).get(PropertyViewModel.class);
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         debtorViewModel   = ViewModelProviders.of(this).get(DebtorViewModel.class);
+        inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);
+
 
 
         if(businessViewModel.getCount() + employmentViewModel.getCount() + residenceViewModel.getCount()>0)
@@ -128,7 +133,7 @@ public class AssignmentChoose extends AppCompatActivity {
         debtorViewModel.getAllDebtor().observe(this, new Observer<List<Debtor>>() {
             @Override
             public void onChanged(@Nullable List<Debtor> debtors) {
-                mAdapter = new DebtorAdapter(AssignmentChoose.this, debtors, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
+                mAdapter = new DebtorAdapter(AssignmentChoose.this, debtors, pdaNo,inUploadViewModel);
                 recyclerView.setAdapter(mAdapter);
 
                 if (mAdapter.getItemCount()==0) {
@@ -481,7 +486,9 @@ public class AssignmentChoose extends AppCompatActivity {
                 else if(response.body().equals("Success")) {
 
                     String CASENO = propertyList.get(j-1).getCASENO();
-                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+                    InUplaod inUplaod = new InUplaod(CASENO,"PROPERTY");
+                    inUploadViewModel.delete(inUplaod);
+
 
                     retrofitExit(CASENO,"PROPERTY");
 
@@ -579,7 +586,8 @@ public class AssignmentChoose extends AppCompatActivity {
                 else if(response.body().equals("Success")) {
 
                     String CASENO = residenceList.get(j-1).getCASENO();
-                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+                    InUplaod inUplaod = new InUplaod(CASENO,"RESIDENCE");
+                    inUploadViewModel.delete(inUplaod);
 
                     retrofitExit(CASENO,"RESIDENCE");
 
@@ -674,7 +682,8 @@ public class AssignmentChoose extends AppCompatActivity {
                 else if(response.body().equals("Success")) {
 
                     String CASENO = employmentList.get(j-1).getCASENO();
-                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+                    InUplaod inUplaod = new InUplaod(CASENO,"EMPLOYMENT");
+                    inUploadViewModel.delete(inUplaod);
 
                     retrofitExit(CASENO,"EMPLOYMENT");
 
@@ -763,7 +772,8 @@ public class AssignmentChoose extends AppCompatActivity {
                 else if(response.body().equals("Success")) {
 
                     String CASENO = businessList.get(j-1).getCASENO();
-                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+                    InUplaod inUplaod = new InUplaod(CASENO,"BUSINESS");
+                    inUploadViewModel.delete(inUplaod);
 
                     retrofitExit(CASENO,"BUSINESS");
 

@@ -52,13 +52,13 @@ public class TestActivity extends AppCompatActivity {
 
         textText = findViewById(R.id.textTester);
 
-        imageViewModel.getAllDebtor().observe(this, new Observer<List<Debtor>>() {
-            @Override
-            public void onChanged(@Nullable List<Debtor> debtors) {
-                mAdapter = new DebtorAdapter(TestActivity.this, debtors, "afa",((MyApplication)getApplicationContext()).myGlobalArray);
-                recyclerView.setAdapter(mAdapter);
-            }
-        });
+//        imageViewModel.getAllDebtor().observe(this, new Observer<List<Debtor>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Debtor> debtors) {
+//                mAdapter = new DebtorAdapter(TestActivity.this, debtors, "afa",((MyApplication)getApplicationContext()).myGlobalArray);
+//                recyclerView.setAdapter(mAdapter);
+//            }
+//        });
 //
         textText.setText(imageViewModel.fetchInUploads("eyt", "ryte") + "Hi");
 

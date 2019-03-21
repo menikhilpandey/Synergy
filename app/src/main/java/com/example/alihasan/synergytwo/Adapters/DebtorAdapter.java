@@ -21,6 +21,9 @@ import com.example.alihasan.synergytwo.Assignments.BusinessActivity;
 import com.example.alihasan.synergytwo.Assignments.EmploymentActivity;
 import com.example.alihasan.synergytwo.Assignments.PropertyActivity;
 import com.example.alihasan.synergytwo.Assignments.ResidenceActivity;
+import com.example.alihasan.synergytwo.Database.DebtorDatabase.DebtorViewModel;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewModel;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
 
@@ -33,15 +36,17 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     List<Debtor> debtorList;
     static String userName;
     static ArrayList<String> negativeCaseNo;
+    InUploadViewModel inUploadViewModel;
 
     //DATABSE
 
 
-    public DebtorAdapter(Context context, List<Debtor> debtorList, String userName, ArrayList<String> negativeCaseNo) {
+    public DebtorAdapter(Context context, List<Debtor> debtorList, String userName,InUploadViewModel inUploadViewModel) {
         this.context = context;
         this.debtorList = debtorList;
         this.userName = userName;
-        this.negativeCaseNo = negativeCaseNo;
+//        this.negativeCaseNo = negativeCaseNo;
+        this.inUploadViewModel = inUploadViewModel;
     }
 
     @NonNull
@@ -59,11 +64,23 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         Log.v("HELLO", position+" ");
         Log.v("HOLDER", debtor.getCaseNo()+"FUCK");
 
-        if(negativeCaseNo.contains(debtor.getCaseNo()))
+        List<InUplaod> inUploadList = inUploadViewModel.getAllData();
+
+        InUplaod inUplaod = new InUplaod(debtor.getCaseNo(),debtor.getTypeCase());
+
+
+
+        if(containsObject(inUploadList,inUplaod))
         {
             holder.inUploads.setText("IN UPLOAD");
             holder.inUploads.setVisibility(View.VISIBLE);
         }
+
+//        if(negativeCaseNo.contains(debtor.getCaseNo()))
+//        {
+//            holder.inUploads.setText("IN UPLOAD");
+//            holder.inUploads.setVisibility(View.VISIBLE);
+//        }
 
         holder.caseNo.setText(debtor.getCaseNo());
         holder.applName.setText(debtor.getApplName());
@@ -80,6 +97,23 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
                 context.startActivity(intent);
             }
         });
+    }
+
+    public boolean containsObject(List<InUplaod> inUplaodList, InUplaod u)
+    {
+        int length = inUplaodList.size();
+        for(int i = 0 ; i < length ; i++)
+        {
+            String CASETYPE = u.getCaseType();
+            String CASENO = u.getCaseNo();
+            if(inUplaodList.get(i).getCaseType().equals(CASETYPE) &&
+                    inUplaodList.get(i).getCaseNo().equals(CASENO))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

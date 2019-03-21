@@ -41,6 +41,8 @@ import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
+import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewModel;
 import com.example.alihasan.synergytwo.Database.PropertyDatabase.Property;
 import com.example.alihasan.synergytwo.Database.PropertyDatabase.PropertyViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
@@ -84,6 +86,7 @@ public class PropertyActivity extends AppCompatActivity {
      */
     private PropertyViewModel propertyViewModel;
     private ImageViewModel imageViewModel   ;
+    private InUploadViewModel inUploadViewModel;
     /**
      *
      */
@@ -234,6 +237,7 @@ public class PropertyActivity extends AppCompatActivity {
          */
         propertyViewModel = ViewModelProviders.of(this).get(PropertyViewModel.class);
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);
 
         /**
          * PERMISSION CHECKS
@@ -525,7 +529,7 @@ public class PropertyActivity extends AppCompatActivity {
     public void onSubmit(String stringCaseNo)
     {
 //        retrofitExit(StringCaseNo,ACTIVITY);
-        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
+        inUploadViewModel.insert(new InUplaod(stringCaseNo,"PROPERTY"));
 
 //                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
 //                SharedPreferences.Editor editor = preferences.edit();
@@ -721,6 +725,7 @@ public class PropertyActivity extends AppCompatActivity {
             // Process the image and set it to the TextView
             processAndSetImage();
         } else {
+            Toast.makeText(getApplicationContext(),"not taken", Toast.LENGTH_LONG).show();
 
             // Otherwise, delete the temporary image file
             photoHelper.deleteImageFile(this, mTempPhotoPath);
@@ -786,7 +791,7 @@ public class PropertyActivity extends AppCompatActivity {
 //
 //                else if(response.body().equals("Success"))
 //                {
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
                     counter.addCounter();
 
                     if(counter.addCounter() >= 3)
