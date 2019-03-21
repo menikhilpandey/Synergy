@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.alihasan.synergytwo.Assignments.TestActivity">
 
-    <Button
-        android:id="@+id/testbut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="157dp"
-        android:layout_marginTop="119dp"
-        android:layout_marginEnd="139dp"
-        android:layout_marginBottom="344dp"
-        android:text="Button"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewTest"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

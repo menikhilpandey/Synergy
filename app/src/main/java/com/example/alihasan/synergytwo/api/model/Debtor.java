@@ -1,9 +1,15 @@
 package com.example.alihasan.synergytwo.api.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "debtor_table", primaryKeys = {"caseNo", "typeCase"})
 public class Debtor {
 
+    @NonNull
     @SerializedName("CASENO")
     private String caseNo;
 
@@ -16,6 +22,7 @@ public class Debtor {
     @SerializedName("PHONE")
     private String altTele;
 
+    @NonNull
     @SerializedName("CASETYPE")
     private String typeCase;
 
@@ -25,7 +32,7 @@ public class Debtor {
 //    private String productType;
 
 
-    public Debtor(String caseNo, String applName, String address, String altTele, String typeCase,String clientCode) {
+    public Debtor(@NonNull String caseNo, String applName, String address, String altTele, String typeCase,String clientCode) {
         this.caseNo = caseNo;
         this.applName = applName;
         this.address = address;

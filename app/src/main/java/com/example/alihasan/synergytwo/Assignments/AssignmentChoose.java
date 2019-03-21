@@ -1,10 +1,12 @@
 package com.example.alihasan.synergytwo.Assignments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.example.alihasan.synergytwo.Adapters.DebtorAdapter;
 import com.example.alihasan.synergytwo.Database.Business;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.DebtorDatabase.DebtorViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
@@ -43,6 +46,7 @@ public class AssignmentChoose extends AppCompatActivity {
      * DD test
      */
     private BusinessViewModel businessViewModel;
+    private DebtorViewModel   debtorViewModel;
     /**
      *
      */
@@ -77,6 +81,8 @@ public class AssignmentChoose extends AppCompatActivity {
          * DD test
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
+        debtorViewModel   = ViewModelProviders.of(this).get(DebtorViewModel.class  );
+
 
         if(businessViewModel.getCount()>0)
         {
@@ -100,6 +106,31 @@ public class AssignmentChoose extends AppCompatActivity {
         recyclerView.invalidate();
 
         /**
+         * DD changes
+         */
+
+        debtorViewModel.getAllDebtor().observe(this, new Observer<List<Debtor>>() {
+            @Override
+            public void onChanged(@Nullable List<Debtor> debtors) {
+                mAdapter = new DebtorAdapter(AssignmentChoose.this, debtors, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
+                recyclerView.setAdapter(mAdapter);
+
+                if (mAdapter.getItemCount()==0) {
+                    recyclerView.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        /**
+         * DD/
+         */
+
+        /**
          * START OF RETROFIT
          */
 
@@ -118,6 +149,8 @@ public class AssignmentChoose extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
 
+                    debtorViewModel.deleteAll();
+
                 if(response.body()==null)
                 {
                     Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
@@ -127,17 +160,21 @@ public class AssignmentChoose extends AppCompatActivity {
 
                     List<Debtor> dataList = response.body();
 
-                    mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
-                    recyclerView.setAdapter(mAdapter);
+                    for(int i = 0; i < dataList.size(); i++){
+                        debtorViewModel.insert(dataList.get(i));
+                    }
 
-                    if (mAdapter.getItemCount()==0) {
-                        recyclerView.setVisibility(View.GONE);
-                        textView.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        textView.setVisibility(View.GONE);
-                    }
+//                    mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
+//                    recyclerView.setAdapter(mAdapter);
+//
+//                    if (mAdapter.getItemCount()==0) {
+//                        recyclerView.setVisibility(View.GONE);
+//                        textView.setVisibility(View.VISIBLE);
+//                    }
+//                    else {
+//                        recyclerView.setVisibility(View.VISIBLE);
+//                        textView.setVisibility(View.GONE);
+//                    }
 
                 }
 
@@ -179,6 +216,8 @@ public class AssignmentChoose extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<List<Debtor>> call, Response<List<Debtor>> response) {
 
+                            debtorViewModel.deleteAll();
+
                             if(response.body()==null)
                             {
                                 Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
@@ -188,17 +227,21 @@ public class AssignmentChoose extends AppCompatActivity {
 
                             List<Debtor> dataList = response.body();
 
-                            mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
-                            recyclerView.setAdapter(mAdapter);
+                            for(int i = 0; i < dataList.size(); i++){
+                                debtorViewModel.insert(dataList.get(i));
+                            }
 
-                            if (mAdapter.getItemCount()==0) {
-                                recyclerView.setVisibility(View.GONE);
-                                textView.setVisibility(View.VISIBLE);
-                            }
-                            else {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                textView.setVisibility(View.GONE);
-                            }
+//                            mAdapter = new DebtorAdapter(AssignmentChoose.this, dataList, pdaNo,((MyApplication)getApplicationContext()).myGlobalArray);
+//                            recyclerView.setAdapter(mAdapter);
+//
+//                            if (mAdapter.getItemCount()==0) {
+//                                recyclerView.setVisibility(View.GONE);
+//                                textView.setVisibility(View.VISIBLE);
+//                            }
+//                            else {
+//                                recyclerView.setVisibility(View.VISIBLE);
+//                                textView.setVisibility(View.GONE);
+//                            }
 
                             mSwipeRefreshLayout.setRefreshing(false);
 

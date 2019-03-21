@@ -5,19 +5,26 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.alihasan.synergytwo.Adapters.DebtorAdapter;
 import com.example.alihasan.synergytwo.Database.Business;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.DebtorDatabase.DebtorViewModel;
 import com.example.alihasan.synergytwo.R;
+import com.example.alihasan.synergytwo.api.model.Debtor;
 
 import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
 
-    private BusinessViewModel businessViewModel;
+    private DebtorViewModel businessViewModel;
+    private RecyclerView recyclerView;
+    private DebtorAdapter mAdapter;
     private Button button;
 
 
@@ -26,37 +33,27 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
+        recyclerView = findViewById(R.id.recyclerViewTest);
+        LinearLayoutManager manager = new LinearLayoutManager(TestActivity.this);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.invalidate();
+
+        businessViewModel = ViewModelProviders.of(this).get(DebtorViewModel.class);
 //
-        businessViewModel.insert(new Business("address","adafdsfa","af","afd","asf","afsd","adsfa","asfafd","adfafd","dafsdf","asdfasdf","afdsasdf","afafd","adfa","adfasdf","adsfa","afd","afasf","asdf","asfdasdf","asdf","asfd","safdaf","asdf","fasfd","dfasdf","saf","asdf","asfd","asdfad"));
+        businessViewModel.insert(new Debtor("afadf","asfdafd","afdf","afds","afaf","afadf"));
+        businessViewModel.insert(new Debtor("khlkjh","asfdafd","afdf","afds","afaf","afadf"));
+
 //
-//        Toast.makeText(this, businessViewModel.getAllBusinessData().get(0).getAddress(), Toast.LENGTH_SHORT).show();
 
-//        Toast.makeText(this,  businessViewModel.getAllWords().getValue().get(0).getBusiness(), Toast.LENGTH_SHORT).show();
 
-//        businessViewModel.getAllWords().observe(this, new Observer<List<Business>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Business> words) {
-//                Toast.makeText(TestActivity.this, words.get(0).getBusiness(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-        button = (Button) findViewById(R.id.testbut);
-
-        button.setOnClickListener(new View.OnClickListener() {
+        businessViewModel.getAllDebtor().observe(this, new Observer<List<Debtor>>() {
             @Override
-            public void onClick(View view) {
-                String value = businessViewModel.testGetAllData().get(0).getBusiness();
-                String val = businessViewModel.testGetAllData().get(0).getCASENO();
-
-                Toast.makeText(TestActivity.this, value + val + " " + businessViewModel.getCount(), Toast.LENGTH_SHORT).show();
-
-                businessViewModel.delete();
-
+            public void onChanged(@Nullable List<Debtor> debtors) {
+                mAdapter = new DebtorAdapter(TestActivity.this, debtors, "someNO",((MyApplication)getApplicationContext()).myGlobalArray);
+                recyclerView.setAdapter(mAdapter);
             }
         });
-
-
 
 
 
