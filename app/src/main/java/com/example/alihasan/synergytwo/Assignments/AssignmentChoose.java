@@ -25,6 +25,8 @@ import com.example.alihasan.synergytwo.Adapters.DebtorAdapter;
 import com.example.alihasan.synergytwo.Database.Business;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.DebtorDatabase.DebtorViewModel;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
@@ -46,6 +48,7 @@ public class AssignmentChoose extends AppCompatActivity {
      * DD test
      */
     private BusinessViewModel businessViewModel;
+    private ImageViewModel imageViewModel;
     private DebtorViewModel   debtorViewModel;
     /**
      *
@@ -81,7 +84,8 @@ public class AssignmentChoose extends AppCompatActivity {
          * DD test
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
-        debtorViewModel   = ViewModelProviders.of(this).get(DebtorViewModel.class  );
+        imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        debtorViewModel   = ViewModelProviders.of(this).get(DebtorViewModel.class);
 
 
         if(businessViewModel.getCount()>0)
@@ -283,6 +287,71 @@ public class AssignmentChoose extends AppCompatActivity {
                 }
             },1000 * j);
         }
+
+
+        //LOOP FOR IMAGE UPLOAD
+        final List<ImageParam> imageList = imageViewModel.getAllData();
+
+        for(int i = imageViewModel.getCount(), j2 = 1 ;i > 0; i--, j2++) {
+
+            Handler handler = new Handler();
+            final int finalJ2 = j2;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    retroImageUpload(imageList, finalJ2);
+                }
+            },1000 * j2);
+        }
+
+
+    }
+
+        public void retroImageUpload(final List<ImageParam> imageParamList, final int j)
+        {
+
+            //GET THESE STRINGS FROM DATABSE;
+            String encodedImage = imageParamList.get(j-1).getEncodedImage();
+            String globalImageFileName = imageParamList.get(j-1).getGlobalImageFileName();
+            String StringCaseNo = imageParamList.get(j-1).getStringCaseNo();
+            String ACTIVITY = imageParamList.get(j-1).getACTIVITY();
+            String userName = imageParamList.get(j-1).getUserName();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
+
+        Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success"))
+                {
+                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
         }
 
 
