@@ -54,8 +54,7 @@ public class Residence {
     private String LONGITUDE;
     private String REMARKS;
 
-    public Residence(int id, @NonNull String RESIDENCE, String CASENO, String ADDRESS, String EASELOCATE, String AGE, String LOCALITYTYPE, String HOUSETYPE, String HOUSECONDITION, String OWNERSHIP, String LIVINGSTANDARD, String LANDMARK, String STAYINGSINCE, String APPLSTAYATADDRESS, String PERSONCONTACTED, String RELATIONSHIP, String ACCOMODATIONTYPE, String EXTERIOR, String NOOFFAMILY, String WORKING, String DEPENDENTADULTS, String DEPENDENTCHILDREN, String RETIREDMEMBER, String SPOUSEEARNING, String SPOUSEDETAILS, String MARITALSTATUS, String EDUQUAL, String NEIGHBOURNAME1, String ADDRESS1, String NEIGHBOURNAME2, String ADDRESS2, String NEIGHBOURFEEDBACK, String PROOFDETAILS, String VEHICLESEEN, String POLITICALLINK, String OVERALLSTATUS, String REASONNEGATIVEFI, String LATITUDE, String LONGITUDE, String REMARKS) {
-        this.id = id;
+    public Residence(@NonNull String RESIDENCE, String CASENO, String ADDRESS, String EASELOCATE, String AGE, String LOCALITYTYPE, String HOUSETYPE, String HOUSECONDITION, String OWNERSHIP, String LIVINGSTANDARD, String LANDMARK, String STAYINGSINCE, String APPLSTAYATADDRESS, String PERSONCONTACTED, String RELATIONSHIP, String ACCOMODATIONTYPE, String EXTERIOR, String NOOFFAMILY, String WORKING, String DEPENDENTADULTS, String DEPENDENTCHILDREN, String RETIREDMEMBER, String SPOUSEEARNING, String SPOUSEDETAILS, String MARITALSTATUS, String EDUQUAL, String NEIGHBOURNAME1, String ADDRESS1, String NEIGHBOURNAME2, String ADDRESS2, String NEIGHBOURFEEDBACK, String PROOFDETAILS, String VEHICLESEEN, String POLITICALLINK, String OVERALLSTATUS, String REASONNEGATIVEFI, String LATITUDE, String LONGITUDE, String REMARKS) {
         this.RESIDENCE = RESIDENCE;
         this.CASENO = CASENO;
         this.ADDRESS = ADDRESS;
@@ -95,5 +94,170 @@ public class Residence {
         this.LATITUDE = LATITUDE;
         this.LONGITUDE = LONGITUDE;
         this.REMARKS = REMARKS;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @NonNull
+    public String getRESIDENCE() {
+        return RESIDENCE;
+    }
+
+    public String getCASENO() {
+        return CASENO;
+    }
+
+    public String getADDRESS() {
+        return ADDRESS;
+    }
+
+    public String getEASELOCATE() {
+        return EASELOCATE;
+    }
+
+    public String getAGE() {
+        return AGE;
+    }
+
+    public String getLOCALITYTYPE() {
+        return LOCALITYTYPE;
+    }
+
+    public String getHOUSETYPE() {
+        return HOUSETYPE;
+    }
+
+    public String getHOUSECONDITION() {
+        return HOUSECONDITION;
+    }
+
+    public String getOWNERSHIP() {
+        return OWNERSHIP;
+    }
+
+    public String getLIVINGSTANDARD() {
+        return LIVINGSTANDARD;
+    }
+
+    public String getLANDMARK() {
+        return LANDMARK;
+    }
+
+    public String getSTAYINGSINCE() {
+        return STAYINGSINCE;
+    }
+
+    public String getAPPLSTAYATADDRESS() {
+        return APPLSTAYATADDRESS;
+    }
+
+    public String getPERSONCONTACTED() {
+        return PERSONCONTACTED;
+    }
+
+    public String getRELATIONSHIP() {
+        return RELATIONSHIP;
+    }
+
+    public String getACCOMODATIONTYPE() {
+        return ACCOMODATIONTYPE;
+    }
+
+    public String getEXTERIOR() {
+        return EXTERIOR;
+    }
+
+    public String getNOOFFAMILY() {
+        return NOOFFAMILY;
+    }
+
+    public String getWORKING() {
+        return WORKING;
+    }
+
+    public String getDEPENDENTADULTS() {
+        return DEPENDENTADULTS;
+    }
+
+    public String getDEPENDENTCHILDREN() {
+        return DEPENDENTCHILDREN;
+    }
+
+    public String getRETIREDMEMBER() {
+        return RETIREDMEMBER;
+    }
+
+    public String getSPOUSEEARNING() {
+        return SPOUSEEARNING;
+    }
+
+    public String getSPOUSEDETAILS() {
+        return SPOUSEDETAILS;
+    }
+
+    public String getMARITALSTATUS() {
+        return MARITALSTATUS;
+    }
+
+    public String getEDUQUAL() {
+        return EDUQUAL;
+    }
+
+    public String getNEIGHBOURNAME1() {
+        return NEIGHBOURNAME1;
+    }
+
+    public String getADDRESS1() {
+        return ADDRESS1;
+    }
+
+    public String getNEIGHBOURNAME2() {
+        return NEIGHBOURNAME2;
+    }
+
+    public String getADDRESS2() {
+        return ADDRESS2;
+    }
+
+    public String getNEIGHBOURFEEDBACK() {
+        return NEIGHBOURFEEDBACK;
+    }
+
+    public String getPROOFDETAILS() {
+        return PROOFDETAILS;
+    }
+
+    public String getVEHICLESEEN() {
+        return VEHICLESEEN;
+    }
+
+    public String getPOLITICALLINK() {
+        return POLITICALLINK;
+    }
+
+    public String getOVERALLSTATUS() {
+        return OVERALLSTATUS;
+    }
+
+    public String getREASONNEGATIVEFI() {
+        return REASONNEGATIVEFI;
+    }
+
+    public String getLATITUDE() {
+        return LATITUDE;
+    }
+
+    public String getLONGITUDE() {
+        return LONGITUDE;
+    }
+
+    public String getREMARKS() {
+        return REMARKS;
     }
 }
