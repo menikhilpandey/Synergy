@@ -19,7 +19,7 @@ public class ImageParam {
 
     private String userName;
 
-    public ImageParam(@NonNull String globalImageFileName, String encodedImage, String stringCaseNo, String ACTIVITY, String userName) {
+    public ImageParam( String encodedImage, @NonNull String globalImageFileName, String stringCaseNo, String ACTIVITY, String userName) {
         this.globalImageFileName = globalImageFileName;
         this.encodedImage = encodedImage;
         this.stringCaseNo = stringCaseNo;
