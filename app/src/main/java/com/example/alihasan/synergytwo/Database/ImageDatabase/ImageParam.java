@@ -7,11 +7,11 @@ import android.support.annotation.NonNull;
 @Entity(tableName = "image_table")
 public class ImageParam {
 
+    private String encodedImage;
+
     @PrimaryKey
     @NonNull
     private String globalImageFileName;
-
-    private String encodedImage;
 
     private String stringCaseNo;
 
@@ -27,13 +27,13 @@ public class ImageParam {
         this.userName = userName;
     }
 
+    public String getEncodedImage() {
+        return encodedImage;
+    }
+
     @NonNull
     public String getGlobalImageFileName() {
         return globalImageFileName;
-    }
-
-    public String getEncodedImage() {
-        return encodedImage;
     }
 
     public String getStringCaseNo() {
