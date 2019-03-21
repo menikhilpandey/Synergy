@@ -29,6 +29,8 @@ import com.example.alihasan.synergytwo.Database.EmploymentDatabase.Employment;
 import com.example.alihasan.synergytwo.Database.EmploymentDatabase.EmploymentViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
+import com.example.alihasan.synergytwo.Database.ResidenceDatabase.Residence;
+import com.example.alihasan.synergytwo.Database.ResidenceDatabase.ResidenceViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.model.Debtor;
@@ -49,10 +51,11 @@ public class AssignmentChoose extends AppCompatActivity {
      * DD test
      */
     private BusinessViewModel businessViewModel;
+    private EmploymentViewModel employmentViewModel;
+    private ResidenceViewModel residenceViewModel;
     private ImageViewModel imageViewModel;
     private DebtorViewModel   debtorViewModel;
 
-    private EmploymentViewModel employmentViewModel;
     /**
      *
      */
@@ -88,13 +91,14 @@ public class AssignmentChoose extends AppCompatActivity {
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
         employmentViewModel = ViewModelProviders.of(this).get(EmploymentViewModel.class);
+        residenceViewModel = ViewModelProviders.of(this).get(ResidenceViewModel.class);
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         debtorViewModel   = ViewModelProviders.of(this).get(DebtorViewModel.class);
 
 
-        if(businessViewModel.getCount() + employmentViewModel.getCount()>0)
+        if(businessViewModel.getCount() + employmentViewModel.getCount() + residenceViewModel.getCount()>0)
         {
-            pendingCount = businessViewModel.getCount()+employmentViewModel.getCount();
+            pendingCount = businessViewModel.getCount()+employmentViewModel.getCount()+residenceViewModel.getCount();
             pendingUploadTextView.setText(pendingCount + " PENDING UPLOAD");
             pendingUploadLinearLayout.setVisibility(View.VISIBLE);
         }
@@ -196,14 +200,14 @@ public class AssignmentChoose extends AppCompatActivity {
                 @Override
                 public void onRefresh() {
 
-                    if(businessViewModel.getCount()+employmentViewModel.getCount()>0)
+                    if(businessViewModel.getCount()+employmentViewModel.getCount() + residenceViewModel.getCount()>0)
                     {
-                        pendingCount = businessViewModel.getCount()+employmentViewModel.getCount();
+                        pendingCount = businessViewModel.getCount()+employmentViewModel.getCount()+residenceViewModel.getCount();
                         pendingUploadTextView.setText(pendingCount + " PENDING UPLOAD");
                         pendingUploadLinearLayout.setVisibility(View.VISIBLE);
                     }
 
-                    if(businessViewModel.getCount()+employmentViewModel.getCount()<=0)
+                    if(businessViewModel.getCount()+employmentViewModel.getCount()+residenceViewModel.getCount()<=0)
                     {
                         pendingUploadLinearLayout.setVisibility(View.GONE);
                     }
@@ -277,6 +281,10 @@ public class AssignmentChoose extends AppCompatActivity {
 
     public void uploadData(){
 
+        /*
+        BUSINESS VIEWMODEL
+         */
+
         final List<Business> businessList = businessViewModel.testGetAllData();
 
 //        int count = businessViewModel.getCount();
@@ -308,6 +316,25 @@ public class AssignmentChoose extends AppCompatActivity {
                     employmentRetroFitUpload(employmentList, finalJ3);
                 }
             },1000 * j3);
+        }
+
+        /*
+        RESIDENCE VIEW MODEL
+         */
+
+        final List<Residence> residenceList = residenceViewModel.getAllData();
+
+//        int count = businessViewModel.getCount();
+        for(int i = residenceViewModel.getCount(), j4 = 1 ;i > 0; i--, j4++) {
+
+            Handler handler = new Handler();
+            final int finalJ4 = j4;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    residenceRetroFitUpload(residenceList, finalJ4);
+                }
+            },1000 * j4);
         }
 
 
@@ -376,6 +403,104 @@ public class AssignmentChoose extends AppCompatActivity {
         });
         }
 
+    public void residenceRetroFitUpload(final List<Residence> residenceList, final int j)
+    {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+                .build();
+
+        final Client client = retrofit.create(Client.class);
+
+        Call<String> call = client.sendResidenceData(
+                residenceList.get(j-1).getRESIDENCE(),
+                residenceList.get(j-1).getCASENO(),
+                residenceList.get(j-1).getADDRESS(),
+                residenceList.get(j-1).getEASELOCATE(),
+                residenceList.get(j-1).getAGE(),
+                residenceList.get(j-1).getLOCALITYTYPE(),
+                residenceList.get(j-1).getHOUSETYPE(),
+                residenceList.get(j-1).getHOUSECONDITION(),
+                residenceList.get(j-1).getOWNERSHIP(),
+                residenceList.get(j-1).getLIVINGSTANDARD(),
+                residenceList.get(j-1).getLANDMARK(),
+                residenceList.get(j-1).getSTAYINGSINCE(),
+                residenceList.get(j-1).getAPPLSTAYATADDRESS(),
+                residenceList.get(j-1).getPERSONCONTACTED(),
+                residenceList.get(j-1).getRELATIONSHIP(),
+                residenceList.get(j-1).getACCOMODATIONTYPE(),
+                residenceList.get(j-1).getEXTERIOR(),
+                residenceList.get(j-1).getNOOFFAMILY(),
+                residenceList.get(j-1).getWORKING(),
+                residenceList.get(j-1).getDEPENDENTADULTS(),
+                residenceList.get(j-1).getDEPENDENTCHILDREN(),
+                residenceList.get(j-1).getRETIREDMEMBER(),
+                residenceList.get(j-1).getSPOUSEEARNING(),
+                residenceList.get(j-1).getSPOUSEDETAILS(),
+                residenceList.get(j-1).getMARITALSTATUS(),
+                residenceList.get(j-1).getEDUQUAL(),
+                residenceList.get(j-1).getNEIGHBOURNAME1(),
+                residenceList.get(j-1).getADDRESS1(),
+                residenceList.get(j-1).getNEIGHBOURNAME2(),
+                residenceList.get(j-1).getADDRESS2(),
+                residenceList.get(j-1).getNEIGHBOURFEEDBACK(),
+                residenceList.get(j-1).getPROOFDETAILS(),
+                residenceList.get(j-1).getVEHICLESEEN(),
+                residenceList.get(j-1).getPOLITICALLINK(),
+                residenceList.get(j-1).getOVERALLSTATUS(),
+                residenceList.get(j-1).getREASONNEGATIVEFI(),
+                residenceList.get(j-1).getLATITUDE(),
+                residenceList.get(j-1).getLONGITUDE(),
+                residenceList.get(j-1).getREMARKS());
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if(response.body()==null)
+                {
+                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+                }
+
+                else if(response.body().equals("Success")) {
+
+                    String CASENO = residenceList.get(j-1).getCASENO();
+                    ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
+
+                    retrofitExit(CASENO,"RESIDENCE");
+
+                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
+                    retrofitExit(residenceList.get(j-1).getCASENO(),residenceList.get(j-1).getRESIDENCE());
+                    residenceViewModel.delete(residenceList.get(j-1));
+
+//                    businessList.remove(j-1);
+
+                    /**
+                     * Will receive something to verify
+                     * successful upload to table
+                     */
+
+//                    Intent intent = new Intent(BusinessActivity.this, AssignmentChoose.class);
+//                    intent.putExtra("CASENO", StringCaseNo);
+//                    intent.putExtra("USERNAME", userName);
+//                    intent.putExtra("TYPEOFCASE", ACTIVITY);
+//                    startActivity(intent);
+                }
+
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG "+response.body(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void employmentRetroFitUpload(final List<Employment> employmentList, final int j)
     {
 
@@ -438,7 +563,7 @@ public class AssignmentChoose extends AppCompatActivity {
                     String CASENO = employmentList.get(j-1).getCASENO();
                     ((MyApplication)getApplicationContext()).myGlobalArray.remove(CASENO);
 
-                    retrofitExit(CASENO,"BUSINESS");
+                    retrofitExit(CASENO,"EMPLOYMENT");
 
                     Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
                     retrofitExit(employmentList.get(j-1).getCASENO(),employmentList.get(j-1).getEMPLOYMENT());
