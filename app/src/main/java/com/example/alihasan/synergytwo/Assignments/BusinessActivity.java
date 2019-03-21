@@ -381,7 +381,7 @@ public class BusinessActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(counter.getCounter() <  3)
+                if(counter.getCounter() >  3)
                     EXIT_CODE = true;
 
                 if(!EXIT_CODE)
@@ -847,11 +847,11 @@ public class BusinessActivity extends AppCompatActivity {
 //
 //                else if(response.body().equals("Success"))
 //                {
-//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-//                    counter.addCounter();
-//
-//                    if(counter.getCounter() >= 3)
-//                        EXIT_CODE = true;
+                    Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
+                    counter.addCounter();
+
+                    if(counter.getCounter() >= 3)
+                        EXIT_CODE = true;
 //
 //                }
 //                else

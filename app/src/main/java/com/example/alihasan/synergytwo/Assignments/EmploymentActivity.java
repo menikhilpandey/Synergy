@@ -3,6 +3,9 @@ package com.example.alihasan.synergytwo.Assignments;
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.CounterSingleton;
+import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
@@ -21,6 +24,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -71,6 +75,15 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EmploymentActivity extends AppCompatActivity {
+
+    /**
+     * DD test
+     */
+    private EmploymentViewModel employmentViewModel;
+    private ImageViewModel imageViewModel   ;
+    /**
+     *
+     */
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
@@ -184,6 +197,12 @@ public class EmploymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employment);
+
+        /**
+         * DD test
+         */
+        employmentViewModel = ViewModelProviders.of(this).get(EmploymentViewModel.class);
+        imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
 
         /**
          * PERMISSION CHECKS
@@ -362,8 +381,8 @@ public class EmploymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(counter.getCounter() <  3)
-                    EXIT_CODE = false;
+                if(counter.getCounter() >  3)
+                    EXIT_CODE = true;
 
                 if(!EXIT_CODE)
                 {
@@ -453,7 +472,7 @@ public class EmploymentActivity extends AppCompatActivity {
                     /**
                      * RETROFIT MAGIC
                      */
-                    retroFitHelper(TABLENAME,
+                    storeData(TABLENAME,
                             StringCaseNo,
                             saddress,
                             seaseLocSpinner,
@@ -508,13 +527,35 @@ public class EmploymentActivity extends AppCompatActivity {
                 }
 
 
-                onSubmit();
+                onSubmit(StringCaseNo);
             }
 
         });
     }
 
-    public  void retroFitHelper(String TABLENAME,
+    public void onSubmit(String stringCaseNo)
+    {
+//        retrofitExit(StringCaseNo,ACTIVITY);
+        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
+
+//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = preferences.edit();
+//                editor.clear();
+//                editor.apply();
+//                finish();
+
+        SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = preferences2.edit();
+        editor2.clear();
+        editor2.apply();
+        finish();
+
+        Intent backToAssignmentChoose = new Intent(EmploymentActivity.this,AssignmentChoose.class);
+        startActivity(backToAssignmentChoose);
+    }
+
+
+    public  void storeData(String TABLENAME,
                                 String CASENO,
                                 String ADDRESS,
                                 String EASELOCATE,
@@ -551,14 +592,8 @@ public class EmploymentActivity extends AppCompatActivity {
                                 String LONGITUDE,
                                 String REMARKS)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.sendEmploymentData(TABLENAME,
+        employmentViewModel.insert( new Employment(
+                TABLENAME,
                 CASENO,
                 ADDRESS,
                 EASELOCATE,
@@ -593,45 +628,9 @@ public class EmploymentActivity extends AppCompatActivity {
                 REASONNEGATIVEFI,
                 LATITUDE,
                 LONGITUDE,
-                REMARKS);
+                REMARKS));
 
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success")) {
-
-                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
-                    /**
-                     * Will receive something to verify
-                     * successful upload to table
-                     */
-
-                    Intent intent = new Intent(EmploymentActivity.this, AssignmentChoose.class);
-                    intent.putExtra("CASENO", StringCaseNo);
-                    intent.putExtra("USERNAME", userName);
-                    intent.putExtra("TYPEOFCASE", ACTIVITY);
-                    startActivity(intent);
-                }
-
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG"+response.body(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+        Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPDATED IN DB  ", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -778,73 +777,57 @@ public class EmploymentActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView);
-//        recyclerView.setAdapter(adapter);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,employmentViewModel);
+        recyclerView.setAdapter(adapter);
     }
 
     public void retroFitHelper(String encodedImage)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
+        globalImageFileName = photoHelper.getGlobalImageFileName();
+        employmentViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success"))
-                {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(SERVER_URL)
+//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+//                .build();
+//
+//        Client client = retrofit.create(Client.class);
+//
+//        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
+//
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//
+//                if(response.body()==null)
+//                {
+//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if(response.body().equals("Success"))
+//                {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
                     counter.addCounter();
 
                     if(counter.getCounter() >= 3)
                         EXIT_CODE = true;
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//                }
+//                else
+//                {
+//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
 
     }
 
-    public void onSubmit()
-    {
-        retrofitExit(StringCaseNo,ACTIVITY);
-
-//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = preferences.edit();
-//                editor.clear();
-//                editor.apply();
-//                finish();
-
-        SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor2 = preferences2.edit();
-        editor2.clear();
-        editor2.apply();
-        finish();
-
-        Intent backToAssignmentChoose = new Intent(EmploymentActivity.this,AssignmentChoose.class);
-        startActivity(backToAssignmentChoose);
-    }
 
     public  void retrofitExit(String caseNo, String caseType){
 

@@ -2,6 +2,7 @@ package com.example.alihasan.synergytwo.Assignments;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -37,6 +38,9 @@ import android.widget.Toast;
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.CounterSingleton;
+import com.example.alihasan.synergytwo.Database.BusinessViewModel;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
+import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.LoginActivity;
 import com.example.alihasan.synergytwo.PhotoActivity;
 import com.example.alihasan.synergytwo.R;
@@ -72,6 +76,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class PropertyActivity extends AppCompatActivity {
+
+    /**
+     * DD test
+     */
+    private PropertyViewModel propertyViewModel;
+    private ImageViewModel imageViewModel   ;
+    /**
+     *
+     */
 
     static String SERVER_URL = new ServerURL().getSERVER_URL();
 
@@ -213,6 +226,12 @@ public class PropertyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_property);
+
+        /**
+         * DD test
+         */
+        propertyViewModel = ViewModelProviders.of(this).get(PropertyViewModel.class);
+        imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
 
         /**
          * PERMISSION CHECKS
@@ -368,8 +387,8 @@ public class PropertyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(counter.getCounter() <  3)
-                    EXIT_CODE = false;
+                if(counter.getCounter() >  3)
+                    EXIT_CODE = true;
 
                 if(!EXIT_CODE)
                 {
@@ -448,7 +467,7 @@ public class PropertyActivity extends AppCompatActivity {
                     /**
                      * RETROFIT MAGIC
                      */
-                    retroFitHelper(TABLENAME,
+                    storeData(TABLENAME,
                             StringCaseNo,
                             saddress,
                             seaseToLocSpinner,
@@ -495,15 +514,16 @@ public class PropertyActivity extends AppCompatActivity {
 
                 }
 
-                onSubmit();
+                onSubmit(StringCaseNo);
 
             }
         });
     }
 
-    public void onSubmit()
+    public void onSubmit(String stringCaseNo)
     {
-        retrofitExit(StringCaseNo,ACTIVITY);
+//        retrofitExit(StringCaseNo,ACTIVITY);
+        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
 
 //                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
 //                SharedPreferences.Editor editor = preferences.edit();
@@ -521,7 +541,7 @@ public class PropertyActivity extends AppCompatActivity {
         startActivity(backToAssignmentChoose);
     }
 
-    public  void retroFitHelper(String TABLENAME,
+    public  void storeData(String TABLENAME,
                                 String CASENO,
                                 String ADDRESS,
                                 String EASELOCATE,
@@ -551,14 +571,7 @@ public class PropertyActivity extends AppCompatActivity {
                                 String REMARKS)
     {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.sendPropertyData(
+        propertyViewModel.insert(new Property(
                 TABLENAME,
                 CASENO,
                 ADDRESS,
@@ -586,43 +599,9 @@ public class PropertyActivity extends AppCompatActivity {
                 REASONNEGATIVEFI,
                 LATITUDE,
                 LONGITUDE,
-                REMARKS);
+                REMARKS));
+        Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPDATED IN DB  ", Toast.LENGTH_SHORT).show();
 
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success")) {
-
-                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
-                    /**
-                     * Will receive something to verify
-                     * successful upload to table
-                     */
-
-                    Intent intent = new Intent(PropertyActivity.this, AssignmentChoose.class);
-                    intent.putExtra("CASENO", StringCaseNo);
-                    intent.putExtra("USERNAME", userName);
-                    intent.putExtra("TYPEOFCASE", ACTIVITY);
-                    startActivity(intent);
-                }
-
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG"+response.body(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
@@ -772,52 +751,59 @@ public class PropertyActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView);
-//        recyclerView.setAdapter(adapter);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+        recyclerView.setAdapter(adapter);
     }
 
     public void retroFitHelper(String encodedImage)
     {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
 
-        Client client = retrofit.create(Client.class);
+        /**
+         * DD change
+         */
+        globalImageFileName = photoHelper.getGlobalImageFileName();
+        imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
-        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body()==null)
-                {
-                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-                }
-
-                else if(response.body().equals("Success"))
-                {
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(SERVER_URL)
+//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
+//                .build();
+//
+//        Client client = retrofit.create(Client.class);
+//
+//        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
+//
+//        call.enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//
+//                if(response.body()==null)
+//                {
+//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if(response.body().equals("Success"))
+//                {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
                     counter.addCounter();
 
                     if(counter.addCounter() >= 3)
                         EXIT_CODE = true;
 
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//                }
+//                else
+//                {
+//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
 
     }
 
