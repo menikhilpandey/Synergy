@@ -824,7 +824,7 @@ public class BusinessActivity extends AppCompatActivity {
         /**
          * DD change
          */
-
+        globalImageFileName = photoHelper.getGlobalImageFileName();
         imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
 //        Retrofit retrofit = new Retrofit.Builder()
