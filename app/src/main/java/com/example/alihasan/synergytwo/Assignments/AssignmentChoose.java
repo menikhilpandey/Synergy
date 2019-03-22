@@ -271,6 +271,7 @@ public class AssignmentChoose extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<List<Debtor>> call, Throwable t) {
                             Toast.makeText(getApplicationContext(), "No Internet/ Failure", Toast.LENGTH_SHORT).show();
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
 
