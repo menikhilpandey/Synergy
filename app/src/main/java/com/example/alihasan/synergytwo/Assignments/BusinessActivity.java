@@ -17,6 +17,8 @@ import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
 import com.example.alihasan.synergytwo.api.service.ServerURL;
+import com.example.easywaylocation.EasyWayLocation;
+import com.example.easywaylocation.Listener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -33,9 +35,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -44,6 +48,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,7 +86,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BusinessActivity extends AppCompatActivity {
+public class BusinessActivity extends AppCompatActivity implements Listener {
 
     /**
      * DD test
@@ -93,7 +98,7 @@ public class BusinessActivity extends AppCompatActivity {
      *
      */
 
-    static String SERVER_URL = new ServerURL().getSERVER_URL();
+//    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     EditText address;
 
@@ -152,11 +157,8 @@ public class BusinessActivity extends AppCompatActivity {
 
     Button nextButton, locationButton;
 
-    TextView lat,lng;
-    public static final int LOCATION_REQ_CODE = 100;
-    LocationManager locationManager;
-    private double latitude = 0;
-    private double longitude = 0;
+
+
 
     Intent i = getIntent();
 //        String StringCaseNo = i.getStringExtra("CASENO");
@@ -184,6 +186,22 @@ public class BusinessActivity extends AppCompatActivity {
     TextView fetchingLocation;
 
     private RecyclerView recyclerView;
+
+    /**
+     * LOCATION
+     */
+
+    EasyWayLocation easyWayLocation;
+
+    TextView lat,lng;
+    private Double lati, longi;
+
+    final String []locationPermissionList={
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,};
+
+    private static final int LOCATION_STRING_CODE = 925;
+
 
     /**
      * PHOTO ACTIVITY
@@ -232,19 +250,29 @@ public class BusinessActivity extends AppCompatActivity {
          * PERMISSION CHECKS
          */
 
+        /*
+        LOCATION STUFF
+         */
+
+        easyWayLocation = new EasyWayLocation(this);
+        easyWayLocation.setListener(this);
+
+        ActivityCompat.requestPermissions(this,
+                locationPermissionList,
+                LOCATION_STRING_CODE);
+
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
 
         String []permissionsList={Manifest.permission.CAMERA,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE};
+
         ActivityCompat.requestPermissions(this,
                 permissionsList,
                 REQUEST_STRING_CODE);
 
-        displayLocationSettingsRequest(BusinessActivity.this);
+
 
         photoHelper = new PhotoHelper(BusinessActivity.this);
 
@@ -373,9 +401,6 @@ public class BusinessActivity extends AppCompatActivity {
          * LOCATION BUTTON
          */
 
-        final AppLocationService appLocationService = new AppLocationService(
-                this);
-
 
         /**
          * LOCATION END
@@ -384,6 +409,8 @@ public class BusinessActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                requestPermission();
 
                 if(counter.getCounter() >  3)
                     EXIT_CODE = true;
@@ -402,36 +429,12 @@ public class BusinessActivity extends AppCompatActivity {
                         return;
                 }
 
-                /**
-                 *LocationFetching
-                 */
-//                final AppLocationService appLocationService = new AppLocationService(
-//                        BusinessActivity.this);
-
-
-                Location nwLocation = appLocationService
-                        .getLocation();
-
-                if (nwLocation != null) {
-
-
-                    double latitude = nwLocation.getLatitude();
-                    double longitude = nwLocation.getLongitude();
-
-//                    locText.setText(latitude + " " + longitude);
-
-                    lat.setText(String.valueOf(latitude));
-                    lng.setText(String.valueOf(longitude));
-
-//                    GOT_LOCATION = true;
-                }
-
 
                 /**
                  * Fetched
                  */
 
-                if(nwLocation != null)
+                if(lat.getText().toString().length()>0 && lng.getText().toString().length()>0)
                 {
 
                     spdaNoSpinner = pdaNoSpinner.getSelectedItem().toString();
@@ -477,9 +480,6 @@ public class BusinessActivity extends AppCompatActivity {
                      * EDIT TEXTS END
                      */
 
-//                    Toast.makeText(BusinessActivity.this, slati + " " + slongi , Toast.LENGTH_SHORT).show();
-                    //String stypeCompany,svcard,snameboard,sambience,
-                    //            sexterior,seaseToLoc,sbact,srecomm;
                     /**
                      * RETROFIT MAGIC
                      */
@@ -492,22 +492,10 @@ public class BusinessActivity extends AppCompatActivity {
                 }
 
                 else {
-//                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
 
-                    Toast.makeText(BusinessActivity.this, "Click again after a moment", Toast.LENGTH_LONG).show();
-
-                    String []permissionsList={Manifest.permission.CAMERA,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE};
                     ActivityCompat.requestPermissions(BusinessActivity.this,
-                            permissionsList,
-                            REQUEST_STRING_CODE);
-
-                    displayLocationSettingsRequest(BusinessActivity.this);
-
-
+                            locationPermissionList,
+                            LOCATION_STRING_CODE);
                 }
 
                 onSubmit(StringCaseNo);
@@ -517,22 +505,80 @@ public class BusinessActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *LOCATION STUFF
+     */
+    @Override
+    public void locationOn() {
+//        Toast.makeText(this, "Location ON", Toast.LENGTH_SHORT).show();
+//        easyWayLocation.beginUpdates();
+    }
+
+    @Override
+    public void onPositionChanged() {
+//        lati = easyWayLocation.getLatitude();
+//        longi = easyWayLocation.getLongitude();
+//        tvLatitude.setText(String.valueOf(lati));
+//        tvLongitude.setText(String.valueOf(longi));
+    }
+
+    @Override
+    public void locationCancelled() {
+//        easyWayLocation.showAlertDialog(getString(R.string.loc_title), getString(R.string.loc_mess), null);
+    }
+
+    private void showExplanation(String title,
+                                 String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermission();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(BusinessActivity.this,
+                locationPermissionList,
+                LOCATION_STRING_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String permissions[],
+            int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_STRING_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(BusinessActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    easyWayLocation.beginUpdates();
+                    lati = easyWayLocation.getLatitude();
+                    longi = easyWayLocation.getLongitude();
+                    lat.setText(String.valueOf(lati));
+                    lng.setText(String.valueOf(longi));
+                }
+                else {
+                    Toast.makeText(BusinessActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
+                }
+        }
+    }
+
+    /**
+     *
+     * LOCATION STUFF ENDS
+     */
+
     public void onSubmit(String stringCaseNo)
     {
 
-
-
-//        retrofitExit(StringCaseNo,ACTIVITY);
-//        ((MyApplication)getApplicationContext()).myGlobalArray.add(stringCaseNo);
         inUploadViewModel.insert(new InUplaod(stringCaseNo,"BUSINESS"));
-
-
-
-//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = preferences.edit();
-//                editor.clear();
-//                editor.apply();
-//                finish();
 
         SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor2 = preferences2.edit();
@@ -592,154 +638,20 @@ public class BusinessActivity extends AppCompatActivity {
 
     }
 
-
-//    public void businessRetroFitUpload(final String TABLENAME,
-//                               final String CASENO,
-//                               final String ADDRESS,
-//                               final String EASELOCATE,
-//                               final String OFFICEOWNERSHIP,
-//                               final String APPLCOMPANYNAME,
-//                               final String LOCALITYTYPE,
-//                               final String NATUREBUSNIESS,
-//                               final String APPLDESIGNATION,
-//                               final String WORKINGSINCE,
-//                               final String PERSONCONTACTED,
-//                               final String PERSONDESIGNATION,
-//                               final String NOSEMP,
-//                               final String LANDMARK,
-//                               final String NOSBRANCHES,
-//                               final String BUSINESSSETUP,
-//                               final String BUSINESSBOARD,
-//                               final String NOSYEARSATADDRESS,
-//                               final String VISITINGCARD,
-//                               final String APPLNAMEVERIFFROM,
-//                               final String CONTACTVERIF1,
-//                               final String CONTACTVERIF2,
-//                               final String CONTACTFEEDBACK,
-//                               final String PROOFDETAILS,
-//                               final String POLITICALLINK,
-//                               final String OVERALLSTATUS,
-//                               final String REASONNEGATIVEFI,
-//                               final String LATITUDE,
-//                               final String LONGITUDE,
-//                               final String REMARKS)
-//    {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(SERVER_URL)
-//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-//                .build();
-//
-//        Client client = retrofit.create(Client.class);
-//
-//        Call<String> call = client.sendBusinessData(TABLENAME, CASENO,ADDRESS, EASELOCATE, OFFICEOWNERSHIP,
-//                APPLCOMPANYNAME, LOCALITYTYPE, NATUREBUSNIESS,
-//                APPLDESIGNATION, WORKINGSINCE, PERSONCONTACTED,
-//                PERSONDESIGNATION, NOSEMP, LANDMARK, NOSBRANCHES,
-//                BUSINESSSETUP, BUSINESSBOARD, NOSYEARSATADDRESS,
-//                VISITINGCARD, APPLNAMEVERIFFROM, CONTACTVERIF1,
-//                CONTACTVERIF2, CONTACTFEEDBACK, PROOFDETAILS,
-//                POLITICALLINK, OVERALLSTATUS, REASONNEGATIVEFI,
-//                LATITUDE, LONGITUDE,REMARKS);
-//
-//        call.enqueue(new Callback<String>() {
-//            @Override
-//            public void onResponse(Call<String> call, Response<String> response) {
-//
-//                if(response.body()==null)
-//                {
-//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                else if(response.body().equals("Success")) {
-//
-//                    Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPLOADED  ", Toast.LENGTH_SHORT).show();
-//                    /**
-//                     * Will receive something to verify
-//                     * successful upload to table
-//                     */
-//
-//                    Intent intent = new Intent(BusinessActivity.this, AssignmentChoose.class);
-//                    intent.putExtra("CASENO", StringCaseNo);
-//                    intent.putExtra("USERNAME", userName);
-//                    intent.putExtra("TYPEOFCASE", ACTIVITY);
-//                    startActivity(intent);
-//                }
-//
-//                else
-//                    {
-//                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG "+response.body(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<String> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.camerabutton, menu);
         return true;
     }
-    private void displayLocationSettingsRequest(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
 
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i("TAG", "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i("TAG", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult(BusinessActivity.this, 1);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i("TAG", "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i("TAG", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
-                }
-            }
-
-
-        });
-
-
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.camera:
 
-//                String enUser;
-//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-//                enUser = preferences.getString("ENPDANO", "");
-//
-//                logout(enUser);
                 launchCamera();
-
 
                 return true;
             default:
@@ -832,86 +744,13 @@ public class BusinessActivity extends AppCompatActivity {
         globalImageFileName = photoHelper.getGlobalImageFileName();
         imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(SERVER_URL)
-//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-//                .build();
-//
-//        Client client = retrofit.create(Client.class);
-//
-//        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
-//
-//        call.enqueue(new Callback<String>() {
-//            @Override
-//            public void onResponse(Call<String> call, Response<String> response) {
-//
-//                if(response.body()==null)
-//                {
-//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                else if(response.body().equals("Success"))
-//                {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
                     counter.addCounter();
 
                     if(counter.getCounter() >= 3)
                         EXIT_CODE = true;
-//
-//                }
-//                else
-//                {
-//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<String> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-//
-//
-//            }
-//        });
+
 
     }
-
-    public  void retrofitExit(String caseNo, String caseType){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.exit(caseNo,caseType);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body().equals("Success"))
-                {
-                    Toast.makeText(getApplicationContext(), "COMPLETED", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-
-    }
-
-
-
-
 
 }

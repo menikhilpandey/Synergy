@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -15,6 +17,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +54,8 @@ import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
 import com.example.alihasan.synergytwo.api.service.ServerURL;
+import com.example.easywaylocation.EasyWayLocation;
+import com.example.easywaylocation.Listener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -79,7 +84,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class PropertyActivity extends AppCompatActivity {
+public class PropertyActivity extends AppCompatActivity implements Listener {
 
     /**
      * DD test
@@ -226,6 +231,20 @@ public class PropertyActivity extends AppCompatActivity {
 
     PhotoHelper photoHelper;
 
+    /**
+     * LOCATION
+     */
+
+    EasyWayLocation easyWayLocation;
+
+    private Double lati, longi;
+
+    final String []locationPermissionList={
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,};
+
+    private static final int LOCATION_STRING_CODE = 925;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +261,17 @@ public class PropertyActivity extends AppCompatActivity {
         /**
          * PERMISSION CHECKS
          */
+        
+         /*
+        LOCATION STUFF
+         */
+
+        easyWayLocation = new EasyWayLocation(this);
+        easyWayLocation.setListener(this);
+
+        ActivityCompat.requestPermissions(this,
+                locationPermissionList,
+                LOCATION_STRING_CODE);
 
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
@@ -376,18 +406,8 @@ public class PropertyActivity extends AppCompatActivity {
 
         /**
          * END SETTING ADAPTERS
-         */
-        /**
-         * LOCATION BUTTON
-         */
+        **/
 
-        final AppLocationService appLocationService = new AppLocationService(
-                this);
-
-
-        /**
-         * LOCATION END
-         */
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -410,36 +430,12 @@ public class PropertyActivity extends AppCompatActivity {
                     return;
                 }
 
-                /**
-                 *LocationFetching
-                 */
-//                final AppLocationService appLocationService = new AppLocationService(
-//                        BusinessActivity.this);
-
-
-                Location nwLocation = appLocationService
-                        .getLocation();
-
-                if (nwLocation != null) {
-
-
-                    double latitude = nwLocation.getLatitude();
-                    double longitude = nwLocation.getLongitude();
-
-//                    locText.setText(latitude + " " + longitude);
-
-                    lat.setText(String.valueOf(latitude));
-                    lng.setText(String.valueOf(longitude));
-
-//                    GOT_LOCATION = true;
-                }
-
 
                 /**
                  * Fetched
                  */
 
-                if(nwLocation != null)
+                if(lat.getText().toString().length()>0 && lng.getText().toString().length()>0)
                 {
                     seaseToLocSpinner = easeToLocSpinner.getSelectedItem().toString();
                     srelationshipSpinner = relationshipSpinner.getSelectedItem().toString();
@@ -504,19 +500,9 @@ public class PropertyActivity extends AppCompatActivity {
                 }
 
                 else {
-//                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(PropertyActivity.this, "Click again after a moment", Toast.LENGTH_LONG).show();
-
-                    String []permissionsList={Manifest.permission.CAMERA,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE};
                     ActivityCompat.requestPermissions(PropertyActivity.this,
-                            permissionsList,
-                            REQUEST_STRING_CODE);
-
-                    displayLocationSettingsRequest(PropertyActivity.this);
+                            locationPermissionList,
+                            LOCATION_STRING_CODE);
 
                 }
 
@@ -526,17 +512,80 @@ public class PropertyActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *LOCATION STUFF
+     */
+    @Override
+    public void locationOn() {
+//        Toast.makeText(this, "Location ON", Toast.LENGTH_SHORT).show();
+//        easyWayLocation.beginUpdates();
+    }
+
+    @Override
+    public void onPositionChanged() {
+//        lati = easyWayLocation.getLatitude();
+//        longi = easyWayLocation.getLongitude();
+//        tvLatitude.setText(String.valueOf(lati));
+//        tvLongitude.setText(String.valueOf(longi));
+    }
+
+    @Override
+    public void locationCancelled() {
+//        easyWayLocation.showAlertDialog(getString(R.string.loc_title), getString(R.string.loc_mess), null);
+    }
+
+    private void showExplanation(String title,
+                                 String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermission();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(PropertyActivity.this,
+                locationPermissionList,
+                LOCATION_STRING_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String permissions[],
+            int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_STRING_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(PropertyActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    easyWayLocation.beginUpdates();
+                    lati = easyWayLocation.getLatitude();
+                    longi = easyWayLocation.getLongitude();
+                    lat.setText(String.valueOf(lati));
+                    lng.setText(String.valueOf(longi));
+                }
+                else {
+                    Toast.makeText(PropertyActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
+                }
+        }
+    }
+
+    /**
+     *
+     * LOCATION STUFF ENDS
+     */
+
     public void onSubmit(String stringCaseNo)
     {
-//        retrofitExit(StringCaseNo,ACTIVITY);
         inUploadViewModel.insert(new InUplaod(stringCaseNo,"PROPERTY"));
-
-//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = preferences.edit();
-//                editor.clear();
-//                editor.apply();
-//                finish();
-
+        
         SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor2 = preferences2.edit();
         editor2.clear();
@@ -771,82 +820,12 @@ public class PropertyActivity extends AppCompatActivity {
         globalImageFileName = photoHelper.getGlobalImageFileName();
         imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
 
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(SERVER_URL)
-//                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-//                .build();
-//
-//        Client client = retrofit.create(Client.class);
-//
-//        Call<String> call = client.imageUpload(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName);
-//
-//        call.enqueue(new Callback<String>() {
-//            @Override
-//            public void onResponse(Call<String> call, Response<String> response) {
-//
-//                if(response.body()==null)
-//                {
-//                    Toast.makeText(getApplicationContext(), "SERVER IS DOWN", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                else if(response.body().equals("Success"))
-//                {
                     Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
                     counter.addCounter();
 
                     if(counter.addCounter() >= 3)
                         EXIT_CODE = true;
-
-//                }
-//                else
-//                {
-//                    Toast.makeText(getApplicationContext(), "IMAGE UPLOAD UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<String> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-//
-//
-//            }
-//        });
-
-    }
-
-    public  void retrofitExit(String caseNo, String caseType){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.exit(caseNo,caseType);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body().equals("Success"))
-                {
-                    Toast.makeText(getApplicationContext(), "COMPLETED", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-
+                    
     }
 
 }

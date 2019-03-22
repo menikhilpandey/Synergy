@@ -1,12 +1,15 @@
 package com.example.alihasan.synergytwo.Assignments;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
@@ -25,6 +28,8 @@ import com.example.alihasan.synergytwo.R;
 import com.example.alihasan.synergytwo.api.service.AppLocationService;
 import com.example.alihasan.synergytwo.api.service.Client;
 import com.example.alihasan.synergytwo.api.service.ServerURL;
+import com.example.easywaylocation.EasyWayLocation;
+import com.example.easywaylocation.Listener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -80,7 +85,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ResidenceActivity extends AppCompatActivity {
+public class ResidenceActivity extends AppCompatActivity implements Listener {
 
     /**
      * DD test
@@ -92,8 +97,21 @@ public class ResidenceActivity extends AppCompatActivity {
      *
      */
 
-    static String SERVER_URL = new ServerURL().getSERVER_URL();
+    /**
+     * LOCATION
+     */
 
+    EasyWayLocation easyWayLocation;
+
+    TextView lat,lng;
+    private Double lati, longi;
+
+    final String []locationPermissionList={
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,};
+
+    private static final int LOCATION_STRING_CODE = 925;
+    
     /**
      * Total 36
      * EditText  18
@@ -188,7 +206,6 @@ public class ResidenceActivity extends AppCompatActivity {
 
     Button nextButton, locationButton;
 
-    TextView lat, lng;
     public static final int LOCATION_REQ_CODE = 100;
     LocationManager locationManager;
     private double latitude = 0;
@@ -262,6 +279,17 @@ public class ResidenceActivity extends AppCompatActivity {
         /**
          * PERMISSION CHECKS
          */
+        
+        /*
+        LOCATION STUFF
+         */
+
+        easyWayLocation = new EasyWayLocation(this);
+        easyWayLocation.setListener(this);
+
+        ActivityCompat.requestPermissions(this,
+                locationPermissionList,
+                LOCATION_STRING_CODE);
 
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
@@ -274,7 +302,6 @@ public class ResidenceActivity extends AppCompatActivity {
                 permissionsList,
                 REQUEST_STRING_CODE);
 
-        displayLocationSettingsRequest(ResidenceActivity.this);
 
         photoHelper = new PhotoHelper(ResidenceActivity.this);
 
@@ -359,25 +386,6 @@ public class ResidenceActivity extends AppCompatActivity {
          * SETTING SPINNER ADAPTERS
          */
 
-        //easeToLocSpinnerAdapter,
-        //            locTypeSpinnerAdapter,
-        //            houseTypeSpinnerAdapter,
-        //            houseCondSpinnerAdapter,
-        //            owenershipSpinnerAdapter,
-        //            livingStandSpinnerAdapter,
-        //            appStaySpinnerAdapter,
-        //            relationshipSpinnerAdapter,
-        //            accoTypeSpinnerAdapter,
-        //            exteriorSpinnerAdapter,
-        //            spouseEarnSpinnerAdapter,
-        //            maritalStatSpinnerAdapter,
-        //            educatQualSpinnerAdapter,
-        //            neighbourFeedSpinnerAdapter,
-        //             vehicalSeenSpinnerAdapter,
-        //            politiclLinkSpinnerAdapter,
-        //            overallStatusSpinnerAdapter,
-        //            reasonNegativeSpinnerAdapter;
-
         easeToLocSpinnerAdapter = ArrayAdapter.createFromResource(ResidenceActivity.this, R.array.EASELOCATE1, R.layout.support_simple_spinner_dropdown_item);
         easeToLocSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         easeToLocSpinner.setAdapter(easeToLocSpinnerAdapter);
@@ -453,17 +461,7 @@ public class ResidenceActivity extends AppCompatActivity {
         /**
          * END SETTING ADAPTERS
          */
-        /**
-         * LOCATION BUTTON
-         */
-
-        final AppLocationService appLocationService = new AppLocationService(
-                this);
-
-        /**
-         * LOCATION END
-         */
-
+        
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -485,36 +483,12 @@ public class ResidenceActivity extends AppCompatActivity {
                     return;
                 }
 
-                /**
-                 *LocationFetching
-                 */
-//                final AppLocationService appLocationService = new AppLocationService(
-//                        BusinessActivity.this);
-
-
-                Location nwLocation = appLocationService
-                        .getLocation();
-
-                if (nwLocation != null) {
-
-
-                    double latitude = nwLocation.getLatitude();
-                    double longitude = nwLocation.getLongitude();
-
-//                    locText.setText(latitude + " " + longitude);
-
-                    lat.setText(String.valueOf(latitude));
-                    lng.setText(String.valueOf(longitude));
-
-//                    GOT_LOCATION = true;
-                }
-
 
                 /**
                  * Fetched
                  */
 
-                if(nwLocation != null)
+                if(lat.getText().toString().length()>0 && lng.getText().toString().length()>0)
                 {
                     seaseToLocSpinner = easeToLocSpinner.getSelectedItem().toString();
                     slocTypeSpinner = locTypeSpinner.getSelectedItem().toString();
@@ -601,20 +575,9 @@ public class ResidenceActivity extends AppCompatActivity {
                 }
 
                 else {
-//                    Toast.makeText(getApplicationContext(), "FETCHING LOCATION...", Toast.LENGTH_SHORT).show();
-
-                    Toast.makeText(ResidenceActivity.this, "Click again after a moment", Toast.LENGTH_LONG).show();
-
-                    String []permissionsList={Manifest.permission.CAMERA,
-                            Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE};
                     ActivityCompat.requestPermissions(ResidenceActivity.this,
-                            permissionsList,
-                            REQUEST_STRING_CODE);
-
-                    displayLocationSettingsRequest(ResidenceActivity.this);
+                            locationPermissionList,
+                            LOCATION_STRING_CODE);
                 }
 
                 onSubmit(StringCaseNo);
@@ -623,14 +586,79 @@ public class ResidenceActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *LOCATION STUFF
+     */
+    @Override
+    public void locationOn() {
+//        Toast.makeText(this, "Location ON", Toast.LENGTH_SHORT).show();
+//        easyWayLocation.beginUpdates();
+    }
+
+    @Override
+    public void onPositionChanged() {
+//        lati = easyWayLocation.getLatitude();
+//        longi = easyWayLocation.getLongitude();
+//        tvLatitude.setText(String.valueOf(lati));
+//        tvLongitude.setText(String.valueOf(longi));
+    }
+
+    @Override
+    public void locationCancelled() {
+//        easyWayLocation.showAlertDialog(getString(R.string.loc_title), getString(R.string.loc_mess), null);
+    }
+
+    private void showExplanation(String title,
+                                 String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestPermission();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(ResidenceActivity.this,
+                locationPermissionList,
+                LOCATION_STRING_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode,
+            String permissions[],
+            int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_STRING_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(ResidenceActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    easyWayLocation.beginUpdates();
+                    lati = easyWayLocation.getLatitude();
+                    longi = easyWayLocation.getLongitude();
+                    lat.setText(String.valueOf(lati));
+                    lng.setText(String.valueOf(longi));
+                }
+                else {
+                    Toast.makeText(ResidenceActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
+                }
+        }
+    }
+
+    /**
+     *
+     * LOCATION STUFF ENDS
+     */
+
     public void onSubmit(String stringCaseNo)
     {
         inUploadViewModel.insert(new InUplaod(stringCaseNo,"RESIDENCE"));
-//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-//                SharedPreferences.Editor editor = preferences.edit();
-//                editor.clear();
-//                editor.apply();
-//                finish();
 
         SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor2 = preferences2.edit();
@@ -732,51 +760,6 @@ public class ResidenceActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.camerabutton, menu);
         return true;
-    }
-
-    private void displayLocationSettingsRequest(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
-
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i("TAG", "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i("TAG", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult(ResidenceActivity.this, 1);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i("TAG", "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i("TAG", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
-                }
-            }
-
-
-        });
-
-
     }
 
     @Override
@@ -895,39 +878,6 @@ public class ResidenceActivity extends AppCompatActivity {
 
     }
 
-    public  void retrofitExit(String caseNo, String caseType){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_URL)
-                .addConverterFactory(GsonConverterFactory.create()) //Here we are using the GsonConverterFactory to directly convert json data to object
-                .build();
-
-        Client client = retrofit.create(Client.class);
-
-        Call<String> call = client.exit(caseNo,caseType);
-
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-
-                if(response.body().equals("Success"))
-                {
-                    Toast.makeText(getApplicationContext(), "COMPLETED", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "SOMETHING WENT WRONG", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "IN FAILURE", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-
-    }
+    
 }
 
