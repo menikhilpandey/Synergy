@@ -250,9 +250,6 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
 
-        ActivityCompat.requestPermissions(this,
-                permissionsList,
-                REQUEST_STRING_CODE);
 
         photoHelper = new PhotoHelper(EmploymentActivity.this);
 
@@ -607,11 +604,13 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
                     Toast.makeText(EmploymentActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                     showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
                 }
+            break;
 
             case REQUEST_STRING_CODE:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    launchCamera();
                     Toast.makeText(EmploymentActivity.this, "Camera Permission Granted!", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -732,7 +731,9 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
         switch (item.getItemId()) {
             case R.id.camera:
 
-                launchCamera();
+                ActivityCompat.requestPermissions(this,
+                        permissionsList,
+                        REQUEST_STRING_CODE);
 
 
                 return true;

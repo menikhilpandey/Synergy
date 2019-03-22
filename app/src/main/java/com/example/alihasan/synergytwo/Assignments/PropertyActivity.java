@@ -195,7 +195,7 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
 
     ProgressBar progressBar;
 
-    private int REQUEST_STRING_CODE=1234;
+    private static final int REQUEST_STRING_CODE=1234;
 
     boolean GOT_LOCATION = false;
 
@@ -204,6 +204,9 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
     /**
      * PHOTO ACTIVITY
      */
+    final String []permissionsList={Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -276,15 +279,6 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
 
-        String []permissionsList={Manifest.permission.CAMERA,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE};
-        ActivityCompat.requestPermissions(this,
-                permissionsList,
-                REQUEST_STRING_CODE);
-
-        displayLocationSettingsRequest(PropertyActivity.this);
 
         photoHelper = new PhotoHelper(PropertyActivity.this);
 
@@ -553,6 +547,25 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
                 LOCATION_STRING_CODE);
     }
 
+    private void showCamExplanation(String title,
+                                    String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestCamPermission();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestCamPermission() {
+        ActivityCompat.requestPermissions(PropertyActivity.this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+    }
+
     @Override
     public void onRequestPermissionsResult(
             int requestCode,
@@ -573,6 +586,19 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
                 else {
                     Toast.makeText(PropertyActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                     showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
+                }
+                break;
+
+            case REQUEST_STRING_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    launchCamera();
+                    Toast.makeText(PropertyActivity.this, "Camera Permission Granted!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(PropertyActivity.this, "Camera Permission Denied!", Toast.LENGTH_SHORT).show();
+                    showCamExplanation(getString(R.string.cam_title),getString(R.string.cam_mess));
                 }
         }
     }
@@ -668,65 +694,14 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
         return true;
     }
 
-    private void displayLocationSettingsRequest(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
-
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
-
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i("TAG", "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i("TAG", "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult(PropertyActivity.this, 1);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i("TAG", "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i("TAG", "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
-                }
-            }
-
-
-        });
-
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.camera:
-
-//                String enUser;
-//                SharedPreferences preferences =getSharedPreferences("PDANOSHARED",Context.MODE_PRIVATE);
-//                enUser = preferences.getString("ENPDANO", "");
-//
-//                logout(enUser);
-                launchCamera();
-
-
+                ActivityCompat.requestPermissions(this,
+                        permissionsList,
+                        REQUEST_STRING_CODE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
