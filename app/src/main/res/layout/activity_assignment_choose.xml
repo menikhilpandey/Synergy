@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView"
             android:visibility="visible"
-            android:scrollbars="vertical"
             >
         </android.support.v7.widget.RecyclerView>
 

@@ -61,10 +61,6 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Debtor debtor = debtorList.get(position);
-
-        Log.v("HELLO", position+" ");
-        Log.v("HOLDER", debtor.getCaseNo()+"FUCK");
-
         List<InUplaod> inUploadList = inUploadViewModel.getAllData();
 
         InUplaod inUplaod = new InUplaod(debtor.getCaseNo(),debtor.getTypeCase());
@@ -74,8 +70,18 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         if(containsObject(inUploadList,inUplaod))
         {
             holder.inUploads.setText("IN UPLOAD");
+            Log.v("HOLDER", debtor.getCaseNo()+"FUCK DAMN IT");
             holder.agentLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorInUpload));
             holder.inUploads.setVisibility(View.VISIBLE);
+        }
+
+        if(!containsObject(inUploadList,inUplaod))
+        {
+            Log.v("HOLDER", debtor.getCaseNo()+"FUCK DAMN IT FIX");
+            holder.inUploads.setText("");
+            Log.v("HOLDER", debtor.getCaseNo()+"FUCK DAMN IT");
+            holder.agentLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.WHITE));
+            holder.inUploads.setVisibility(View.GONE);
         }
 
 //        if(negativeCaseNo.contains(debtor.getCaseNo()))
