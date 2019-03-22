@@ -486,6 +486,9 @@
         <item>Stability less than 1 year</item>
     </string-array>
 
-    <string name="loc_mess">Please on location of your device. To get your current Address.</string>
+    <string name="loc_mess">Please on location of your device.</string>
     <string name="loc_title">Location Alert</string>
+
+    <string name="cam_mess">Please give Camera and Read//Write permission.</string>
+    <string name="cam_title">Camera Alert</string>
 </resources>

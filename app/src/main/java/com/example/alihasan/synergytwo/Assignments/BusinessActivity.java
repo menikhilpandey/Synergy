@@ -179,7 +179,7 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
 
     ProgressBar progressBar;
 
-    private int REQUEST_STRING_CODE=1234;
+    private static final int REQUEST_STRING_CODE=1234;
 
     boolean GOT_LOCATION = false;
 
@@ -206,6 +206,9 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
     /**
      * PHOTO ACTIVITY
     */
+    final String []permissionsList={Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -264,15 +267,9 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
 
-        String []permissionsList={Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE};
-
         ActivityCompat.requestPermissions(this,
                 permissionsList,
                 REQUEST_STRING_CODE);
-
-
 
         photoHelper = new PhotoHelper(BusinessActivity.this);
 
@@ -540,6 +537,25 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
         builder.create().show();
     }
 
+    private void showCamExplanation(String title,
+                                 String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestCamPermission();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestCamPermission() {
+        ActivityCompat.requestPermissions(BusinessActivity.this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+    }
+
     private void requestPermission() {
         ActivityCompat.requestPermissions(BusinessActivity.this,
                 locationPermissionList,
@@ -556,7 +572,7 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(BusinessActivity.this, "Permission Granted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BusinessActivity.this, "Location Permission Granted!", Toast.LENGTH_SHORT).show();
                     easyWayLocation.beginUpdates();
                     lati = easyWayLocation.getLatitude();
                     longi = easyWayLocation.getLongitude();
@@ -564,9 +580,32 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
                     lng.setText(String.valueOf(longi));
                 }
                 else {
-                    Toast.makeText(BusinessActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BusinessActivity.this, "Location Permission Denied!", Toast.LENGTH_SHORT).show();
                     showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
                 }
+
+            case REQUEST_STRING_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(BusinessActivity.this, "Camera Permission Granted!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(BusinessActivity.this, "Camera Permission Denied!", Toast.LENGTH_SHORT).show();
+                    showCamExplanation(getString(R.string.cam_title),getString(R.string.cam_mess));
+                }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the image capture activity was called and was successful
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // Process the image and set it to the TextView
+            processAndSetImage();
+        } else {
+            // Otherwise, delete the temporary image file
+            photoHelper.deleteImageFile(this, mTempPhotoPath);
         }
     }
 
@@ -632,9 +671,7 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
                 POLITICALLINK,OVERALLSTATUS,REASONNEGATIVEFI,
                 LATITUDE,LONGITUDE,REMARKS));
 
-
         Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPDATED IN DB  ", Toast.LENGTH_SHORT).show();
-
 
     }
 
@@ -690,18 +727,6 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
                 // Launch the camera activity
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // If the image capture activity was called and was successful
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // Process the image and set it to the TextView
-            processAndSetImage();
-        } else {
-            // Otherwise, delete the temporary image file
-            photoHelper.deleteImageFile(this, mTempPhotoPath);
         }
     }
 

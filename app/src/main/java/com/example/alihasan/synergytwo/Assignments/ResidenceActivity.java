@@ -227,7 +227,7 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
 
     ProgressBar progressBar;
 
-    private int REQUEST_STRING_CODE=1234;
+    private static final int REQUEST_STRING_CODE=1234;
 
     boolean GOT_LOCATION = false;
 
@@ -236,6 +236,10 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
     /**
      * PHOTO ACTIVITY
      */
+
+    final String []permissionsList={Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -294,10 +298,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
         counter = CounterSingleton.getInstance();
         counter.setCounter(0);
 
-        String []permissionsList={Manifest.permission.CAMERA,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE};
         ActivityCompat.requestPermissions(this,
                 permissionsList,
                 REQUEST_STRING_CODE);
@@ -621,6 +621,25 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
         builder.create().show();
     }
 
+    private void showCamExplanation(String title,
+                                    String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        requestCamPermission();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void requestCamPermission() {
+        ActivityCompat.requestPermissions(ResidenceActivity.this,
+                permissionsList,
+                REQUEST_STRING_CODE);
+    }
+
     private void requestPermission() {
         ActivityCompat.requestPermissions(ResidenceActivity.this,
                 locationPermissionList,
@@ -647,6 +666,16 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
                 else {
                     Toast.makeText(ResidenceActivity.this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                     showExplanation(getString(R.string.loc_title),getString(R.string.loc_mess));
+                }
+            case REQUEST_STRING_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(ResidenceActivity.this, "Camera Permission Granted!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(ResidenceActivity.this, "Camera Permission Denied!", Toast.LENGTH_SHORT).show();
+                    showCamExplanation(getString(R.string.cam_title),getString(R.string.cam_mess));
                 }
         }
     }

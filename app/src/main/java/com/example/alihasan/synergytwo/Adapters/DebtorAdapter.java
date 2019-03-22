@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
@@ -73,6 +74,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
         if(containsObject(inUploadList,inUplaod))
         {
             holder.inUploads.setText("IN UPLOAD");
+            holder.agentLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.colorInUpload));
             holder.inUploads.setVisibility(View.VISIBLE);
         }
 
@@ -128,6 +130,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView caseNo, applName, altTele, address, typeCase, bankType,inUploads;
+        LinearLayout agentLinearLayout;
         Context context;
         List<Debtor> data;
         ImageButton callButton;
@@ -145,6 +148,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             bankType = itemView.findViewById(R.id.bankType);
             inUploads = itemView.findViewById(R.id.inUploads);
             callButton = itemView.findViewById(R.id.callButton);
+            agentLinearLayout= itemView.findViewById(R.id.agentLinearLayout);
 
             itemView.setOnClickListener(this);
         }
