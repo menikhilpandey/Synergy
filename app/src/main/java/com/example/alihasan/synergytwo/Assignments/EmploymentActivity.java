@@ -226,6 +226,11 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
         setContentView(R.layout.activity_employment);
 
         /**
+         * Disable Screenshot
+         */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        /**
          * DD test
          */
         employmentViewModel = ViewModelProviders.of(this).get(EmploymentViewModel.class);

@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -87,6 +88,12 @@ public class AssignmentChoose extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_choose);
+
+        /**
+         * Disable Screenshot
+         */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
 
         pendingUploadLinearLayout = findViewById(R.id.pendingUploadLinearLayout);
         pendingUploadTextView = findViewById(R.id.pendingUploadTextView);
@@ -290,6 +297,8 @@ public class AssignmentChoose extends AppCompatActivity {
     }
 
     public void uploadData(){
+
+        pendingUploadButton.setEnabled(false);
 
         /*
         BUSINESS VIEWMODEL

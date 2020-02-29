@@ -255,6 +255,11 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
         setContentView(R.layout.activity_property);
 
         /**
+         * Disable Screenshot
+         */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        /**
          * DD test
          */
         propertyViewModel = ViewModelProviders.of(this).get(PropertyViewModel.class);

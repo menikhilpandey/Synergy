@@ -274,6 +274,11 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
         setContentView(R.layout.activity_residence);
 
         /**
+         * Disable Screenshot
+         */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        /**
          * DD test
          */
         residenceViewModel = ViewModelProviders.of(this).get(ResidenceViewModel.class);

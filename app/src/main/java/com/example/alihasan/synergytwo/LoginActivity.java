@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -51,6 +52,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         /**
+         * Disable Screenshot
+         */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+
+        /**
          * PERMISSION CHECK
          */
 
@@ -85,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 //        }, 2000);
 
-        /**
+        /*
          * Auto LogIn feature
          */
 

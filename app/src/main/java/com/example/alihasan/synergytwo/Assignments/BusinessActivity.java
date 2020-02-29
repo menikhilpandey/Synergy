@@ -242,6 +242,12 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
         setContentView(R.layout.activity_business);
 
         /**
+         * Disable Screenshot
+         */
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+
+        /**
          * DD test
          */
         businessViewModel = ViewModelProviders.of(this).get(BusinessViewModel.class);
@@ -773,8 +779,6 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
 
                     if(counter.getCounter() >= 3)
                         EXIT_CODE = true;
-
-
     }
 
 }
