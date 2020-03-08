@@ -411,6 +411,7 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
 
                 requestPermission();
 
+                //as counter starts from 0
                 if(counter.getCounter() >  3)
                     EXIT_CODE = true;
 
