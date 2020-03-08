@@ -3,12 +3,15 @@ package com.example.alihasan.synergytwo;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,6 +22,13 @@ import com.example.alihasan.synergytwo.Assignments.AssignmentChoose;
 import com.example.alihasan.synergytwo.api.service.ServerURL;
 import com.example.alihasan.synergytwo.Encoder.md5;
 import com.example.alihasan.synergytwo.api.service.Client;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
 
 import java.math.BigInteger;
 
@@ -28,13 +38,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
+
 public class LoginActivity extends AppCompatActivity {
 
     Button loginButton;
     EditText userEditText;
     EditText passEditText;
 
-    private int REQUEST_STRING_CODE=1234;
+    private int REQUEST_STRING_CODE = 1234;
+    private int IN_APP_UPDATE = 1111;
+
+    AppUpdateManager appUpdateManager;
 
     /**
      * TV
@@ -50,6 +65,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        /**
+         * Support in-app Update
+         */
+        inAppUpdate();
 
         /**
          * Disable Screenshot
@@ -187,6 +207,59 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    void inAppUpdate()
+    {
+        // Creates instance of the manager.
+        appUpdateManager = AppUpdateManagerFactory.create(this);
+
+        // Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+        // Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // For a flexible update, use AppUpdateType.FLEXIBLE
+                    && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
+                // Request the update.
+
+                try {
+                    appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            // Or 'AppUpdateType.FLEXIBLE' for flexible updates.
+                            IMMEDIATE,
+                            // The current activity making the update request.
+                            this,
+                            // Include a request code to later monitor this update request.
+                            IN_APP_UPDATE);
+                }
+
+                catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+
+            } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED){
+                popupSnackbarForCompleteUpdate();
+            } else {
+                Log.e("IN_APP", "checkForAppUpdateAvailability: something else");
+            }
+
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IN_APP_UPDATE) {
+            if (resultCode != RESULT_OK) {
+                Toast.makeText(getApplicationContext(), "Update flow failed! Result code: " + resultCode, Toast.LENGTH_SHORT).show();
+                // If the update is cancelled or fails,
+                // you can request to start the update again.
+                popupSnackbarForCompleteUpdate();
+            }
+        }
+    }
+
     public String md5encoder(String str)
     {
         byte[] md5Input = str.getBytes();
@@ -215,7 +288,71 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "GRANT PERMISSIONS", Toast.LENGTH_SHORT).show();
         }
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        appUpdateManager
+                .getAppUpdateInfo()
+                .addOnSuccessListener(
+                        appUpdateInfo -> {
+                            if (appUpdateInfo.updateAvailability()
+                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                                // If an in-app update is already running, resume the update.
+
+                                try {
+                                    appUpdateManager.startUpdateFlowForResult(
+                                            appUpdateInfo,
+                                            IMMEDIATE,
+                                            this,
+                                            IN_APP_UPDATE);
+                                }
+
+                                catch (IntentSender.SendIntentException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED){
+                                popupSnackbarForCompleteUpdate();
+                            } else {
+                                Log.e("IN_APP", "checkForAppUpdateAvailability: something else");
+                            }
+                        });
+    }
+
+    private void popupSnackbarForCompleteUpdate() {
+
+        Snackbar snackbar =
+                Snackbar.make(
+                        findViewById(R.id.coordinatorLayout),
+                        "Please update to continue...",
+                        Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Install", view -> {
+            if (appUpdateManager != null){
+                inAppUpdate();
+            }
+        });
+
+        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+        snackbar.show();
+    }
+
+    private void upToDate() {
+
+        Snackbar snackbar =
+                Snackbar.make(
+                        findViewById(R.id.coordinatorLayout),
+                        "App up to date.",
+                        Snackbar.LENGTH_INDEFINITE);
+
+        snackbar.setAction("Ok", view -> {
+            snackbar.dismiss();
+        });
+
+        snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+        snackbar.show();
     }
 }

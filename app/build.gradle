@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 2
-        versionName "2.0"
+        versionName "AztekTwo"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -15,6 +15,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -53,5 +57,7 @@ dependencies {
     //LOCATION
     implementation 'com.github.prabhat1707:EasyWayLocation:1.0'
 
+    //PlayCore
+    implementation 'com.google.android.play:core:1.6.5'
 
 }
