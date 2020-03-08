@@ -6,8 +6,8 @@ android {
         applicationId "com.oblique.aztek"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "AztekTwo"
+        versionCode 5
+        versionName "AztekFive"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

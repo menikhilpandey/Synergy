@@ -412,6 +412,7 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
             @Override
             public void onClick(View v) {
 
+                //as counter starts from 0
                 if(counter.getCounter() >  3)
                     EXIT_CODE = true;
 
