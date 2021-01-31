@@ -31,13 +31,9 @@ public class ImageRepo {
         new deleteAsyncTask(mImageDao).execute(globalImageFileName);
     }
 
-
     List<ImageParam> getAllData(){
         return new allDataAsyncTask(mImageDao).doInBackground();
     }
-
-
-
 
     private static class insertAsyncTask extends AsyncTask<ImageParam, Void, Void> {
 

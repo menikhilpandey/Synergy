@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
-import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
@@ -33,6 +32,7 @@ import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,20 +52,11 @@ import java.util.ArrayList;
 
 public class ResidenceActivity extends AppCompatActivity implements Listener {
 
-    /**
-     * DD test
-     */
     private ResidenceViewModel residenceViewModel;
     private ImageViewModel imageViewModel   ;
     private InUploadViewModel inUploadViewModel;
-    /**
-     *
-     */
 
-    /**
-     * LOCATION
-     */
-
+     //LOCATION
     EasyWayLocation easyWayLocation;
 
     TextView lat,lng;
@@ -82,7 +73,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
      * EditText  18
      * Spinner 18
      */
-
     EditText address;
     String saddress;
 
@@ -98,7 +88,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
      * EDITTEXT AND SPINNER
      * STRING VALUES
      */
-
     String sapplicantName,
             salternateTele,
             sage,
@@ -142,7 +131,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
     /**
      * SPINNER ADAPTER
      */
-
     ArrayAdapter<CharSequence> easeToLocSpinnerAdapter,
             locTypeSpinnerAdapter,
             houseTypeSpinnerAdapter,
@@ -171,18 +159,8 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
 
     Button nextButton, locationButton;
 
-    public static final int LOCATION_REQ_CODE = 100;
-    LocationManager locationManager;
-    private double latitude = 0;
-    private double longitude = 0;
-
-    Intent i = getIntent();
-//        String StringCaseNo = i.getStringExtra("CASENO");
-//    String userName = i.getStringExtra("USERNAME");
-
     String userName;
     String StringCaseNo;
-
 
     String ACTIVITY = "RESIDENCE";
 
@@ -194,14 +172,11 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
 
     private static final int REQUEST_STRING_CODE=1234;
 
-    boolean GOT_LOCATION = false;
-
     TextView fetchingLocation;
 
     /**
      * PHOTO ACTIVITY
      */
-
     final String []permissionsList={Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -217,21 +192,21 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
     File photoFile = null;
 
     static String globalImageFileName;
-    private CounterSingleton counter;
-
-    boolean EXIT_CODE = false;
 
     private ArrayList<Bitmap> mImageUrls = new ArrayList<>();
     private ArrayList<String> mImageNames = new ArrayList<>();
 
     TextView emptyView;
-    private RecyclerView recyclerView;
     String PERSONNAME;
 
     TextView personName,caseType,bankType;
 
     PhotoHelper photoHelper;
 
+    //Recycler View Global
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+    RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,12 +223,16 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
          */
         residenceViewModel = ViewModelProviders.of(this).get(ResidenceViewModel.class);
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
-        inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);;
+        inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);
 
         /**
          * PERMISSION CHECKS
          */
-        
+
+        //RecyclerView global
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(layoutManager);
+
         /*
         LOCATION STUFF
          */
@@ -265,17 +244,12 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
                 locationPermissionList,
                 LOCATION_STRING_CODE);
 
-        counter = CounterSingleton.getInstance();
-        counter.setCounter(0);
-
         photoHelper = new PhotoHelper(ResidenceActivity.this);
-
 
         progressBar=findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
         recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.empty_view);
-        EXIT_CODE = false;
 
         personName = findViewById(R.id.PersonNameMAIN);
         caseType = findViewById(R.id.CaseTypeMAIN);
@@ -431,24 +405,10 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
             @Override
             public void onClick(View v) {
 
-                //as counter starts from 0
-                if(counter.getCounter() >  3)
-                    EXIT_CODE = true;
-
-                if(!EXIT_CODE)
-                {
-                    if(counter.getCounter() < 3)
-                    {
-                        Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "JUST A MINUTE. UPLOADING IMAGE...", Toast.LENGTH_SHORT).show();
-                    }
-
+                if(adapter.getItemCount() < 3){
+                    Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
 
                 /**
                  * Fetched
@@ -830,6 +790,7 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
     private void processAndSetImage() {
 
         mResultsBitmap = photoHelper.getBitmap(mTempPhotoPath,ResidenceActivity.this);
+
         /**
          * UPLOAD IMAGE USING RETROFIT
          */
@@ -840,35 +801,18 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
         mImageUrls.add(mResultsBitmap);
         mImageNames.add(globalImageFileName);
         emptyView.setVisibility(View.GONE);
-        initRecyclerView();
+        adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+        recyclerView.setAdapter(adapter);
+        Log.v("Adapter current size", adapter.getItemCount()+"CHEESE_Residence");
 
 //        imageView.setImageBitmap(mResultsBitmap);
     }
 
-    private void initRecyclerView(){
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
-        recyclerView.setAdapter(adapter);
-    }
-
     public void businessRetroFitUpload(String encodedImage)
     {
-
-        /**
-         * DD change
-         */
         globalImageFileName = photoHelper.getGlobalImageFileName();
         imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
-
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
-                    counter.addCounter();
-
-                    if(counter.getCounter() >= 3)
-                        EXIT_CODE = true;
-
+        Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
     }
 
     

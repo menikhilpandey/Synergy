@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +35,6 @@ import android.widget.Toast;
 
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
-import com.example.alihasan.synergytwo.CounterSingleton;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
@@ -53,17 +53,9 @@ import java.util.ArrayList;
 
 public class PropertyActivity extends AppCompatActivity implements Listener {
 
-    /**
-     * DD test
-     */
     private PropertyViewModel propertyViewModel;
     private ImageViewModel imageViewModel   ;
     private InUploadViewModel inUploadViewModel;
-    /**
-     *
-     */
-
-    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     /**
      * Total 23
@@ -136,19 +128,7 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
      */
     String slongi, slati;
 
-    ProgressDialog dialog;
-
     Button nextButton, locationButton;
-
-    TextView lat, lng;
-    public static final int LOCATION_REQ_CODE = 100;
-    LocationManager locationManager;
-    private double latitude = 0;
-    private double longitude = 0;
-
-    Intent i = getIntent();
-//        String StringCaseNo = i.getStringExtra("CASENO");
-//    String userName = i.getStringExtra("USERNAME");
 
     String userName;
     String StringCaseNo;
@@ -163,8 +143,6 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
     ProgressBar progressBar;
 
     private static final int REQUEST_STRING_CODE=1234;
-
-    boolean GOT_LOCATION = false;
 
     TextView fetchingLocation;
 
@@ -186,15 +164,11 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
     File photoFile = null;
 
     static String globalImageFileName;
-    private CounterSingleton counter;
-
-    boolean EXIT_CODE = false;
 
     private ArrayList<Bitmap> mImageUrls = new ArrayList<>();
     private ArrayList<String> mImageNames = new ArrayList<>();
 
     TextView emptyView;
-    private RecyclerView recyclerView;
     String PERSONNAME;
 
     TextView personName,caseType,bankType;
@@ -204,7 +178,7 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
     /**
      * LOCATION
      */
-
+    TextView lat, lng;
     EasyWayLocation easyWayLocation;
 
     private Double lati, longi;
@@ -215,6 +189,10 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
 
     private static final int LOCATION_STRING_CODE = 925;
 
+    //Recycler View Global
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+    RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,18 +226,12 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
                 locationPermissionList,
                 LOCATION_STRING_CODE);
 
-        counter = CounterSingleton.getInstance();
-        counter.setCounter(0);
-
-
         photoHelper = new PhotoHelper(PropertyActivity.this);
-
 
         progressBar=findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
         recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.empty_view);
-        EXIT_CODE = false;
 
         personName = findViewById(R.id.PersonNameMAIN);
         caseType = findViewById(R.id.CaseTypeMAIN);
@@ -280,6 +252,10 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
             caseType.setText(ACTIVITY);
             bankType.setText(CLIENTCODE);
         }
+
+        //RecyclerView global
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(layoutManager);
 
         //EditText
 
@@ -379,24 +355,10 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
             @Override
             public void onClick(View v) {
 
-                //as counter starts from 0
-                if(counter.getCounter() >  3)
-                    EXIT_CODE = true;
-
-                if(!EXIT_CODE)
-                {
-                    if(counter.getCounter() < 3)
-                    {
-                        Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "JUST A MINUTE. UPLOADING IMAGE...", Toast.LENGTH_SHORT).show();
-                    }
-
+                if(adapter.getItemCount() < 3){
+                    Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
 
                 /**
                  * Fetched
@@ -655,8 +617,6 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
                 LONGITUDE,
                 REMARKS));
         Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPDATED IN DB  ", Toast.LENGTH_SHORT).show();
-
-
     }
 
 
@@ -745,35 +705,16 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
         mImageUrls.add(mResultsBitmap);
         mImageNames.add(globalImageFileName);
         emptyView.setVisibility(View.GONE);
-        initRecyclerView();
-
-//        imageView.setImageBitmap(mResultsBitmap);
-    }
-
-    private void initRecyclerView(){
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+        adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
         recyclerView.setAdapter(adapter);
+        Log.v("Adapter current size", adapter.getItemCount()+"CHEESE_Property");
     }
 
     public void businessRetroFitUpload(String encodedImage)
     {
-
-        /**
-         * DD change
-         */
         globalImageFileName = photoHelper.getGlobalImageFileName();
         imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
-
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
-                    counter.addCounter();
-
-                    if(counter.addCounter() >= 3)
-                        EXIT_CODE = true;
-                    
+        Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
     }
 
 }
