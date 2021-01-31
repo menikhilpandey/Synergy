@@ -116,6 +116,17 @@
                 android:paddingTop="7dp"
                 />
 
+            <TextView
+                android:textColor="#000"
+                android:hint="ALLOTED AT"
+                android:textSize="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/allotedAt"
+                android:paddingLeft="7dp"
+                android:paddingTop="7dp"
+                />
+
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

@@ -26,21 +26,22 @@ public class Debtor {
     @SerializedName("CASETYPE")
     private String typeCase;
 
-        @SerializedName("CLIENTCODE")
+    @SerializedName("CLIENTCODE")
     private String clientCode;
 
-        private String inUpload;
+    @SerializedName("ALLOTTEDAT")
+    private String allotedAt;
 
-//    private String productType;
+    private String inUpload;
 
-
-    public Debtor(@NonNull String caseNo, String applName, String address, String altTele, String typeCase,String clientCode) {
+    public Debtor(@NonNull String caseNo, String applName, String address, String altTele, String typeCase,String clientCode,String allotedAt) {
         this.caseNo = caseNo;
         this.applName = applName;
         this.address = address;
         this.altTele = altTele;
         this.typeCase = typeCase;
         this.clientCode = clientCode;
+        this.allotedAt = allotedAt;
     }
 
     public void setInUpload(String inUpload) {
@@ -97,5 +98,13 @@ public class Debtor {
 
     public void setClientCode(String clientCode) {
         this.clientCode = clientCode;
+    }
+
+    public String getAllotedAt() {
+        return allotedAt;
+    }
+
+    public void setAllotedAt(String allotedAt) {
+        this.allotedAt = allotedAt;
     }
 }

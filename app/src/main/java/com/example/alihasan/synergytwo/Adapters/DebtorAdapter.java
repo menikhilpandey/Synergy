@@ -39,14 +39,10 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
     static ArrayList<String> negativeCaseNo;
     InUploadViewModel inUploadViewModel;
 
-    //DATABSE
-
-
     public DebtorAdapter(Context context, List<Debtor> debtorList, String userName,InUploadViewModel inUploadViewModel) {
         this.context = context;
         this.debtorList = debtorList;
         this.userName = userName;
-//        this.negativeCaseNo = negativeCaseNo;
         this.inUploadViewModel = inUploadViewModel;
     }
 
@@ -65,8 +61,6 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
         InUplaod inUplaod = new InUplaod(debtor.getCaseNo(),debtor.getTypeCase());
 
-
-
         if(containsObject(inUploadList,inUplaod))
         {
             holder.inUploads.setText("IN UPLOAD");
@@ -84,18 +78,13 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             holder.inUploads.setVisibility(View.GONE);
         }
 
-//        if(negativeCaseNo.contains(debtor.getCaseNo()))
-//        {
-//            holder.inUploads.setText("IN UPLOAD");
-//            holder.inUploads.setVisibility(View.VISIBLE);
-//        }
-
         holder.caseNo.setText(debtor.getCaseNo());
         holder.applName.setText(debtor.getApplName());
         holder.altTele.setText(debtor.getAltTele());
         holder.address.setText(debtor.getAddress());
         holder.typeCase.setText(debtor.getTypeCase());
         holder.bankType.setText(debtor.getClientCode());
+        holder.allotedAt.setText(debtor.getAllotedAt());
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +124,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView caseNo, applName, altTele, address, typeCase, bankType,inUploads;
+        TextView caseNo, applName, altTele, address, typeCase, bankType,inUploads,allotedAt;
         LinearLayout agentLinearLayout;
         Context context;
         List<Debtor> data;
@@ -155,7 +144,7 @@ public class DebtorAdapter extends RecyclerView.Adapter<DebtorAdapter.MyViewHold
             inUploads = itemView.findViewById(R.id.inUploads);
             callButton = itemView.findViewById(R.id.callButton);
             agentLinearLayout= itemView.findViewById(R.id.agentLinearLayout);
-
+            allotedAt = itemView.findViewById(R.id.allotedAt);
             itemView.setOnClickListener(this);
         }
 
