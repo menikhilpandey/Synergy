@@ -1,5 +1,4 @@
 package com.example.alihasan.synergytwo.Assignments;
-
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.Database.EmploymentDatabase.Employment;
@@ -11,9 +10,7 @@ import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewMod
 import com.example.alihasan.synergytwo.R;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
-
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,11 +37,9 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,18 +116,12 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
      */
     String slongi, slati;
 
-    ProgressDialog dialog;
-
     Button nextButton, locationButton;
 
     public static final int LOCATION_REQ_CODE = 100;
     LocationManager locationManager;
     private double latitude = 0;
     private double longitude = 0;
-
-    Intent i = getIntent();
-//        String StringCaseNo = i.getStringExtra("CASENO");
-//    String userName = i.getStringExtra("USERNAME");
 
     String userName;
     String StringCaseNo;
@@ -143,8 +132,6 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
     String TABLENAME = "cases-employment";
 
     String ADDRESS,CLIENTCODE;
-
-    ProgressBar progressBar;
 
     private static final int REQUEST_STRING_CODE=1234;
 
@@ -223,8 +210,6 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
 
         photoHelper = new PhotoHelper(EmploymentActivity.this);
 
-
-        progressBar=findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
         recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.empty_view);
@@ -366,8 +351,6 @@ public class EmploymentActivity extends AppCompatActivity implements Listener {
         /**
          * END SETTING ADAPTERS
          */
-
-
 
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override

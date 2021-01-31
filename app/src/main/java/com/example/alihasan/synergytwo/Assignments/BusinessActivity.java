@@ -11,7 +11,6 @@ import com.example.alihasan.synergytwo.R;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,7 +36,6 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,21 +102,10 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
      */
     String slongi,slati;
 
-    ProgressDialog dialog;
-
     Button nextButton, locationButton;
-
-
-
-
-    Intent i = getIntent();
-//        String StringCaseNo = i.getStringExtra("CASENO");
-//    String userName = i.getStringExtra("USERNAME");
 
     String userName;
     String StringCaseNo;
-
-
 
     String ACTIVITY = "BUSINESS";
 
@@ -127,8 +114,6 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
     String PERSONNAME,CLIENTCODE;
 
     String ADDRESS;
-
-    ProgressBar progressBar;
 
     private static final int REQUEST_STRING_CODE=1234;
 
@@ -220,7 +205,6 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
 
         photoHelper = new PhotoHelper(BusinessActivity.this);
 
-        progressBar = findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
         emptyView = findViewById(R.id.empty_view);
 

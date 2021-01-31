@@ -1,7 +1,5 @@
 package com.example.alihasan.synergytwo.Assignments;
-
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -28,11 +25,9 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
@@ -42,14 +37,11 @@ import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewMod
 import com.example.alihasan.synergytwo.Database.PropertyDatabase.Property;
 import com.example.alihasan.synergytwo.Database.PropertyDatabase.PropertyViewModel;
 import com.example.alihasan.synergytwo.R;
-import com.example.alihasan.synergytwo.api.service.ServerURL;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 
 public class PropertyActivity extends AppCompatActivity implements Listener {
 
@@ -140,8 +132,6 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
 
     String ADDRESS,CLIENTCODE;
 
-    ProgressBar progressBar;
-
     private static final int REQUEST_STRING_CODE=1234;
 
     TextView fetchingLocation;
@@ -228,7 +218,6 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
 
         photoHelper = new PhotoHelper(PropertyActivity.this);
 
-        progressBar=findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
         recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.empty_view);

@@ -20,7 +20,6 @@ import com.example.alihasan.synergytwo.R;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +36,6 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,8 +148,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
      */
     String slongi, slati;
 
-    ProgressDialog dialog;
-
     Button nextButton, locationButton;
 
     String userName;
@@ -162,8 +158,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
     String TABLENAME = "cases-residence";
 
     String ADDRESS,CLIENTCODE;
-
-    ProgressBar progressBar;
 
     private static final int REQUEST_STRING_CODE=1234;
 
@@ -239,7 +233,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
 
         photoHelper = new PhotoHelper(ResidenceActivity.this);
 
-        progressBar=findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
         recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.empty_view);
