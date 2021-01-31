@@ -355,6 +355,7 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
             @Override
             public void onClick(View v) {
 
+                requestPermission();
                 if(adapter.getItemCount() < 3){
                     Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                     return;
@@ -616,6 +617,7 @@ public class PropertyActivity extends AppCompatActivity implements Listener {
                 LATITUDE,
                 LONGITUDE,
                 REMARKS));
+
         Toast.makeText(getApplicationContext(), "SUCCESSFULLY UPDATED IN DB  ", Toast.LENGTH_SHORT).show();
     }
 

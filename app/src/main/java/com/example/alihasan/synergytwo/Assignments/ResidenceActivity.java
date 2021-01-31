@@ -1,5 +1,4 @@
 package com.example.alihasan.synergytwo.Assignments;
-
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -9,7 +8,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
@@ -21,13 +19,11 @@ import com.example.alihasan.synergytwo.Database.ResidenceDatabase.ResidenceViewM
 import com.example.alihasan.synergytwo.R;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,7 +41,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -226,10 +221,8 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
         inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);
 
         /**
-         * PERMISSION CHECKS
+         * RecyclerView global
          */
-
-        //RecyclerView global
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -405,6 +398,7 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
             @Override
             public void onClick(View v) {
 
+                requestPermission();
                 if(adapter.getItemCount() < 3){
                     Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
                     return;
@@ -668,7 +662,6 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
                                 String REMARKS)
     {
 
-
         residenceViewModel.insert(new Residence(TABLENAME, CASENO,
                 ADDRESS,
                 EASELOCATE,
@@ -724,11 +717,9 @@ public class ResidenceActivity extends AppCompatActivity implements Listener {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.camera:
-
                 ActivityCompat.requestPermissions(this,
                         permissionsList,
                         REQUEST_STRING_CODE);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,49 +1,24 @@
 package com.example.alihasan.synergytwo.Assignments;
-
 import com.example.alihasan.synergytwo.Adapters.RecyclerViewAdapter;
 import com.example.alihasan.synergytwo.ClassHelper.PhotoHelper;
-import com.example.alihasan.synergytwo.CounterSingleton;
-import com.example.alihasan.synergytwo.Database.AssignmentDatabase;
 import com.example.alihasan.synergytwo.Database.Business;
-import com.example.alihasan.synergytwo.Database.BusinessDao;
-//import com.example.alihasan.synergytwo.Database.BusinessRepo;
-//import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.BusinessViewModel;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageParam;
 import com.example.alihasan.synergytwo.Database.ImageDatabase.ImageViewModel;
 import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUplaod;
 import com.example.alihasan.synergytwo.Database.InUploadDatabase.InUploadViewModel;
 import com.example.alihasan.synergytwo.R;
-import com.example.alihasan.synergytwo.api.service.AppLocationService;
-import com.example.alihasan.synergytwo.api.service.Client;
-import com.example.alihasan.synergytwo.api.service.ServerURL;
 import com.example.easywaylocation.EasyWayLocation;
 import com.example.easywaylocation.Listener;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -53,8 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,37 +41,15 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BusinessActivity extends AppCompatActivity implements Listener {
 
-    /**
-     * DD test
-     */
     private BusinessViewModel businessViewModel;
     private ImageViewModel    imageViewModel   ;
     private InUploadViewModel inUploadViewModel;
-    /**
-     *
-     */
-
-//    static String SERVER_URL = new ServerURL().getSERVER_URL();
 
     EditText address;
 
@@ -185,8 +136,6 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
 
     TextView fetchingLocation;
 
-    private RecyclerView recyclerView;
-
     /**
      * LOCATION
      */
@@ -221,20 +170,18 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
     File photoFile = null;
 
     static String globalImageFileName;
-//    int counter = 0;
-
-    private CounterSingleton counter;
 
     PhotoHelper photoHelper;
-
-
-
-    boolean EXIT_CODE = false;
 
     private ArrayList<Bitmap> mImageUrls = new ArrayList<>();
     private ArrayList<String> mImageNames = new ArrayList<>();
 
     TextView emptyView;
+
+    //Recycler View Global
+    LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+    RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,10 +201,11 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         inUploadViewModel = ViewModelProviders.of(this).get(InUploadViewModel.class);
 
-
         /**
-         * PERMISSION CHECKS
+         * RecyclerView global
          */
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(layoutManager);
 
         /*
         LOCATION STUFF
@@ -270,16 +218,11 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
                 locationPermissionList,
                 LOCATION_STRING_CODE);
 
-        counter = CounterSingleton.getInstance();
-        counter.setCounter(0);
-
         photoHelper = new PhotoHelper(BusinessActivity.this);
 
         progressBar = findViewById(R.id.progressBar);
         fetchingLocation = findViewById(R.id.fetchingLocation);
-        recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.empty_view);
-        EXIT_CODE = false;
 
         personName = findViewById(R.id.PersonNameMAIN);
         caseType = findViewById(R.id.CaseTypeMAIN);
@@ -410,25 +353,10 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
             public void onClick(View v) {
 
                 requestPermission();
-
-                //as counter starts from 0
-                if(counter.getCounter() >  3)
-                    EXIT_CODE = true;
-
-                if(!EXIT_CODE)
-                {
-                        if(counter.getCounter() < 3)
-                        {
-                            Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), "JUST A MINUTE. UPLOADING IMAGE...", Toast.LENGTH_SHORT).show();
-                        }
-
-                        return;
+                if(adapter.getItemCount() < 3){
+                    Toast.makeText(getApplicationContext(), "UPLOAD AT LEAST 3 IMAGES", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-
 
                 /**
                  * Fetched
@@ -621,7 +549,6 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
 
     public void onSubmit(String stringCaseNo)
     {
-
         inUploadViewModel.insert(new InUplaod(stringCaseNo,"BUSINESS"));
 
         SharedPreferences preferences2 =getSharedPreferences("CASEDATA",Context.MODE_PRIVATE);
@@ -752,18 +679,11 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
         mImageUrls.add(mResultsBitmap);
         mImageNames.add(globalImageFileName);
         emptyView.setVisibility(View.GONE);
-        initRecyclerView();
+        adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView,imageViewModel);
+        recyclerView.setAdapter(adapter);
+        Log.v("Adapter current size", adapter.getItemCount()+"CHEESE_Business");
 
 //        imageView.setImageBitmap(mResultsBitmap);
-    }
-
-    private void initRecyclerView(){
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, mImageUrls,mImageNames,emptyView, imageViewModel);
-        recyclerView.setAdapter(adapter);
     }
 
     public void retroFitHelper(String encodedImage)
@@ -774,12 +694,7 @@ public class BusinessActivity extends AppCompatActivity implements Listener {
          */
         globalImageFileName = photoHelper.getGlobalImageFileName();
         imageViewModel.insert(new ImageParam(encodedImage,globalImageFileName,StringCaseNo,ACTIVITY,userName));
-
-                    Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
-                    counter.addCounter();
-
-                    if(counter.getCounter() >= 3)
-                        EXIT_CODE = true;
+        Toast.makeText(getApplicationContext(), "IMAGE UPLOADED DATABASE", Toast.LENGTH_SHORT).show();
     }
 
 }
