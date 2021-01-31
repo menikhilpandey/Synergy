@@ -81,7 +81,7 @@ public class AssignmentChoose extends AppCompatActivity {
     LinearLayout pendingUploadLinearLayout;
     TextView pendingUploadTextView;
     Button pendingUploadButton;
-
+    TextView totalCount;
     int pendingCount = 0;
 
     @Override
@@ -94,10 +94,10 @@ public class AssignmentChoose extends AppCompatActivity {
          */
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-
         pendingUploadLinearLayout = findViewById(R.id.pendingUploadLinearLayout);
         pendingUploadTextView = findViewById(R.id.pendingUploadTextView);
         pendingUploadButton = findViewById(R.id.pendingUploadButton);
+        totalCount = findViewById(R.id.totalCount);
 
         /**
          * DD test
@@ -215,7 +215,8 @@ public class AssignmentChoose extends AppCompatActivity {
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-
+                    totalCount.setText("Total Pending Cases: "+ mAdapter.getItemCount());
+                    
                     if(businessViewModel.getCount()+employmentViewModel.getCount() + residenceViewModel.getCount() + propertyViewModel.getCount()>0)
                     {
                         pendingCount = businessViewModel.getCount()+employmentViewModel.getCount()+residenceViewModel.getCount()+propertyViewModel.getCount();

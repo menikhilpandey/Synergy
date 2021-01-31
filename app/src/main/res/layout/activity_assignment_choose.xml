@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".Assignments.AssignmentChoose">
 
+    <TextView
+        android:id="@+id/totalCount"
+        android:paddingLeft="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:text="Please refresh"
+        android:textColor="#FF0000"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+
         <TextView
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
@@ -19,6 +29,7 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="wrap_content"
         android:layout_above="@+id/pendingUploadLinearLayout"
+        android:layout_below="@+id/totalCount"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView

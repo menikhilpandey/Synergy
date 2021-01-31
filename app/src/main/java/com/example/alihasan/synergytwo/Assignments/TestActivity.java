@@ -46,7 +46,7 @@ public class TestActivity extends AppCompatActivity {
 //
         imageViewModel = ViewModelProviders.of(this).get(DebtorViewModel.class);
 //
-        imageViewModel.insert(new Debtor("plm","rg","qwer","asdf", "pqa", "afsd"));
+        imageViewModel.insert(new Debtor("plm","rg","qwer","asdf", "pqa", "afsd", "kgh"));
 
         imageViewModel.updateInUploads("eyt", "ryte");
 
